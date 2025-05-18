@@ -1,0 +1,46 @@
+.qodo
+
+# Go build artifacts
+/build/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Python virtual environments and artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs and temporary files
+/output/logs/
+*.log
+*.tmp
+scripts/resources/output/
+
+# Binary files
+/or-mcp-v2
+/build/or-mcp-server
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+.DS_Store
