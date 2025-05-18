@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs
+.PHONY: all build clean clean-all test run dirs config
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -7,7 +7,7 @@ OUTPUT_DIR=output/logs
 GO=go
 PORT=8080
 
-all: clean dirs build
+all: clean dirs config build
 	@echo "========================================================"
 	@echo "✅ Build complete! Run 'make run' to start the server."
 	@echo "========================================================"
@@ -29,6 +29,40 @@ dirs:
 	@mkdir -p $(OUTPUT_DIR)
 	@mkdir -p $(BUILD_DIR)
 	@echo "✅ Directories created"
+
+# Setup configuration file
+config:
+	@echo "========================================================"
+	@echo "🔧 Checking configuration file..."
+	@echo "========================================================"
+	@if [ ! -f config.yaml ]; then \
+		echo "⚠️  No config.yaml found. Creating a copy from template..."; \
+		if [ -f config.yaml.template ]; then \
+			cp config.yaml.template config.yaml; \
+			echo ""; \
+			echo "❗❗❗ CRITICAL CONFIGURATION REQUIRED ❗❗❗"; \
+			echo "✅ Created config.yaml from template with PLACEHOLDER VALUES."; \
+			echo "⚠️  WARNING: The server will NOT WORK with placeholder credentials."; \
+			echo "⚠️  YOU MUST MANUALLY EDIT config.yaml and replace ALL values with"; \
+			echo "⚠️  your actual OpsRamp credentials before running the server."; \
+			echo ""; \
+			echo "Edit config.yaml now with your editor:"; \
+			echo "  nano config.yaml"; \
+			echo "  or"; \
+			echo "  vi config.yaml"; \
+			echo "❗❗❗ CRITICAL CONFIGURATION REQUIRED ❗❗❗"; \
+			echo ""; \
+		else \
+			echo "❌ No config.yaml.template found. Please create config.yaml manually."; \
+			exit 1; \
+		fi; \
+	else \
+		echo "✅ Configuration file found"; \
+		echo ""; \
+		echo "⚠️  REMINDER: Make sure your config.yaml contains VALID OpsRamp credentials."; \
+		echo "⚠️  The server will not function with placeholder values."; \
+		echo ""; \
+	fi
 
 # Clean build artifacts
 clean:
@@ -68,28 +102,32 @@ test-file: dirs
 	$(GO) test -v $(TEST_FILE)
 
 # Run the server
-run: build dirs
+run: build dirs config
 	@echo "========================================================"
 	@echo "🚀 Running HPE OpsRamp MCP server on port $(PORT)..."
+	@echo "========================================================"
+	@echo "⚠️  NOTE: Server requires valid OpsRamp credentials in config.yaml to function properly."
 	@echo "========================================================"
 	PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME)
 
 # Run in debug mode
-run-debug: build dirs
+run-debug: build dirs config
 	@echo "========================================================"
 	@echo "🐞 Running HPE OpsRamp MCP server in DEBUG mode on port $(PORT)..."
+	@echo "========================================================"
+	@echo "⚠️  NOTE: Server requires valid OpsRamp credentials in config.yaml to function properly."
 	@echo "========================================================"
 	DEBUG=true PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME)
 
 # Integration test - build, run server, and test integrations
-integration-test: build dirs
+integration-test: build dirs config
 	@echo "========================================================"
 	@echo "🧪 Running integration tests..."
 	@echo "========================================================"
 	./test_integration_server.sh
 
 # Integration test with debug (ignore session errors)
-integration-test-debug: build dirs
+integration-test-debug: build dirs config
 	@echo "========================================================"
 	@echo "🧪 Running integration tests in debug mode..."
 	@echo "========================================================"
@@ -110,7 +148,7 @@ integration-test-debug: build dirs
 	}
 
 # Health check only - build, run server, and check health
-health-check: build dirs
+health-check: build dirs config
 	@echo "========================================================"
 	@echo "🔍 Running health check..."
 	@echo "========================================================"
@@ -137,6 +175,7 @@ help:
 	@echo "  build           - Build the server binary"
 	@echo "  clean           - Remove build artifacts"
 	@echo "  clean-all       - Remove all build artifacts and temporary files"
+	@echo "  config          - Check and set up configuration (creates config.yaml from template if needed)"
 	@echo "  dirs            - Create required directories"
 	@echo "  health-check    - Run a quick server health check"
 	@echo "  help            - Show this help message"

@@ -9,6 +9,42 @@ This project provides the official Model Context Protocol implementation for HPE
 1. A Go-based MCP server that exposes HPE OpsRamp integrations as tools
 2. A Python client library for interacting with the server
 
+## Prerequisites
+
+Before you begin, you'll need:
+
+1. **Go 1.18 or higher** - For building and running the server
+2. **Python 3.7 or higher** - For running the client
+3. **OpsRamp Credentials** - You'll need the following from your OpsRamp instance:
+   - Tenant URL (e.g., `https://your-instance.opsramp.com`)
+   - Auth URL (e.g., `https://your-instance.opsramp.com/tenancy/auth/oauth/token`)
+   - Auth Key (API key for authentication)
+   - Auth Secret (API secret for authentication)
+   - Tenant ID (Your OpsRamp tenant identifier)
+
+## Configuration
+
+⚠️ **IMPORTANT:** Before running the server, you **MUST** create a valid configuration file with your OpsRamp credentials:
+
+1. Copy the template configuration file to create your local config:
+   ```bash
+   cp config.yaml.template config.yaml
+   ```
+
+2. Edit `config.yaml` and replace ALL placeholder values with your actual OpsRamp credentials:
+   ```yaml
+   opsramp:
+     tenant_url: "https://your-tenant-instance.opsramp.com"  # Replace with your actual tenant URL
+     auth_url: "https://your-tenant-instance.opsramp.com/tenancy/auth/oauth/token"  # Replace with your actual auth URL
+     auth_key: "YOUR_AUTH_KEY_HERE"  # Replace with your actual auth key
+     auth_secret: "YOUR_AUTH_SECRET_HERE"  # Replace with your actual auth secret
+     tenant_id: "YOUR_TENANT_ID_HERE"  # Replace with your actual tenant ID
+   ```
+
+3. Make sure your credentials are correct. The server will not function properly without valid OpsRamp credentials.
+
+> **Security Note:** The `config.yaml` file is excluded from Git to protect sensitive information. Never commit this file to the repository. Each developer needs to create their own local copy with their credentials.
+
 ## Quick Start Guide
 
 ### 1. Server Setup and Running
@@ -18,10 +54,14 @@ This project provides the official Model Context Protocol implementation for HPE
 git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
 
+# REQUIRED: Create your configuration file with actual credentials
+cp config.yaml.template config.yaml
+# ⚠️ YOU MUST edit config.yaml with your valid OpsRamp credentials before proceeding ⚠️
+
 # Build and create required directories in one step
 make
 
-# Run the server
+# Run the server (will fail if config.yaml has not been properly configured)
 make run
 ```
 
