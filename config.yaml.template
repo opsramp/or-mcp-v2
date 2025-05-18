@@ -1,0 +1,7 @@
+# MCP Server OpsRamp API config
+opsramp:
+  tenant_url: "https://your-tenant-instance.opsramp.com"
+  auth_url: "https://your-tenant-instance.opsramp.com/tenancy/auth/oauth/token"
+  auth_key: "YOUR_AUTH_KEY_HERE"
+  auth_secret: "YOUR_AUTH_SECRET_HERE"
+  tenant_id: "YOUR_TENANT_ID_HERE"
