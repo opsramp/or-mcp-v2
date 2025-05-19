@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -6,6 +6,7 @@ BUILD_DIR=build
 OUTPUT_DIR=output/logs
 GO=go
 PORT=8080
+PYTHON_CLIENT_DIR=client/python
 
 all: clean dirs config build
 	@echo "========================================================"
@@ -124,7 +125,7 @@ integration-test: build dirs config
 	@echo "========================================================"
 	@echo "🧪 Running integration tests..."
 	@echo "========================================================"
-	./test_integration_server.sh
+	./tests/test_integration_server.sh
 
 # Integration test with debug (ignore session errors)
 integration-test-debug: build dirs config
@@ -165,6 +166,80 @@ health-check: build dirs config
 		exit 1; \
 	fi
 
+# Find and kill any running MCP server
+kill-server:
+	@echo "========================================================"
+	@echo "🔍 Finding running MCP server..."
+	@echo "========================================================"
+	@if pgrep -f "or-mcp-server" > /dev/null; then \
+		echo "Found running server, shutting down..."; \
+		pkill -f "or-mcp-server"; \
+		echo "✅ Server shutdown complete"; \
+	else \
+		echo "✅ No running server found"; \
+	fi
+
+# Python client targets
+client-setup:
+	@echo "========================================================"
+	@echo "🐍 Setting up Python client..."
+	@echo "========================================================"
+	@cd $(PYTHON_CLIENT_DIR) && make setup
+
+client-test:
+	@echo "========================================================"
+	@echo "🧪 Running Python client tests..."
+	@echo "========================================================"
+	@cd $(PYTHON_CLIENT_DIR) && make test
+
+client-run-browser:
+	@echo "========================================================"
+	@echo "🚀 Running Python client browser example..."
+	@echo "========================================================"
+	@cd $(PYTHON_CLIENT_DIR) && make run-browser
+
+client-run-integrations:
+	@echo "========================================================"
+	@echo "🚀 Running Python client integrations example..."
+	@echo "========================================================"
+	@cd $(PYTHON_CLIENT_DIR) && make run-integrations
+
+client-clean:
+	@echo "========================================================"
+	@echo "🧹 Cleaning Python client..."
+	@echo "========================================================"
+	@cd $(PYTHON_CLIENT_DIR) && make clean-all
+
+# Combined server and client testing
+test-with-client: build dirs config
+	@echo "========================================================"
+	@echo "🧪 Running server and client tests..."
+	@echo "========================================================"
+	@echo "Starting MCP server in the background..."
+	@PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME) > $(OUTPUT_DIR)/server.log 2>&1 & \
+	echo $$! > .server.pid; \
+	echo "Server started with PID $$(cat .server.pid)"; \
+	echo "Waiting for server to initialize..."; \
+	sleep 3; \
+	\
+	echo "Running Python client tests..."; \
+	cd $(PYTHON_CLIENT_DIR) && make test; \
+	TEST_STATUS=$$?; \
+	\
+	echo "Stopping server..."; \
+	if [ -f .server.pid ]; then \
+		kill -15 $$(cat .server.pid) 2>/dev/null || true; \
+		rm .server.pid; \
+	fi; \
+	\
+	if [ $$TEST_STATUS -eq 0 ]; then \
+		echo "✅ Server and client tests passed!"; \
+		exit 0; \
+	else \
+		echo "❌ Tests failed!"; \
+		exit 1; \
+	fi
+
 # Show help
 help:
 	@echo "========================================================"
@@ -180,8 +255,17 @@ help:
 	@echo "  health-check    - Run a quick server health check"
 	@echo "  help            - Show this help message"
 	@echo "  integration-test- Run integration tests"
+	@echo "  kill-server     - Find and shut down any running MCP server"
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
 	@echo "  test            - Run server unit tests"
 	@echo ""
-	@echo "For client operations, cd to client/python and run 'make help'" 
+	@echo "Python client targets:"
+	@echo "  client-setup            - Set up the Python client"
+	@echo "  client-test             - Run Python client tests"
+	@echo "  client-run-browser      - Run the Python client browser example"
+	@echo "  client-run-integrations - Run the Python client integrations example"
+	@echo "  client-clean            - Clean Python client artifacts"
+	@echo "  test-with-client        - Build and run server, then run client tests"
+	@echo ""
+	@echo "Or cd to client/python and run 'make help' for more client options" 

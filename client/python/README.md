@@ -13,16 +13,54 @@ This client provides a reliable way to interact with the HPE OpsRamp MCP server 
 - Python 3.7 or higher
 - A running MCP server (see [server setup](../README.md))
 
-### Installation
+### Installation and Setup
 
-Using Makefile (recommended):
+#### Using Root Level Makefile (Recommended)
+
+You can build, run, and test the entire project (both server and client) using the Makefile at the repository root:
 
 ```bash
+# From the repository root directory
+cd /path/to/or-mcp-v2
+
+# Build everything
+make all
+
+# Run the server in debug mode (background)
+make run-debug
+
+# Run the Python client browser example
+make client-run-browser
+
+# Run the Python client integrations example
+make client-run-integrations
+
+# Run all client tests (with a running server)
+make client-test
+
+# Run client integration tests
+MCP_INTEGRATION_TEST=1 make client-test
+
+# Stop the server when done
+make kill-server
+```
+
+#### Using Python Client Makefile
+
+If you prefer to work directly with the Python client:
+
+```bash
+# Navigate to the Python client directory
+cd client/python
+
 # One-step setup - creates virtual environment and installs dependencies
-make
+make setup
 
 # Activate the virtual environment
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Run examples, tests, etc.
+make run-browser
 ```
 
 ### Running Examples
@@ -30,14 +68,16 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 Using the Makefile:
 
 ```bash
-# Run the browser-like client example
+# From repository root:
+make client-run-browser
+make client-run-integrations
+
+# OR from client/python directory:
 make run-browser
+make run-integrations
 
 # Run the example with debug logging enabled
 make run-browser ARGS="--debug" 
-
-# Run the integrations example
-make run-integrations
 
 # Run any other example
 make run-example EXAMPLE=examples/check_server.py
@@ -48,8 +88,13 @@ make run-example EXAMPLE=examples/check_server.py
 Using the Makefile:
 
 ```bash
-# Run all unit tests
+# From repository root:
+make client-test
+MCP_INTEGRATION_TEST=1 make client-test
+
+# OR from client/python directory:
 make unit-test
+MCP_INTEGRATION_TEST=1 make test
 
 # Clean up temporary files
 make clean
@@ -90,15 +135,15 @@ asyncio.run(main())
 
 ## Makefile Commands
 
-The `Makefile` provides several useful commands:
+The client's `Makefile` provides several useful commands:
 
 ```
-make                 # Set up development environment
 make setup           # Create virtual environment and install dependencies
 make run-browser     # Run the browser-like client example
 make run-integrations # Run the integrations example
 make run-example     # Run a specific example file
 make unit-test       # Run unit tests
+make test            # Run all tests (including integration tests if MCP_INTEGRATION_TEST=1)
 make clean           # Remove temporary files
 make clean-all       # Remove all generated files and virtual environment
 make help            # Show all available commands
@@ -112,7 +157,17 @@ make run-browser ARGS="--debug --server-url=http://custom-server:8080"
 
 # Run a specific example file
 make run-example EXAMPLE=examples/custom_example.py
+
+# Run integration tests (requires server running)
+MCP_INTEGRATION_TEST=1 make test
 ```
+
+## Recent Improvements
+
+- Updated `list_tools` method to handle both response formats (direct list and nested structure)
+- Fixed integration tests with proper async fixtures using pytest-asyncio
+- Added proper error handling for server responses
+- Enhanced the client to parse different server response formats
 
 ## Key Features
 
@@ -188,12 +243,8 @@ client/python/
 │       ├── exceptions.py      # Custom exceptions
 │       └── utils.py           # Utility functions
 ├── tests/                     # Test directory
-│   ├── integration/           # Integration tests
-│   │   ├── test_browser_like_client.py
-│   │   └── test_server_connection.py
-│   └── utils/                 # Test utilities
-│       ├── server_runner.py   # Server control for tests
-│       └── test_config.py     # Test configuration
+│   ├── test_client.py         # Client unit tests
+│   ├── test_integration.py    # Integration tests with real server
 ├── Makefile                   # Makefile for common tasks
 ├── requirements.txt           # Dependencies
 └── README.md                  # This file
@@ -250,9 +301,20 @@ If you encounter issues:
    python examples/check_server.py --debug
    ```
 
-3. Verify your session ID is valid:
+3. Make sure the server is running and accessible:
    ```bash
-   curl "http://localhost:8080/debug?sessionId=<your-session-id>"
+   # From repository root
+   make kill-server  # Stop any running servers
+   make run-debug    # Start a fresh server instance
+   ```
+
+4. If tests are failing, try:
+   ```bash
+   # Start fresh with a clean environment
+   cd or-mcp-v2
+   make clean-all
+   make all
+   make test-with-client
    ```
 
 For more help, see the [Troubleshooting Guide](../docs/TROUBLESHOOTING.md).

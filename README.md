@@ -47,7 +47,9 @@ Before you begin, you'll need:
 
 ## Quick Start Guide
 
-### 1. Server Setup and Running
+### Complete Setup with Single Makefile
+
+The project is designed to be built, run, and tested using a single Makefile at the root level:
 
 ```bash
 # Clone the repository
@@ -58,65 +60,70 @@ cd or-mcp-v2
 cp config.yaml.template config.yaml
 # ⚠️ YOU MUST edit config.yaml with your valid OpsRamp credentials before proceeding ⚠️
 
-# Build and create required directories in one step
-make
+# Clean any previous builds and build everything fresh
+make clean-all
+make all
 
-# Run the server (will fail if config.yaml has not been properly configured)
-make run
+# Kill any running server instances 
+make kill-server
+
+# Run the server and client tests together
+make test-with-client
+
+# OR run the server and connect with client examples
+make run-debug           # Run server in debug mode in the background
+make client-run-browser  # Run client browser example in another terminal
+make client-run-integrations  # Run integrations example
+make kill-server         # Shut down the server when done
 ```
 
-The server will start listening on port 8080 by default. You should see log messages confirming that the server has started.
+### Unified Makefile Targets
 
-For additional control:
+The root Makefile now provides targets to:
+
+1. Build and run the server
+2. Run Python client tests
+3. Run client examples
+4. Clean up all artifacts
+
+Use `make help` to see all available targets:
 
 ```bash
+make help
+```
+
+### Individual Component Setup
+
+If you prefer to work with the server and client separately:
+
+#### 1. Server Setup and Running
+
+```bash
+# Build and start the server
+make
+make run
+
 # Run with debug mode enabled
 make run-debug
 
 # Run quick health check
 make health-check
-
-# See all available Makefile targets
-make help
 ```
 
-### 2. Python Client Setup
+#### 2. Python Client Setup
 
 ```bash
 # Navigate to the Python client directory
 cd client/python
 
-# Setup the Python environment (creates virtual env and installs dependencies)
-make
-```
+# Setup the Python environment
+make setup
 
-### 3. Running and Testing the Client
-
-```bash
 # Run unit tests (no server required)
 make unit-test
 
-# Run the browser-like example (requires server running)
+# Run the browser example (requires server running)
 make run-browser
-
-# Run the integrations example
-make run-integrations
-
-# Get client help
-make help
-```
-
-### 4. Clean Everything
-
-You can clean all artifacts and start fresh at any time:
-
-```bash
-# From project root (cleans server and all client artifacts)
-make clean-all
-
-# From client directory (cleans only Python client artifacts)
-cd client/python
-make clean-all
 ```
 
 ## Server Features
@@ -160,7 +167,10 @@ The server can be configured via environment variables or through Makefile targe
 PORT=8090 make run
 
 # Run in debug mode
-make run-debug
+DEBUG=true make run
+
+# Run with debug logging
+LOG_LEVEL=debug make run
 ```
 
 ### Client Configuration
@@ -169,10 +179,10 @@ The client can be configured when running examples with Makefile:
 
 ```bash
 # Run with additional arguments
-make run-browser ARGS="--debug --server-url=http://localhost:8090"
+make client-run-browser ARGS="--debug --server-url=http://localhost:8090"
 
-# Run a specific example with arguments
-make run-example EXAMPLE=examples/check_server.py ARGS="--debug"
+# Run client integration tests with MCP server
+MCP_INTEGRATION_TEST=1 make client-test
 ```
 
 ## MCP Protocol Implementation
