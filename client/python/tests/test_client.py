@@ -149,7 +149,7 @@ class TestMCPClient(unittest.TestCase):
         # Mock the async send_request method
         mock_tools = [{"name": "tool1"}, {"name": "tool2"}]
         async def mock_send_request(*args, **kwargs):
-            return {"result": mock_tools}
+            return {"result": {"tools": mock_tools}}
         self.mock_session.send_request = AsyncMock(side_effect=mock_send_request)
         
         # Run the test with an async wrapper

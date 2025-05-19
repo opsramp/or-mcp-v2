@@ -12,6 +12,7 @@ import sys
 import time
 import pytest
 import asyncio
+import pytest_asyncio
 from unittest import mock
 
 # Add the parent directory to the Python path
@@ -31,7 +32,7 @@ pytestmark = pytest.mark.skipif(
 SERVER_URL = os.environ.get('MCP_SERVER_URL', 'http://localhost:8080')
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_client():
     """Fixture to provide an async client for testing."""
     client = MCPClient(SERVER_URL, auto_connect=False)

@@ -117,7 +117,18 @@ class MCPClient:
         try:
             logger.debug("Requesting list of available tools")
             response = await self.session.send_request("tools/list", {}, timeout=timeout)
-            tools = response.get("result", [])
+            if isinstance(response, str):
+                import json
+                response = json.loads(response)
+            
+            # Handle both response formats:
+            # 1. Direct list: [tool1, tool2, ...]
+            # 2. Wrapped in result: {"result": {"tools": [tool1, tool2, ...]}}
+            if isinstance(response, list):
+                tools = response
+            else:
+                tools = response.get("result", {}).get("tools", [])
+            
             self._available_tools = tools
             logger.debug(f"Received {len(tools)} available tools")
             return tools
@@ -153,6 +164,10 @@ class MCPClient:
                 },
                 timeout=timeout
             )
+            
+            if isinstance(response, str):
+                import json
+                response = json.loads(response)
             
             result = response.get("result")
             logger.debug(f"Tool '{tool_name}' call successful")
