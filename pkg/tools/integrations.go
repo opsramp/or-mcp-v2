@@ -47,10 +47,34 @@ func NewIntegrationsTool(api IntegrationsAPI) *IntegrationsTool {
 
 // NewIntegrationsMcpTool returns the MCP tool definition and handler for integrations
 func NewIntegrationsMcpTool() (mcp.Tool, server.ToolHandlerFunc) {
-	// Create a mock API implementation for now
-	// In a real implementation, this would use the OpsRampIntegrationsAPI with a real client
-	mockAPI := &MockIntegrationsAPI{}
+	// Get the logger
+	logger := common.GetLogger()
 
+	// Load configuration
+	config, err := common.LoadConfig("")
+	if err != nil {
+		logger.Error("Failed to load config for OpsRamp Integrations API: %v", err)
+		logger.Warn("Falling back to mock implementation")
+		mockAPI := &MockIntegrationsAPI{}
+		return createIntegrationsTool(mockAPI)
+	}
+
+	// Create and initialize the real API implementation
+	api, err := NewOpsRampIntegrationsAPI(&config.OpsRamp)
+	if err != nil {
+		logger.Error("Failed to initialize OpsRamp Integrations API: %v", err)
+		logger.Warn("Falling back to mock implementation")
+		// Fall back to mock implementation if initialization fails
+		mockAPI := &MockIntegrationsAPI{}
+		return createIntegrationsTool(mockAPI)
+	}
+
+	logger.Info("Successfully initialized OpsRamp Integrations API")
+	return createIntegrationsTool(api)
+}
+
+// createIntegrationsTool creates the MCP tool with the given API implementation
+func createIntegrationsTool(api IntegrationsAPI) (mcp.Tool, server.ToolHandlerFunc) {
 	return mcp.Tool{
 			Name:        "integrations",
 			Description: "Manage HPE OpsRamp integrations and their configurations.",
@@ -73,7 +97,7 @@ func NewIntegrationsMcpTool() (mcp.Tool, server.ToolHandlerFunc) {
 				Required: []string{"action"},
 			},
 		}, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			return IntegrationsToolHandler(ctx, req, mockAPI)
+			return IntegrationsToolHandler(ctx, req, api)
 		}
 }
 
@@ -245,12 +269,24 @@ func (m *MockIntegrationsAPI) ListTypes(ctx context.Context) ([]types.Integratio
 }
 
 func (m *MockIntegrationsAPI) GetType(ctx context.Context, id string) (*types.IntegrationType, error) {
-	return &types.IntegrationType{
-		ID:          id,
-		Name:        "API Integration",
-		Description: "Integration with external APIs",
-		Category:    "external",
-	}, nil
+	switch id {
+	case "api":
+		return &types.IntegrationType{
+			ID:          "api",
+			Name:        "API Integration",
+			Description: "Integration with external APIs",
+			Category:    "external",
+		}, nil
+	case "webhook":
+		return &types.IntegrationType{
+			ID:          "webhook",
+			Name:        "Webhook Integration",
+			Description: "Integration with webhooks",
+			Category:    "external",
+		}, nil
+	default:
+		return nil, fmt.Errorf("integration type with ID %s not found", id)
+	}
 }
 
 func (m *MockIntegrationsAPI) GetDetailed(ctx context.Context, id string) (*types.DetailedIntegration, error) {

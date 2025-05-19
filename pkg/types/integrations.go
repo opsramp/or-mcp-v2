@@ -1,14 +1,14 @@
 package types
 
 // FilterCriterion represents a single filter condition for integration config
- type FilterCriterion struct {
+type FilterCriterion struct {
 	Attribute string `json:"attribute"`
 	Operator  string `json:"operator"`
 	Value     string `json:"value"`
 }
 
 // IntegrationConfig is a generic config for all integration types
- type IntegrationConfig struct {
+type IntegrationConfig struct {
 	Host              string                 `json:"host,omitempty"`
 	Username          string                 `json:"username,omitempty"`
 	Password          string                 `json:"password,omitempty"`
@@ -25,23 +25,33 @@ package types
 }
 
 // Integration represents an installed integration instance
- type Integration struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Type        string            `json:"type"`
-	Status      string            `json:"status"`
-	Config      IntegrationConfig `json:"config"`
-	CreatedBy   string            `json:"createdBy"`
-	CreatedTime string            `json:"createdTime"`
-	UpdatedBy   string            `json:"updatedBy"`
-	UpdatedTime string            `json:"updatedTime"`
+type Integration struct {
+	ID              string            `json:"id"`
+	Name            string            `json:"name"`
+	DisplayName     string            `json:"displayName"`
+	Type            string            `json:"type"`
+	Status          string            `json:"status"`
+	State           string            `json:"state"`
+	App             string            `json:"app"`
+	Version         string            `json:"version"`
+	Category        string            `json:"category"`
+	Config          IntegrationConfig `json:"config"`
+	CreatedBy       string            `json:"createdBy"`
+	CreatedTime     string            `json:"createdTime"`
+	UpdatedBy       string            `json:"updatedBy"`
+	UpdatedTime     string            `json:"updatedTime"`
+	InstalledBy     string            `json:"installedBy"`
+	InstalledTime   string            `json:"installedTime"`
+	ModifiedBy      string            `json:"modifiedBy"`
+	ModifiedTime    string            `json:"modifiedTime"`
+	UpdateAvailable bool              `json:"updateAvailable"`
 }
 
 // IntegrationType represents the schema for a supported integration type
- type IntegrationType struct {
-	ID          string                 `json:"id"`
-	Name        string                 `json:"name"`
-	Description string                 `json:"description"`
-	Category    string                 `json:"category"`
+type IntegrationType struct {
+	ID           string                 `json:"id"`
+	Name         string                 `json:"name"`
+	Description  string                 `json:"description"`
+	Category     string                 `json:"category"`
 	ConfigSchema map[string]interface{} `json:"configSchema"`
 }

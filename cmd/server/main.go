@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/mark3labs/mcp-go/server"
@@ -120,6 +123,31 @@ func debugHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(debugInfo)
 }
 
+// startupHealthCheck performs a real API call to verify connectivity and config validity
+func startupHealthCheck() error {
+	// Load configuration
+	config, err := common.LoadConfig("")
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	// Create the integrations API
+	integrationsAPI, err := tools.NewOpsRampIntegrationsAPI(&config.OpsRamp)
+	if err != nil {
+		return fmt.Errorf("failed to create integrations API: %w", err)
+	}
+
+	// Make a real API call (e.g., list integrations)
+	integrations, err := integrationsAPI.List(context.Background())
+	if err != nil {
+		return fmt.Errorf("startup health check failed: %w", err)
+	}
+
+	// Log success
+	customLogger.Info("Startup health check passed: successfully listed %d integrations", len(integrations))
+	return nil
+}
+
 func main() {
 	// Record start time
 	startTime = time.Now()
@@ -174,35 +202,69 @@ func main() {
 	// Log registered tools
 	customLogger.Info("Registered tool: %s", integrationsTool.Name)
 
-	// Create an HTTP server with the MCP server and a health check endpoint
-	portString := fmt.Sprintf(":%d", port)
-	customLogger.Info("Server listening on %s", portString)
+	// Perform startup health check
+	if err := startupHealthCheck(); err != nil {
+		customLogger.Warn("Startup health check failed: %v", err)
+		customLogger.Info("Continuing with server startup despite health check failure")
+	}
 
 	// Create SSE server with appropriate options for MCP
 	var options []server.SSEOption
 
-	// In debug mode, accept any session ID
+	// In debug mode, log more information
 	if debugMode {
-		// Currently, we can't access the options API to modify session validation
-		// This requires modifying the library itself
-		customLogger.Info("Debug mode enabled, but note that session ID validation is controlled by the SSE server library")
+		customLogger.Info("Debug mode enabled, logging additional information")
 	}
 
+	// Create SSE server with tools
 	sseServer = server.NewSSEServer(mcpServer, options...)
+	customLogger.Debug("SSE server created with %d tools", len(registeredTools))
+	customLogger.Debug("Registered tools: %v", registeredTools)
 
-	// Set up HTTP mux for multiple endpoints
+	// Create an HTTP mux to handle health, readiness, debug, and SSE endpoints
 	mux := http.NewServeMux()
-
-	// Add status endpoints
 	mux.HandleFunc("/health", healthHandler)
 	mux.HandleFunc("/readiness", readinessHandler)
 	mux.HandleFunc("/debug", debugHandler)
+	mux.Handle("/sse", sseServer) // SSE endpoint
+	mux.Handle("/", sseServer)    // Fallback for all other paths
+	customLogger.Debug("HTTP routes configured")
 
-	// Add SSE server handler for all other paths
-	mux.Handle("/", sseServer)
+	// Create HTTP server with the mux
+	portString := fmt.Sprintf(":%d", port)
+	customLogger.Info("Server listening on %s", portString)
 
-	// Start the HTTP server with our mux
-	if err := http.ListenAndServe(portString, mux); err != nil {
-		customLogger.Fatal("Failed to start server: %v", err)
+	// Create HTTP server
+	httpServer := &http.Server{
+		Addr:    portString,
+		Handler: mux,
+		// Increase timeouts
+		ReadTimeout:  120 * time.Second,
+		WriteTimeout: 120 * time.Second,
+		IdleTimeout:  240 * time.Second,
 	}
+
+	// Start the server
+	go func() {
+		customLogger.Info("Starting HTTP server on %s", portString)
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			customLogger.Fatal("Failed to start server: %v", err)
+		}
+	}()
+
+	// Wait for interrupt signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	// Create shutdown context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	customLogger.Info("Shutting down server...")
+	if err := httpServer.Shutdown(ctx); err != nil {
+		customLogger.Fatal("Server forced to shutdown: %v", err)
+	}
+
+	customLogger.Info("Server exited gracefully")
 }
