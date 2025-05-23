@@ -8,7 +8,6 @@ import (
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
 	"github.com/vobbilis/codegen/or-mcp-v2/pkg/tools"
 )
 
@@ -28,18 +27,15 @@ func TestIntegrationsRealAPI(t *testing.T) {
 		t.Skip("Skipping test: Missing OpsRamp credentials in config.yaml")
 	}
 
-	// Create the real OpsRamp client
-	opsrampClient := client.NewOpsRampClient(config)
-
 	// Create the real OpsRamp integrations API
-	integrationsAPI := tools.NewOpsRampIntegrationsAPI(opsrampClient)
-
-	// Create a custom integrations tool that uses the real API
-	customIntTool := tools.NewIntegrationsTool(integrationsAPI)
+	integrationsAPI, err := tools.NewOpsRampIntegrationsAPI(&config.OpsRamp)
+	if err != nil {
+		t.Fatalf("Failed to create integrations API: %v", err)
+	}
 
 	// Create a handler function for the tool
 	intHandler := func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		return tools.IntegrationsToolHandler(ctx, req, customIntTool)
+		return tools.IntegrationsToolHandler(ctx, req, integrationsAPI)
 	}
 
 	// Test cases - only testing list and get

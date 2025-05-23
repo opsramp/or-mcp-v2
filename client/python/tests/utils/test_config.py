@@ -13,7 +13,7 @@ DEFAULT_REQUEST_TIMEOUT = 30
 
 # Get configuration from environment variables
 SERVER_URL = os.environ.get("MCP_SERVER_URL", DEFAULT_SERVER_URL)
-DEBUG = os.environ.get("DEBUG", "").lower() in ("true", "1", "yes")
+DEBUG = os.environ.get("DEBUG", "true").lower() in ("true", "1", "yes")  # Default to True for debugging
 CONNECTION_TIMEOUT = int(os.environ.get("CONNECTION_TIMEOUT", DEFAULT_CONNECTION_TIMEOUT))
 REQUEST_TIMEOUT = int(os.environ.get("REQUEST_TIMEOUT", DEFAULT_REQUEST_TIMEOUT))
 
@@ -47,6 +47,10 @@ def configure_logging(level=None):
         ]
     )
     
+    # Set src.ormcp logger to DEBUG explicitly
+    logging.getLogger('src.ormcp').setLevel(logging.DEBUG)
+    
     # Silence some verbose loggers
     logging.getLogger('urllib3').setLevel(logging.WARNING)
-    logging.getLogger('sseclient').setLevel(logging.INFO) 
+    logging.getLogger('sseclient').setLevel(logging.INFO)
+    logging.getLogger('aiohttp').setLevel(logging.INFO) 

@@ -1,21 +1,40 @@
-# HPE OpsRamp MCP (Model Context Protocol) Server and Client
+# HPE OpsRamp MCP Documentation
 
-This project implements the official MCP server and client for HPE OpsRamp using the mark3labs/mcp-go library and a custom Python client. The project is hosted at [github.com/opsramp/or-mcp-v2](https://github.com/opsramp/or-mcp-v2).
+This directory contains documentation for the HPE OpsRamp MCP (Model Context Protocol) implementation.
 
-## Documentation Structure
+## Contents
 
-- [Project README](../README.md) - Main project documentation and server setup
-- [Python Client README](../client/python/README.md) - Python client documentation
-- [Architecture](./ARCHITECTURE.md) - System architecture and component design
-- [Testing Guide](./TESTING.md) - Comprehensive testing strategy
-- [Troubleshooting](./TROUBLESHOOTING.md) - Common issues and solutions
+| Document               | Description                                             |
+|------------------------|---------------------------------------------------------|
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture and component overview |
+| [TESTING.md](./TESTING.md) | Testing strategy and procedures |
+| [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | Common issues and solutions |
+| [MCP_GO_FORK.md](./MCP_GO_FORK.md) | Information about our fork of mark3labs/mcp-go |
 
-## Project Structure
+## Related Documentation
 
-- `cmd/` — Server entrypoints (main.go)
-- `pkg/` — Core packages (tools, utilities) 
-- `internal/` — Server internal logic
-- `common/` — Shared utilities (logging, configurations)
-- `client/python/` — Python client implementation
-- `tests/` — Server test helpers and integration tests
-- `docs/` — Project documentation
+Additional documentation can be found in specific component directories:
+
+- [Agent Documentation](../client/agent/README.md) - Documentation for the AI agent with integrations expertise
+- [Python Client](../client/python/README.md) - Documentation for the Python client library
+
+## Quick Links
+
+- [Main README](../README.md) - Project overview and quick start guide
+- [Client Makefile](../client/Makefile) - Client-specific build and run targets
+- [Server Setup](../README.md#server-setup-and-running) - Server setup instructions
+- [Agent Testing](./TESTING.md#ai-agent-testing) - Testing the agent's integration expertise
+
+## Integration Expert
+
+The AI agent in this project is specialized in OpsRamp integrations management, with expertise in:
+
+1. Listing and categorizing available integrations
+2. Providing detailed information about specific integrations
+3. Explaining integration operations (create, update, delete, enable, disable)
+4. Filtering integrations by type, category, or status
+5. Describing integration types and capabilities
+
+For more information on integration testing, see:
+- [Integration Testing](./TESTING.md#integration-expertise-testing)
+- [Sample Prompts](../client/agent/examples/sample_prompts.txt)

@@ -4,6 +4,7 @@ Utility functions for the HPE OpsRamp MCP client.
 
 import json
 import uuid
+import re
 from typing import Dict, Any, Optional
 
 def generate_request_id() -> str:
@@ -67,10 +68,36 @@ def parse_session_id_from_sse(event_data: str) -> Optional[str]:
     Returns:
         The session ID, or None if not found
     """
+    # Try to parse JSON first if the event data looks like JSON
+    if event_data.strip().startswith('{'):
+        try:
+            data = json.loads(event_data)
+            # Look for common session ID fields
+            for field in ['sessionId', 'session_id', 'id']:
+                if field in data:
+                    return str(data[field])
+                    
+            # Look in nested objects
+            if 'session' in data and isinstance(data['session'], dict):
+                session = data['session']
+                for field in ['id', 'sessionId', 'session_id']:
+                    if field in session:
+                        return str(session[field])
+        except json.JSONDecodeError:
+            pass  # Not JSON, try other formats
+    
+    # Extract session ID from URL-like format: /message?sessionId=<uuid>
     if "sessionId=" in event_data:
-        # Extract session ID from the format: /message?sessionId=<uuid>
         parts = event_data.split("sessionId=")
         if len(parts) > 1:
-            session_id = parts[1].strip()
+            # Get everything up to the next & or space or end of string
+            session_id = re.split(r'[&\s]', parts[1])[0].strip()
             return session_id
+    
+    # Look for UUIDs in the event data
+    uuid_pattern = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    uuids = re.findall(uuid_pattern, event_data, re.IGNORECASE)
+    if uuids:
+        return uuids[0]  # Return the first UUID found
+        
     return None 

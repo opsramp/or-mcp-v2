@@ -37,7 +37,7 @@ func NewDevicesMcpTool() (mcp.Tool, server.ToolHandlerFunc) {
 }
 
 func devicesToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	args := req.Params.Arguments
+	args := req.GetArguments()
 	action, _ := args["action"].(string)
 	id, _ := args["id"].(string)
 	config, _ := args["config"].(map[string]interface{})

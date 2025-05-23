@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 	"testing"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
-	"github.com/vobbilis/codegen/or-mcp-v2/tests"
+
+	"github.com/vobbilis/codegen/or-mcp-v2/common"
 	"gopkg.in/yaml.v2"
 )
 
@@ -37,9 +37,22 @@ func TestIntegrationsAPI_List_Create_Get(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load config: %v", err)
 	}
-	auth := tests.NewTestAuthClient(cfg.Opsramp.AuthKey, cfg.Opsramp.AuthSecret, cfg.Opsramp.AuthURL)
-	client := client.NewOpsRampClient(cfg.Opsramp.TenantURL, auth)
-	api := NewOpsRampIntegrationsAPI(client)
+
+	// Create OpsRamp config
+	opsRampConfig := &common.OpsRampConfig{
+		TenantURL:  cfg.Opsramp.TenantURL,
+		AuthURL:    cfg.Opsramp.AuthURL,
+		AuthKey:    cfg.Opsramp.AuthKey,
+		AuthSecret: cfg.Opsramp.AuthSecret,
+		TenantID:   cfg.Opsramp.TenantID,
+	}
+
+	// Create API client
+	api, err := NewOpsRampIntegrationsAPI(opsRampConfig)
+	if err != nil {
+		t.Fatalf("Failed to create API client: %v", err)
+	}
+
 	ctx := context.Background()
 
 	// List

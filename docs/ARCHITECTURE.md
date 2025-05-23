@@ -1,129 +1,169 @@
 # HPE OpsRamp MCP Architecture
 
-This document outlines the architecture of the HPE OpsRamp MCP system, consisting of a Go-based server and a Python client.
+This document describes the architecture of the HPE OpsRamp Model Context Protocol (MCP) implementation.
 
-## System Overview
-
-The HPE OpsRamp MCP system implements the Model Context Protocol, a communication protocol designed for AI agents to interact with tools. The system has two main components:
-
-1. **MCP Server** - A Go application that exposes tools via HTTP endpoints
-2. **MCP Client** - A Python library for connecting to and interacting with the server
+## High-Level Architecture
 
 ```
-┌───────────────┐     HTTP/SSE     ┌────────────────┐
-│  Python       │  <-------------> │  Go MCP        │
-│  MCP Client   │  JSON-RPC 2.0    │  Server        │
-└───────────────┘                  └────────────────┘
+                 ┌───────────────────┐
+                 │                   │
+                 │    MCP Server     │
+                 │                   │
+                 └─────────┬─────────┘
+                           │
+                           │ HTTP/SSE/JSON-RPC
+                           │
+                 ┌─────────▼─────────┐
+                 │                   │
+                 │   Python Client   │
+                 │                   │
+                 └─────────┬─────────┘
+                           │
+                           │ Provides tools
+                           │
+              ┌────────────▼───────────┐
+              │                        │
+              │   AI Agent with        │
+              │   Integration Expertise│
+              │                        │
+              └────────────────────────┘
 ```
+
+The system consists of three main components:
+
+1. **Server**: A Go server that implements the MCP specification using our forked version of mark3labs/mcp-go
+2. **Client**: A Python client that handles the communication with the server
+3. **AI Agent**: An intelligent agent that uses LLMs (either OpenAI or Anthropic) to process natural language queries about OpsRamp integrations
 
 ## Server Architecture
 
-The server is built on top of the [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) library and follows a modular design:
+### Core Components
 
-```
-┌─────────────────────────────────────────────────┐
-│                   HTTP Server                    │
-├─────────────┬─────────────────────┬─────────────┤
-│  SSE Server │  JSON-RPC Handlers  │  Health API │
-├─────────────┴─────────────────────┴─────────────┤
-│                   MCP Server                     │
-├─────────────────────────────────────────────────┤
-│                   Tool Registry                  │
-└─────────────────────────────────────────────────┘
-```
+The server follows a layered architecture:
 
-Key components:
+1. **HTTP Layer**: Handles HTTP requests, SSE connections, and routing
+2. **MCP Protocol Layer**: Implements the MCP protocol specification (session management, message formatting)
+3. **Tool Layer**: Tool implementation and registration
+4. **OpsRamp API Layer**: Integration with OpsRamp APIs
 
-1. **HTTP Server** - Handles incoming HTTP requests
-2. **SSE Server** - Manages Server-Sent Events connections for real-time communication
-3. **JSON-RPC Handlers** - Process JSON-RPC 2.0 requests
-4. **Health API** - Provides health and readiness endpoints
-5. **MCP Server** - Core implementation of the MCP protocol
-6. **Tool Registry** - Manages the available tools and their handlers
+### MCP-GO Fork
+
+The server relies on a customized fork of the mark3labs/mcp-go library, with several enhancements:
+
+1. **Enhanced SSE Transport**: Improved Server-Sent Events implementation for better connection stability
+2. **Extended Client Capabilities**: Additional methods to access transport and capabilities
+3. **Custom Testing Framework**: Robust in-process testing utilities
+4. **Server Instrumentation**: Added hooks for monitoring and debugging
+
+See [MCP_GO_FORK.md](./MCP_GO_FORK.md) for detailed information about the modifications.
+
+### Tools
+
+The server exposes the following tools:
+
+- **integrations**: Manage OpsRamp integrations
+  - List all integrations
+  - Get integration details
+  - Create/update/delete integrations
+  - Enable/disable integrations
+  - List integration types
+  - Get details about specific integration types
 
 ## Client Architecture
 
-The Python client is designed with an asynchronous-first approach, with a synchronous wrapper for convenience:
+The Python client is designed to be modular and extensible:
+
+1. **Transport Layer**: Handles the HTTP and SSE communication
+2. **Protocol Layer**: Manages JSON-RPC requests and responses
+3. **Session Management**: Handles session creation, maintenance, and reconnection
+4. **Tool Interface**: Provides a simple interface to call server tools
+
+## AI Agent Architecture
+
+The AI agent uses large language models to understand and respond to natural language queries about OpsRamp integrations:
 
 ```
-┌─────────────────────────────────────────────────┐
-│                   MCPClient                      │
-├─────────────────────────────────────────────────┤
-│                   MCPSession                     │
-├─────────────────┬─────────────────┬─────────────┤
-│ BrowserLikeSSE  │  JSON-RPC       │  Event      │
-│ Client          │  Client         │  Handlers   │
-└─────────────────┴─────────────────┴─────────────┘
+┌──────────────────────┐     ┌──────────────────────┐     ┌──────────────────────┐
+│                      │     │                      │     │                      │
+│     User Query       │────►│     LLM Processing   │────►│    Tool Execution    │
+│                      │     │                      │     │                      │
+└──────────────────────┘     └──────────────────────┘     └──────────────────────┘
+                                      │                             │
+                                      │                             │
+                                      │                             │
+                                      ▼                             ▼
+                             ┌──────────────────────┐     ┌──────────────────────┐
+                             │                      │     │                      │
+                             │    Response          │◄────│  Result Processing   │
+                             │    Generation        │     │                      │
+                             │                      │     │                      │
+                             └──────────────────────┘     └──────────────────────┘
 ```
 
-Key components:
+### OpsRamp Integrations Expertise
 
-1. **MCPClient** - High-level client interface with methods for tool discovery and invocation
-2. **MCPSession** - Manages the connection to the server and handles session state
-3. **BrowserLikeSSEClient** - Maintains persistent SSE connection with browser-like behavior
-4. **JSON-RPC Client** - Formats and sends JSON-RPC 2.0 requests
-5. **Event Handlers** - Processes events from the SSE connection
+The agent's system prompt is specifically designed to provide deep expertise in OpsRamp integrations management:
+
+1. **Comprehensive Tool Knowledge**: The agent understands all integration tool actions (list, get, getDetailed, create, update, delete, enable, disable, listTypes, getType)
+2. **Parameter Understanding**: It knows which parameters are required for each action
+3. **Integration Categorization**: It can categorize integrations by type, status, and purpose
+4. **Lifecycle Expertise**: It understands the full integration lifecycle from discovery to retirement
+
+### AI Agent Components
+
+- **Agent Class**: Main coordinator handling conversation flow
+- **System Prompt**: Specialized prompt focusing on integration expertise
+- **Tool Handling**: Logic to select appropriate tool based on user request
+- **Mock Integration Logic**: Sophisticated mocks for testing without MCP server
+
+### Simple Mode
+
+The agent supports a "simple mode" that doesn't require an MCP server connection:
+
+1. Processes the same queries and commands
+2. Returns pre-defined mock responses that simulate actual integration data
+3. Follows the same conversational patterns
+
+This mode is useful for:
+- Development without a running server
+- Testing integration expertise
+- Demonstrations of capability
 
 ## Communication Flow
 
-1. **Connection Establishment**:
-   - Client opens an SSE connection to the server via `/sse` endpoint
-   - Server assigns a session ID and returns it in an `endpoint` event
+1. User sends a question to the AI agent
+2. Agent uses LLM to determine which integration action is needed
+3. Agent calls the appropriate tool via the Python client
+4. Client sends the request to the server via HTTP/JSON-RPC
+5. Server processes the request and returns results
+6. Client receives the results and passes them back to the agent
+7. Agent uses LLM to generate a natural language response
+8. Response is presented to the user
 
-2. **Initialization**:
-   - Client sends an `initialize` request with client metadata
-   - Server validates the session and responds with protocol capabilities
+## Testing Architecture
 
-3. **Tool Discovery**:
-   - Client requests available tools with `tools/list`
-   - Server responds with list of registered tools
+The system has a comprehensive testing framework:
 
-4. **Tool Invocation**:
-   - Client calls a tool using `tools/call` with tool name and arguments
-   - Server processes the tool request and returns the result
+1. **Server Tests**: Go unit and integration tests 
+2. **Client Tests**: Python unit and integration tests
+3. **Agent Tests**: Tests for the AI agent's integration expertise
 
-5. **Real-time Events**:
-   - Server can send events to the client at any time via the SSE connection
-   - Client processes events and makes them available to the application
+The integration expertise testing uses:
+- 37 diverse integration-related prompts
+- Specialized mocks for testing without server connection
+- Detailed validation of all response patterns
 
-## Implementation Details
+## Security Considerations
 
-### Server Implementation
+1. **Authentication**: OpsRamp API credentials stored securely
+2. **API Keys**: LLM API keys managed via environment variables
+3. **No Persistent Storage**: No user data or conversations stored
+4. **Configuration Protection**: Sensitive configuration excluded from version control
 
-The server is implemented in Go using:
-- Standard library `net/http` for HTTP serving
-- [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) for MCP protocol implementation
-- Custom logging and configuration
+## Deployment Model
 
-### Client Implementation
+The system is designed for flexible deployment:
 
-The client is implemented in Python using:
-- `aiohttp` for asynchronous HTTP requests
-- `sseclient-py` as a base for the BrowserLikeSSEClient
-- `asyncio` for asynchronous programming
-
-## Session Management
-
-Session management is a critical aspect of the MCP protocol:
-
-1. The server creates unique session IDs for each client connection
-2. These IDs must be used in subsequent JSON-RPC requests
-3. The BrowserLikeSSEClient ensures the session remains active
-4. Session validation is handled by the mark3labs/mcp-go library
-
-## Deployment Architecture
-
-For production deployments, the recommended architecture is:
-
-```
-┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-│  AI Agent    │ ---> │  MCP Server  │ ---> │  HPE OpsRamp API │
-│  with MCP    │      │  (Go)        │      │  Services    │
-│  Client      │ <--- │              │ <--- │              │
-└──────────────┘      └──────────────┘      └──────────────┘
-```
-
-Where:
-- The AI Agent uses the MCP Client to communicate with the server
-- The MCP Server acts as a gateway to HPE OpsRamp services
-- The server can be deployed behind a load balancer for scaling 
+1. **Development**: Local development with simple mode
+2. **Testing**: CI/CD with mock integration tests
+3. **Production**: Deployed with real OpsRamp tenant credentials 

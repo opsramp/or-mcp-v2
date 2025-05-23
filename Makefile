@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -7,6 +7,7 @@ OUTPUT_DIR=output/logs
 GO=go
 PORT=8080
 PYTHON_CLIENT_DIR=client/python
+MCP_GO_DIR=internal/mcp-go
 
 all: clean dirs config build
 	@echo "========================================================"
@@ -14,12 +15,12 @@ all: clean dirs config build
 	@echo "========================================================"
 
 # Build the binary
-build:
+build: mcp-go-build
 	@echo "========================================================"
 	@echo "📦 Building $(BINARY_NAME)..."
 	@echo "========================================================"
 	@mkdir -p $(BUILD_DIR)
-	$(GO) build -o $(BUILD_DIR)/$(BINARY_NAME) cmd/server/main.go
+	$(GO) build -mod=mod -o $(BUILD_DIR)/$(BINARY_NAME) cmd/server/main.go
 	@echo "✅ Build successful: $(BUILD_DIR)/$(BINARY_NAME)"
 
 # Create required directories
@@ -73,8 +74,16 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@echo "✅ Build artifacts cleaned"
 
+# Clean the vendor directory
+clean-vendor:
+	@echo "========================================================"
+	@echo "🧹 Cleaning vendor directory..."
+	@echo "========================================================"
+	@rm -rf vendor
+	@echo "✅ Vendor directory cleaned"
+
 # Clean all compiled binaries and temporary files
-clean-all: clean
+clean-all: clean clean-vendor
 	@echo "========================================================"
 	@echo "🧹 Cleaning all compiled binaries and temporary files..."
 	@echo "========================================================"
@@ -89,7 +98,7 @@ clean-all: clean
 	@echo "✅ Clean complete!"
 
 # Run the unit tests
-test: dirs
+test: dirs mcp-go-test
 	@echo "========================================================"
 	@echo "🧪 Running server unit tests..."
 	@echo "========================================================"
@@ -119,6 +128,53 @@ run-debug: build dirs config
 	@echo "⚠️  NOTE: Server requires valid OpsRamp credentials in config.yaml to function properly."
 	@echo "========================================================"
 	DEBUG=true PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME)
+
+# MCP-GO library management
+mcp-go-build:
+	@echo "========================================================"
+	@echo "🔨 Building forked MCP-GO library..."
+	@echo "========================================================"
+	@cd $(MCP_GO_DIR) && $(GO) build ./...
+	@echo "✅ MCP-GO library built successfully"
+
+mcp-go-test:
+	@echo "========================================================"
+	@echo "🧪 Testing forked MCP-GO library..."
+	@echo "========================================================"
+	@cd $(MCP_GO_DIR) && $(GO) test ./...
+	@echo "✅ MCP-GO library tests passed"
+
+mcp-go-update:
+	@echo "========================================================"
+	@echo "🔄 Updating forked MCP-GO library from upstream..."
+	@echo "========================================================"
+	@cd $(MCP_GO_DIR) && git fetch origin && git merge origin/main
+	@echo "✅ MCP-GO library updated successfully"
+	@echo "⚠️  NOTE: You may need to manually resolve merge conflicts"
+
+mcp-go-tidy:
+	@echo "========================================================"
+	@echo "🧹 Tidying MCP-GO dependencies..."
+	@echo "========================================================"
+	@cd $(MCP_GO_DIR) && $(GO) mod tidy
+	@echo "✅ MCP-GO dependencies tidied"
+
+mcp-go-go122:
+	@echo "========================================================"
+	@echo "🔧 Setting MCP-GO to use Go 1.22..."
+	@echo "========================================================"
+	@if grep -q "go 1.23" $(MCP_GO_DIR)/go.mod; then \
+		sed -i '' -e 's/go 1.23/go 1.22/' $(MCP_GO_DIR)/go.mod; \
+		echo "✅ Updated to Go 1.22"; \
+	else \
+		echo "ℹ️ Already using Go 1.22 or other version"; \
+	fi
+	@if grep -q "toolchain" $(MCP_GO_DIR)/go.mod; then \
+		sed -i '' -e '/toolchain/d' $(MCP_GO_DIR)/go.mod; \
+		echo "✅ Removed toolchain directive"; \
+	else \
+		echo "ℹ️ No toolchain directive found"; \
+	fi
 
 # Integration test - build, run server, and test integrations
 integration-test: build dirs config
@@ -259,6 +315,13 @@ help:
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
 	@echo "  test            - Run server unit tests"
+	@echo ""
+	@echo "Forked MCP-GO library targets:"
+	@echo "  mcp-go-build    - Build the forked MCP-GO library"
+	@echo "  mcp-go-test     - Run tests for the forked MCP-GO library"
+	@echo "  mcp-go-update   - Update forked MCP-GO library from upstream"
+	@echo "  mcp-go-tidy     - Run go mod tidy on the forked MCP-GO library"
+	@echo "  mcp-go-go122    - Set forked MCP-GO to use Go 1.22"
 	@echo ""
 	@echo "Python client targets:"
 	@echo "  client-setup            - Set up the Python client"

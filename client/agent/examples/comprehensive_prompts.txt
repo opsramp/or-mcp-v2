@@ -1,0 +1,125 @@
+# Comprehensive OpsRamp Integration Agent Test Prompts
+# This file contains prompts designed to exercise all integration tool capabilities
+
+# === DISCOVERY & LISTING OPERATIONS ===
+List all our integrations
+What integrations do we have?
+Show me all current integrations
+How many integrations are installed?
+Give me an overview of our integration environment
+
+Show me what integration types are available
+What can I integrate with?
+List all integration templates
+What integration types does OpsRamp support?
+Show me available integration categories
+
+# === DETAILED INSPECTION OPERATIONS ===
+Tell me about the hpe-alletra-LabRat integration
+Give me details on integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc
+What's the status of the vcenter-58.51 integration?
+Show me comprehensive details for the redfish-server-LabRat integration
+Analyze the hpe-alletra integration thoroughly
+
+What can you tell me about VMware vCenter integration type?
+Explain the hpe-alletra integration type capabilities
+How do I configure a redfish-server integration?
+What are the requirements for vcenter integration type?
+Show me details about the vcenter integration template
+
+# === CATEGORIZATION & FILTERING ===
+Show me all VMware integrations
+List integrations by category
+What compute integrations do we have?
+Show me all storage integrations
+Which integrations are currently enabled?
+What integrations are in SDK APP category?
+
+# === OPERATIONAL STATUS QUERIES ===
+Which integrations are active?
+Are there any disabled integrations?
+What's the health status of our integrations?
+Show me integration statuses
+Which integrations need attention?
+
+# === RESOURCE & MONITORING ANALYSIS ===
+What resources are being monitored by our integrations?
+Show me the latest discovery results
+What metrics are available from our integrations?
+Are there any alerts from our integrations?
+How many resources are discovered per integration?
+
+# === LIFECYCLE MANAGEMENT SCENARIOS ===
+How do I create a new VMware integration?
+What's needed to set up monitoring for HPE Alletra storage?
+Guide me through adding a new integration
+What configuration is required for redfish monitoring?
+
+How do I update integration credentials?
+I need to change the password for an integration
+Update the configuration for our VMware integration
+Modify settings for the storage integration
+
+How do I temporarily stop monitoring an integration?
+Disable the test integration
+Turn off monitoring for maintenance
+Pause the development environment integration
+
+How do I restart a disabled integration?
+Enable monitoring again for the storage array
+Bring the VMware integration back online
+Resume monitoring after maintenance
+
+When should I delete an integration?
+How do I permanently remove an old integration?
+Clean up unused integrations
+Remove the decommissioned server integration
+
+# === COMPARATIVE ANALYSIS ===
+Compare our VMware and HPE integrations
+What's the difference between our storage integrations?
+Which integration discovers the most resources?
+Compare monitoring capabilities across integrations
+Show me integration performance metrics
+
+# === TROUBLESHOOTING SCENARIOS ===
+Why isn't my integration discovering resources?
+The VMware integration stopped working
+I'm not seeing new alerts from storage
+Integration status shows as failed
+Troubleshoot discovery issues
+
+# === BEST PRACTICES & GUIDANCE ===
+What are best practices for integration management?
+How often should I update integration credentials?
+When should I use detailed vs basic integration info?
+What's the recommended integration monitoring strategy?
+How do I optimize integration performance?
+
+# === COMPLEX MULTI-STEP QUERIES ===
+Show me all integrations, then give me details on the VMware one
+List integration types, then explain how to set up storage monitoring
+What integrations do we have, and which ones need attention?
+Show me our compute integrations and their resource counts
+List all integrations, identify any issues, and suggest fixes
+
+# === EDGE CASES & ERROR HANDLING ===
+What happens if I try to enable an already enabled integration?
+Can I delete an integration that's currently monitoring resources?
+What if I provide wrong credentials during update?
+How do I recover from a failed integration configuration?
+What are the limits on number of integrations?
+
+# === REPORTING & ANALYTICS ===
+Generate a summary report of our integration environment
+What's our integration coverage across infrastructure?
+Show me integration deployment timeline
+Provide integration health dashboard view
+Create an inventory of monitored resources
+
+# === AUTOMATION & BULK OPERATIONS ===
+How can I automate integration deployment?
+What APIs are available for integration management?
+Can I bulk enable/disable integrations?
+How do I script integration configuration changes?
+What's the recommended CI/CD approach for integrations? 

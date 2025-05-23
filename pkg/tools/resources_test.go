@@ -3,14 +3,20 @@ package tools
 import (
 	"context"
 	"testing"
+
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
 )
 
 func TestResourcesTool_List(t *testing.T) {
-	tool, handler := NewResourcesMcpTool()
+	_, handler := NewResourcesMcpTool()
 	req := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "list"},
 		},
 	}
@@ -24,9 +30,15 @@ func TestResourcesTool_List(t *testing.T) {
 }
 
 func TestResourcesTool_Get(t *testing.T) {
-	tool, handler := NewResourcesMcpTool()
+	_, handler := NewResourcesMcpTool()
 	req := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "get", "id": "test-id"},
 		},
 	}
@@ -37,10 +49,16 @@ func TestResourcesTool_Get(t *testing.T) {
 }
 
 func TestResourcesTool_Create(t *testing.T) {
-	tool, handler := NewResourcesMcpTool()
+	_, handler := NewResourcesMcpTool()
 	config := map[string]interface{}{"name": "test-resource"}
 	req := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "create", "config": config},
 		},
 	}
@@ -51,10 +69,16 @@ func TestResourcesTool_Create(t *testing.T) {
 }
 
 func TestResourcesTool_Update(t *testing.T) {
-	tool, handler := NewResourcesMcpTool()
+	_, handler := NewResourcesMcpTool()
 	config := map[string]interface{}{"name": "updated-resource"}
 	req := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "update", "id": "test-id", "config": config},
 		},
 	}
@@ -65,9 +89,15 @@ func TestResourcesTool_Update(t *testing.T) {
 }
 
 func TestResourcesTool_Delete(t *testing.T) {
-	tool, handler := NewResourcesMcpTool()
+	_, handler := NewResourcesMcpTool()
 	req := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "delete", "id": "test-id"},
 		},
 	}

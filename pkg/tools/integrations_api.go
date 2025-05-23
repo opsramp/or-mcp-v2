@@ -366,60 +366,66 @@ func (a *OpsRampIntegrationsAPI) ListTypes(ctx context.Context) ([]types.Integra
 	// Log the raw response for debugging
 	a.logger.Debug("Raw response: %s", string(respBody))
 
-	// Try to parse as a structured response first with results
-	var structuredResp struct {
-		Results []map[string]interface{} `json:"results"`
+	// The response appears to be a direct array of integration objects
+	var rawIntegrationTypes []map[string]interface{}
+	err = json.Unmarshal(respBody, &rawIntegrationTypes)
+	if err != nil {
+		a.logger.Error("Failed to unmarshal integration types as array: %v", err)
+
+		// Try other formats as fallback
+
+		// Try to parse as a structured response with results
+		var structuredResp struct {
+			Results []map[string]interface{} `json:"results"`
+		}
+		err1 := json.Unmarshal(respBody, &structuredResp)
+		if err1 == nil && len(structuredResp.Results) > 0 {
+			rawIntegrationTypes = structuredResp.Results
+		} else {
+			return nil, fmt.Errorf("error unmarshaling integration types: %w", err)
+		}
 	}
 
-	// Direct array of integration types (alternate response format)
-	var directTypes []types.IntegrationType
+	// Convert the raw integration types to our structured format
+	var integrationTypes []types.IntegrationType
+	for _, raw := range rawIntegrationTypes {
+		intType := types.IntegrationType{
+			ID:          getString(raw, "id"),
+			Name:        getString(raw, "name"),
+			Description: getString(raw, "description"),
+			Category:    getString(raw, "category"),
+		}
 
-	// Try the structured format first
-	err1 := json.Unmarshal(respBody, &structuredResp)
-	if err1 == nil && len(structuredResp.Results) > 0 {
-		// Extract unique types from structured response
-		typeMap := make(map[string]types.IntegrationType)
-		for _, integration := range structuredResp.Results {
-			typeInfo, ok := integration["type"].(map[string]interface{})
-			if !ok {
-				continue
-			}
-
-			id, ok := typeInfo["id"].(string)
-			if !ok {
-				continue
-			}
-
-			name, ok := typeInfo["name"].(string)
-			if !ok {
-				continue
-			}
-
-			if _, exists := typeMap[id]; !exists {
-				typeMap[id] = types.IntegrationType{
-					ID:   id,
-					Name: name,
+		// If category is missing, try to get it from subCategory
+		if intType.Category == "" {
+			if subCat, ok := raw["subCategory"]; ok {
+				intType.Category = fmt.Sprintf("%v", subCat)
+			} else if subCatJson, ok := raw["subCategoryJson"].(map[string]interface{}); ok {
+				if name, ok := subCatJson["name"].(string); ok {
+					intType.Category = name
+				} else if displayName, ok := subCatJson["displayName"].(string); ok {
+					intType.Category = displayName
 				}
 			}
 		}
 
-		// Convert map to slice
-		var types []types.IntegrationType
-		for _, integrationType := range typeMap {
-			types = append(types, integrationType)
+		// Use displayName if name is missing
+		if intType.Name == "" && raw["displayName"] != nil {
+			intType.Name = fmt.Sprintf("%v", raw["displayName"])
 		}
 
-		return types, nil
+		integrationTypes = append(integrationTypes, intType)
 	}
 
-	// Try direct array format
-	err2 := json.Unmarshal(respBody, &directTypes)
-	if err2 == nil {
-		return directTypes, nil
-	}
+	return integrationTypes, nil
+}
 
-	// Both parsing attempts failed
-	return nil, fmt.Errorf("error unmarshaling integration types: structured error: %w, direct error: %v", err1, err2)
+// Helper function to safely get string values from map
+func getString(m map[string]interface{}, key string) string {
+	if val, ok := m[key]; ok && val != nil {
+		return fmt.Sprintf("%v", val)
+	}
+	return ""
 }
 
 // GetType returns a specific integration type

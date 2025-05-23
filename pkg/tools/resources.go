@@ -102,7 +102,7 @@ func NewResourcesMcpTool() (mcp.Tool, server.ToolHandlerFunc) {
 func resourcesToolHandler(tool *ResourcesTool) server.ToolHandlerFunc {
 	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		// Extract arguments
-		args := req.Params.Arguments
+		args := req.GetArguments()
 		action, _ := args["action"].(string)
 		id, _ := args["id"].(string)
 		config, _ := args["config"].(map[string]interface{})

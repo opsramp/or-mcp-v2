@@ -1,8 +1,6 @@
 module github.com/vobbilis/codegen/or-mcp-v2
 
-go 1.23
-
-toolchain go1.24.0
+go 1.22
 
 require (
 	github.com/mark3labs/mcp-go v0.23.1
@@ -14,3 +12,6 @@ require (
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 )
+
+// Use our local fork of mcp-go
+replace github.com/mark3labs/mcp-go => ./internal/mcp-go

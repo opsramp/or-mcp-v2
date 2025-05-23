@@ -104,10 +104,20 @@ func createIntegrationsTool(api IntegrationsAPI) (mcp.Tool, server.ToolHandlerFu
 // IntegrationsToolHandler routes requests to the correct method
 // Exported for testing purposes
 func IntegrationsToolHandler(ctx context.Context, req mcp.CallToolRequest, api IntegrationsAPI) (*mcp.CallToolResult, error) {
-	args := req.Params.Arguments
-	action, _ := args["action"].(string)
-	id, _ := args["id"].(string)
-	config, _ := args["config"].(map[string]interface{})
+	// Extract arguments using the helper methods
+	action := req.GetString("action", "")
+	id := req.GetString("id", "")
+
+	// Get arguments as a map
+	args := req.GetArguments()
+
+	// Extract config map if it exists
+	var config map[string]interface{}
+	if configArg, exists := args["config"]; exists && configArg != nil {
+		if configMap, ok := configArg.(map[string]interface{}); ok {
+			config = configMap
+		}
+	}
 
 	// Log the tool execution
 	logger := common.GetLogger()
@@ -143,7 +153,29 @@ func IntegrationsToolHandler(ctx context.Context, req mcp.CallToolRequest, api I
 		err = api.Disable(ctx, id)
 	case "listTypes":
 		logger.Info("Executing List integration types")
-		result, err = api.ListTypes(ctx)
+		integrationTypes, err := api.ListTypes(ctx)
+		if err != nil {
+			logger.Error("Error listing integration types: %v", err)
+			return nil, err
+		}
+
+		// Log the results for debugging
+		typesCount := len(integrationTypes)
+		logger.Debug("Found %d integration types", typesCount)
+
+		if typesCount > 0 {
+			// Log a sample of the integration types
+			sampleSize := min(3, typesCount)
+			for i := 0; i < sampleSize; i++ {
+				intType := integrationTypes[i]
+				logger.Debug("Integration type %d: ID=%s, Name=%s, Category=%s", i, intType.ID, intType.Name, intType.Category)
+			}
+		} else {
+			logger.Warn("No integration types found")
+		}
+
+		// Set the result
+		result = integrationTypes
 	case "getType":
 		logger.Info("Executing Get integration type with ID: %s", id)
 		result, err = api.GetType(ctx, id)
@@ -155,38 +187,31 @@ func IntegrationsToolHandler(ctx context.Context, req mcp.CallToolRequest, api I
 	// Log the result
 	logger.LogToolResult("integrations", action, result, err)
 
+	// If there's an error, return it
 	if err != nil {
-		logger.Error("Error executing %s: %v", action, err)
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
-		}, nil
+		return nil, err
 	}
 
-	// Convert result to string if it exists
-	resultText := "OK"
-	if result != nil {
-		// For large results, use JSON marshaling for better formatting
-		jsonResult, jsonErr := json.Marshal(result)
-		if jsonErr == nil {
-			resultText = string(jsonResult)
-			// Log the result (truncated if too large)
-			if len(resultText) > 1000 {
-				logger.Debug("Result (truncated): %s...", resultText[:1000])
-			} else {
-				logger.Debug("Result: %s", resultText)
-			}
-		} else {
-			// Fallback to simple string conversion
-			resultText = fmt.Sprintf("%v", result)
-			logger.Debug("Result: %s", resultText)
-		}
+	// Convert the result to a JSON string
+	resultJSON, err := json.Marshal(result)
+	if err != nil {
+		logger.Error("Failed to marshal result to JSON: %v", err)
+		return nil, err
 	}
 
-	logger.Info("Successfully executed %s", action)
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
-	}, nil
+	// Log the JSON result
+	logger.Debug("Result JSON: %s", string(resultJSON))
+
+	// Create the MCP tool result
+	toolResult := &mcp.CallToolResult{
+		Content: []mcp.Content{
+			mcp.TextContent{
+				Text: string(resultJSON),
+			},
+		},
+	}
+
+	return toolResult, nil
 }
 
 // MockIntegrationsAPI is a simple mock implementation of IntegrationsAPI

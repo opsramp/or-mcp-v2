@@ -9,6 +9,7 @@ The testing strategy involves multiple levels of testing:
 1. **Unit Tests** - Testing individual components in isolation
 2. **Integration Tests** - Testing the interaction between components
 3. **End-to-End Tests** - Testing the complete system workflow
+4. **AI Agent Tests** - Testing the AI agent's integration expertise
 
 ## Prerequisites
 
@@ -85,20 +86,64 @@ cd $GOPATH/src/github.com/opsramp/or-mcp-v2/client/python
 python -m pytest tests/integration/
 ```
 
-### Automated Testing with run_tests.sh
+## AI Agent Testing
 
-The Python client includes a script to automate testing:
+The OpsRamp AI Agent provides specialized expertise for handling integrations. Testing this capability is crucial to ensure the agent responds correctly to various integration-related queries.
+
+### Integration Expertise Testing
+
+The `test-integrations` target in the client Makefile runs a comprehensive test of the agent's ability to handle integration-related prompts:
 
 ```bash
-cd $GOPATH/src/github.com/opsramp/or-mcp-v2/client/python
-./run_tests.sh
+# Navigate to the client directory
+cd $GOPATH/src/github.com/opsramp/or-mcp-v2/client
+
+# Run all integration tests
+make test-integrations
+
+# Run tests without connecting to an actual MCP server (mock mode)
+make test-integrations SIMPLE_MODE=true
 ```
 
-This script:
-1. Starts the MCP server (if not already running)
-2. Runs unit tests
-3. Runs integration tests
-4. Stops the server (if it was started by the script)
+This test:
+1. Processes 37 different integration-related prompts from `agent/examples/sample_prompts.txt`
+2. Verifies the agent can respond appropriately to each type of query
+3. Generates detailed test results in `client/tests/integration_tests_results.txt`
+
+### Integration Test Categories
+
+The test prompts cover various aspects of integration management:
+
+1. **Basic integration listing** - Listing and summarizing available integrations
+2. **Integration details** - Getting detailed information about specific integrations
+3. **Filtering and querying** - Finding integrations by type, status, or category
+4. **Integration types** - Explaining different types of integrations 
+5. **Integration operations** - Enabling, disabling, creating, updating, and deleting integrations
+6. **Advanced queries** - Comparing integrations, analyzing installation history, etc.
+
+### Testing with Mock Data
+
+When run with `SIMPLE_MODE=true`, the tests use pre-defined mock responses to simulate interactions with HPE Alletra storage, Redfish server, and VMware vCenter integrations. This allows testing without an actual MCP server connection.
+
+### Using Persistent SSE Connection Tests
+
+For testing long-running connections with the MCP server, the `persistent_sse_example.py` script can be used:
+
+```bash
+# Start the server in one terminal
+cd $GOPATH/src/github.com/opsramp/or-mcp-v2
+make run-debug
+
+# In another terminal, run the persistent SSE example
+cd $GOPATH/src/github.com/opsramp/or-mcp-v2/client/python/examples
+python persistent_sse_example.py --run-time 300 --polling-interval 30
+```
+
+This script tests:
+- Establishing and maintaining a persistent SSE connection
+- Handling connection interruptions and recovery
+- Periodically checking integrations data over a long-running session
+- Using event handlers to process server messages
 
 ## End-to-End Testing
 
@@ -117,20 +162,6 @@ This script:
 2. Checks server health
 3. Tests the Python client against the server
 4. Verifies tool functionality
-
-## Testing the Browser-Like Client
-
-The browser-like client implementation can be tested directly:
-
-```bash
-# Start the server
-cd $GOPATH/src/github.com/opsramp/or-mcp-v2
-go run cmd/server/main.go
-
-# In another terminal, run the browser-like example
-cd $GOPATH/src/github.com/opsramp/or-mcp-v2/client/python
-python examples/browser_like_example.py --debug
-```
 
 ## Testing Individual Tools
 
@@ -162,6 +193,7 @@ Tests can be configured using environment variables:
 - `AUTO_START_SERVER` - Auto-start server for tests (default: false)
 - `CONNECTION_TIMEOUT` - Connection timeout in seconds (default: 10)
 - `REQUEST_TIMEOUT` - Request timeout in seconds (default: 30)
+- `SIMPLE_MODE` - Run in simple mode without actual MCP connection (default: false)
 
 ## Continuous Integration
 
@@ -173,6 +205,9 @@ make build && make test && make integration-test-debug
 
 # For client tests
 cd client/python && python -m pytest
+
+# For AI agent integration tests
+cd client && make test-integrations SIMPLE_MODE=true
 ```
 
 ## Troubleshooting Tests

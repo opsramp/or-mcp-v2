@@ -1,0 +1,55 @@
+# Sample prompts for testing OpsRamp AI Agent - Integration Expert
+# Each line is a single prompt
+
+# Basic integration listing
+List all integrations
+Show me all the integrations
+What integrations do we have installed?
+What integrations are available in our environment?
+Give me a summary of our integrations
+
+# Integration details (get/getDetailed)
+Tell me about integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc
+Show details for integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca
+Get detailed information about hpe-alletra-LabRat
+What's the status of the vcenter-58.51 integration?
+Tell me more about the redfish-server integration
+
+# Filtering and querying integrations
+List all SDK APP integrations
+Show me the VMware integrations
+Which integrations are currently enabled?
+What compute integrations do we have?
+List integrations that need updates
+
+# Integration types
+What integration types are available?
+List all integration types
+Tell me about the API integration type
+What's the VMware integration type used for?
+
+# Integration operations (enable/disable)
+How do I enable integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc?
+Can you disable the vcenter-58.51 integration?
+Enable the hpe-alletra-LabRat integration
+Disable integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca
+
+# Integration management (create/update/delete)
+How do I create a new integration?
+What's needed to create a VMware integration?
+Update the hpe-alletra-LabRat integration description
+What fields can I update for integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc?
+How to delete an integration?
+
+# Advanced queries and compound questions
+Compare our VMware and hpe-alletra integrations
+Which integration was installed most recently?
+How many integrations do we have by category?
+What's the difference between SDK APP and COMPUTE_INTEGRATION categories?
+What capabilities does the hpe-alletra integration provide?
+
+# General tool questions
+What integration actions are supported?
+How do I use the integrations tool?
+What can you tell me about OpsRamp integrations?
+Explain the integrations lifecycle 

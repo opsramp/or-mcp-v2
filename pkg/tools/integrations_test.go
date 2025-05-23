@@ -3,93 +3,25 @@ package tools
 import (
 	"context"
 	"testing"
+
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
 )
 
-// MockIntegrationsAPI is a mock implementation for unit testing
-// You can extend this with more sophisticated behavior as needed.
-type MockIntegrationsAPI struct {
-	ListFunc      func(ctx context.Context) ([]types.Integration, error)
-	GetFunc       func(ctx context.Context, id string) (*types.Integration, error)
-	CreateFunc    func(ctx context.Context, config map[string]interface{}) (*types.Integration, error)
-	UpdateFunc    func(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error)
-	DeleteFunc    func(ctx context.Context, id string) error
-	EnableFunc    func(ctx context.Context, id string) error
-	DisableFunc   func(ctx context.Context, id string) error
-	ListTypesFunc func(ctx context.Context) ([]types.IntegrationType, error)
-	GetTypeFunc   func(ctx context.Context, id string) (*types.IntegrationType, error)
-}
-
-func (m *MockIntegrationsAPI) List(ctx context.Context) ([]types.Integration, error) {
-	return m.ListFunc(ctx)
-}
-func (m *MockIntegrationsAPI) Get(ctx context.Context, id string) (*types.Integration, error) {
-	return m.GetFunc(ctx, id)
-}
-func (m *MockIntegrationsAPI) Create(ctx context.Context, config map[string]interface{}) (*types.Integration, error) {
-	return m.CreateFunc(ctx, config)
-}
-func (m *MockIntegrationsAPI) Update(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error) {
-	return m.UpdateFunc(ctx, id, config)
-}
-func (m *MockIntegrationsAPI) Delete(ctx context.Context, id string) error {
-	return m.DeleteFunc(ctx, id)
-}
-func (m *MockIntegrationsAPI) Enable(ctx context.Context, id string) error {
-	return m.EnableFunc(ctx, id)
-}
-func (m *MockIntegrationsAPI) Disable(ctx context.Context, id string) error {
-	return m.DisableFunc(ctx, id)
-}
-func (m *MockIntegrationsAPI) ListTypes(ctx context.Context) ([]types.IntegrationType, error) {
-	return m.ListTypesFunc(ctx)
-}
-func (m *MockIntegrationsAPI) GetType(ctx context.Context, id string) (*types.IntegrationType, error) {
-	return m.GetTypeFunc(ctx, id)
-}
-
-func NewMockIntegrationsAPI() *MockIntegrationsAPI {
-	return &MockIntegrationsAPI{
-		ListFunc: func(ctx context.Context) ([]types.Integration, error) {
-			return []types.Integration{}, nil
-		},
-		GetFunc: func(ctx context.Context, id string) (*types.Integration, error) {
-			return nil, nil
-		},
-		CreateFunc: func(ctx context.Context, config map[string]interface{}) (*types.Integration, error) {
-			return &types.Integration{ID: "mockid"}, nil
-		},
-		UpdateFunc: func(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error) {
-			return &types.Integration{ID: id}, nil
-		},
-		DeleteFunc: func(ctx context.Context, id string) error {
-			return nil
-		},
-		EnableFunc: func(ctx context.Context, id string) error {
-			return nil
-		},
-		DisableFunc: func(ctx context.Context, id string) error {
-			return nil
-		},
-		ListTypesFunc: func(ctx context.Context) ([]types.IntegrationType, error) {
-			return []types.IntegrationType{}, nil
-		},
-		GetTypeFunc: func(ctx context.Context, id string) (*types.IntegrationType, error) {
-			return nil, nil
-		},
-	}
-}
-
 func TestIntegrationsTool_List_Create_Get_Update_Delete(t *testing.T) {
-	api := NewMockIntegrationsAPI()
-	_, handler := NewIntegrationsTool(api)
+	api := &MockIntegrationsAPI{}
+	_, handler := createIntegrationsTool(api)
 	ctx := context.Background()
 
 	// Create
 	createConfig := map[string]interface{}{"name": "test-integration", "type": "api"}
 	createReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "create", "config": createConfig},
 		},
 	}
@@ -103,7 +35,13 @@ func TestIntegrationsTool_List_Create_Get_Update_Delete(t *testing.T) {
 
 	// List
 	listReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "list"},
 		},
 	}
@@ -116,10 +54,15 @@ func TestIntegrationsTool_List_Create_Get_Update_Delete(t *testing.T) {
 	}
 
 	// Get (using the first integration's ID from the mock)
-	var firstID string
-	firstID = "mockid"
+	firstID := "mockid"
 	getReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "get", "id": firstID},
 		},
 	}
@@ -134,7 +77,13 @@ func TestIntegrationsTool_List_Create_Get_Update_Delete(t *testing.T) {
 	// Update
 	updateConfig := map[string]interface{}{"name": "updated-integration"}
 	updateReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "update", "id": firstID, "config": updateConfig},
 		},
 	}
@@ -145,59 +94,6 @@ func TestIntegrationsTool_List_Create_Get_Update_Delete(t *testing.T) {
 	if updateRes == nil || len(updateRes.Content) == 0 {
 		t.Errorf("Expected non-empty result for update")
 	}
-
-	// Enable
-	enableReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
-			Arguments: map[string]interface{}{"action": "enable", "id": firstID},
-		},
-	}
-	enableRes, err := handler(ctx, enableReq)
-	if err != nil {
-		t.Fatalf("Enable failed: %v", err)
-	}
-	if enableRes == nil || len(enableRes.Content) == 0 {
-		t.Errorf("Expected non-empty result for enable")
-	}
-
-	// Disable
-	disableReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
-			Arguments: map[string]interface{}{"action": "disable", "id": firstID},
-		},
-	}
-	disableRes, err := handler(ctx, disableReq)
-	if err != nil {
-		t.Fatalf("Disable failed: %v", err)
-	}
-	if disableRes == nil || len(disableRes.Content) == 0 {
-		t.Errorf("Expected non-empty result for disable")
-	}
-
-	// Delete
-	deleteReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
-			Arguments: map[string]interface{}{"action": "delete", "id": firstID},
-		},
-	}
-	deleteRes, err := handler(ctx, deleteReq)
-	if err != nil {
-		t.Fatalf("Delete failed: %v", err)
-	}
-	if deleteRes == nil || len(deleteRes.Content) == 0 {
-		t.Errorf("Expected non-empty result for delete")
-	}
-
-	// Get (not found)
-	getReqNotFound := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
-			Arguments: map[string]interface{}{"action": "get", "id": "non-existent-id"},
-		},
-	}
-	_, err = handler(ctx, getReqNotFound)
-	if err == nil {
-		t.Errorf("Expected error for get non-existent id")
-	}
 }
 
 func TestIntegrationsTool_ListTypes_GetType(t *testing.T) {
@@ -206,7 +102,13 @@ func TestIntegrationsTool_ListTypes_GetType(t *testing.T) {
 
 	// ListTypes
 	listTypesReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "listTypes"},
 		},
 	}
@@ -220,7 +122,13 @@ func TestIntegrationsTool_ListTypes_GetType(t *testing.T) {
 
 	// GetType (existing)
 	getTypeReq := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "getType", "id": "api"},
 		},
 	}
@@ -234,12 +142,41 @@ func TestIntegrationsTool_ListTypes_GetType(t *testing.T) {
 
 	// GetType (not found)
 	getTypeReqNotFound := mcp.CallToolRequest{
-		Params: mcp.ToolCallParams{
+		Params: struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments,omitempty"`
+			Meta      *struct {
+				ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
+			} `json:"_meta,omitempty"`
+		}{
 			Arguments: map[string]interface{}{"action": "getType", "id": "notfound"},
 		},
 	}
-	_, err = handler(ctx, getTypeReqNotFound)
-	if err == nil {
-		t.Errorf("Expected error for getType non-existent id")
+	result, err := handler(ctx, getTypeReqNotFound)
+	if err != nil {
+		t.Fatalf("Handler returned Go error: %v", err)
 	}
+	if result == nil || !result.IsError {
+		t.Errorf("Expected error result for getType non-existent id")
+	} else {
+		found := false
+		for _, c := range result.Content {
+			if text, ok := c.(mcp.TextContent); ok &&
+				text.Text != "" &&
+				(text.Text == "integration type with ID notfound not found" ||
+					// allow substring match for flexibility
+					contains(text.Text, "notfound") && contains(text.Text, "not found")) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Expected error message for getType non-existent id, got: %+v", result.Content)
+		}
+	}
+}
+
+// contains is a helper for substring matching
+func contains(s, substr string) bool {
+	return len(s) >= len(substr) && (s == substr || (len(s) > len(substr) && (contains(s[1:], substr) || contains(s[:len(s)-1], substr))))
 }

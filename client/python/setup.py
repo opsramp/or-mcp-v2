@@ -7,7 +7,7 @@ setup(
     package_dir={"": "src"},
     install_requires=[
         "aiohttp>=3.8.0",
-        "sseclient-py>=1.7.2",
+        "aiohttp-sse-client>=0.2.1",
         "requests>=2.28.0",
     ],
     python_requires=">=3.7",

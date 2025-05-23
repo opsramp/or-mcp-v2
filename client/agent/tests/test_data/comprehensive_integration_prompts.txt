@@ -1,0 +1,123 @@
+# COMPREHENSIVE OPSRAMP INTEGRATION PROMPTS
+# These prompts are designed to trigger multiple tool calls and cover all integration scenarios
+# Each prompt is categorized by the complexity and type of operations it should trigger
+
+## CATEGORY 1: DISCOVERY & INVENTORY (Basic Multi-Tool Scenarios)
+Show me all our integrations and tell me which ones need updates
+List all integrations and give me details on the HPE Alletra one
+What integrations do we have and what's the status of each one?
+Display all our integrations and highlight any that are down or need attention
+Show me our integration inventory and explain what each type does
+List our integrations and tell me about available integration types we haven't used yet
+
+## CATEGORY 2: COMPARATIVE ANALYSIS (Multi-Integration Analysis)
+Compare all our SDK APP integrations and tell me which ones are performing best
+Show me the differences between our HPE Alletra and Redfish integrations
+What's the difference between our storage integrations and compute integrations?
+Compare the installation dates of all our integrations and identify the newest ones
+Analyze all our integrations and tell me which categories we're missing
+Show me which of our integrations have updates available and prioritize them
+
+## CATEGORY 3: DETAILED TROUBLESHOOTING (Deep Analysis Queries)
+Give me comprehensive details on integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc and analyze any issues
+The HPE Alletra integration shows as DOWN - give me full details and troubleshooting steps
+Analyze the detailed configuration of our vcenter-58.51 integration and check for problems
+Show me complete details on all our integrations that have connection issues
+Deep dive into integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca and explain its current state
+Give me detailed analysis of why integration hpe-alletra-LabRat might be showing status DOWN
+
+## CATEGORY 4: OPERATIONAL WORKFLOWS (Multi-Step Operations)
+I need to understand how to set up a new VMware integration - show me the type details and creation steps
+Walk me through disabling the vcenter-58.51 integration temporarily for maintenance
+Show me how to update credentials for INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc
+I want to add monitoring for new HPE storage - show me available types and setup process
+Guide me through enabling a disabled integration and verify it's working properly
+Help me delete an old integration safely - show me the process and what to check first
+
+## CATEGORY 5: COMPLIANCE & SECURITY ANALYSIS
+Audit all our integrations for security compliance - check authentication methods and credentials
+Show me which integrations have API keys configured and their security status
+Analyze all integration authentication configurations and identify potential vulnerabilities
+List integrations by their security authentication types and recommend improvements
+Check all our integrations for proper credential management and flag any issues
+Review integration access patterns and identify unused or redundant integrations
+
+## CATEGORY 6: CAPACITY & PERFORMANCE PLANNING
+Analyze our integration ecosystem and recommend what additional integrations we need
+Show me integration utilization patterns and identify overloaded or underutilized systems
+Compare our current integrations with available types and suggest expansion opportunities
+Evaluate our monitoring coverage gaps by comparing active integrations with available types
+Assess integration health across all categories and recommend optimization strategies
+Plan integration roadmap by analyzing current state vs available integration types
+
+## CATEGORY 7: INCIDENT RESPONSE & DIAGNOSIS
+Something is wrong with our HPE storage monitoring - diagnose all related integrations
+Our VMware alerts stopped working - check the vcenter integration and troubleshoot
+We're missing metrics from integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc - investigate fully
+The redfish-server integration stopped reporting - give me complete diagnostic information
+Integration monitoring seems inconsistent - analyze all integrations and identify patterns
+We have alert gaps - analyze which integrations might be down or misconfigured
+
+## CATEGORY 8: UPGRADE & MAINTENANCE PLANNING
+Show me all integrations that need updates and plan an upgrade sequence
+Plan maintenance windows for integrations that need attention
+Identify which integrations are running older versions and prioritize updates
+Show me the lifecycle status of all our integrations and recommend maintenance actions
+Plan integration updates considering dependencies and business impact
+Evaluate our integration versions against available updates and create update roadmap
+
+## CATEGORY 9: BUSINESS IMPACT ANALYSIS
+Analyze which integrations are critical for our infrastructure monitoring
+Show me integration coverage across our IT environment and identify gaps
+Evaluate the business impact if each integration went down
+Prioritize integrations by importance and monitoring coverage
+Assess our integration portfolio and recommend consolidation opportunities
+Show me which systems lack integration coverage and business risk implications
+
+## CATEGORY 10: COMPLEX TECHNICAL QUERIES
+The profile shows registered:true but status:DOWN for hpe-alletra-LabRat - explain this contradiction
+Integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc has 0 monitored metrics - investigate why
+Why does vcenter-58.51 show enabled status but empty version and app fields?
+Analyze the inbound authentication configuration for all our integrations
+The HPE Alletra integration shows OAUTH2 auth but has an API key - explain this setup
+Compare the profile configurations across all our integrations and identify anomalies
+
+## CATEGORY 11: INTEGRATION TYPE EXPLORATION
+What cloud integrations are available that we haven't implemented yet?
+Show me all available SDK APP types and compare with what we currently have
+Explore monitoring integration options and recommend additions to our current setup
+What storage integration types exist beyond what we're currently using?
+Investigate automation integration possibilities for our environment
+Show me all available integration categories and assess our coverage in each
+
+## CATEGORY 12: REPORTING & DOCUMENTATION
+Generate a comprehensive report of our entire integration ecosystem
+Document the current state of all integrations with detailed analysis
+Create an integration inventory report with recommendations
+Summarize our integration portfolio for management review
+Generate detailed documentation for each active integration
+Prepare integration status report for quarterly review
+
+## CATEGORY 13: ADVANCED CONFIGURATION SCENARIOS
+Show me how to configure high availability for critical integrations
+Plan disaster recovery for our integration monitoring setup
+Configure monitoring redundancy across multiple integration types
+Set up automated failover for critical integration monitoring
+Design integration architecture for maximum reliability
+Plan integration configuration for multi-site deployment
+
+## CATEGORY 14: REAL-TIME OPERATIONS
+Check current operational status of all integrations right now
+Monitor real-time health of critical integrations
+Investigate current connectivity issues across all integrations
+Assess immediate impact of any integration failures
+Real-time troubleshooting of integration performance issues
+Current status check and immediate remediation recommendations
+
+## CATEGORY 15: FUTURE PLANNING & STRATEGY
+Design integration strategy for next 6 months based on current gaps
+Plan integration expansion to cover additional infrastructure components
+Evaluate emerging integration types for future implementation
+Strategic assessment of integration portfolio evolution needs
+Long-term integration architecture planning and roadmap development
+Innovation opportunities in our integration monitoring approach 

@@ -1,0 +1,53 @@
+# ULTRA-COMPLEX OPSRAMP INTEGRATION PROMPTS - MULTI-TOOL SCENARIOS
+# These prompts are specifically designed to trigger multiple tool calls and complex analysis workflows
+
+## CATEGORY 1: ULTRA DEEP COMPARATIVE ANALYSIS (Multi-Tool Multi-Action)
+First show me all our integrations, then get detailed information on the HPE Alletra integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally show me all available integration types to compare what we have versus what's available
+Show me a comprehensive comparison by first listing all our integrations, then getting detailed info on each one individually, and finally showing me available integration types we could add
+Perform a complete audit by listing all integrations, getting detailed information on INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc and INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, then showing me all available types and recommending additions
+Give me a full ecosystem analysis starting with all current integrations, detailed analysis of the vcenter-58.51 integration, comprehensive details on the HPE Alletra integration, and finally show me what integration types are available for expansion
+
+## CATEGORY 2: SECURITY AND COMPLIANCE DEEP DIVE (Multi-Integration Analysis)
+Analyze the security posture of all our integrations by first listing them all, then getting detailed configuration information for INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc to examine its authentication setup, and comparing with available secure integration types
+Perform a comprehensive security audit by examining all integrations, then deep diving into the authentication configuration of integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally reviewing what secure integration options are available
+Conduct a compliance review starting with all current integrations, detailed security analysis of INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and comparison with available integration types that meet security standards
+
+## CATEGORY 3: TROUBLESHOOTING WORKFLOWS (Multi-Step Diagnostic Analysis)
+Help me troubleshoot our monitoring gaps by first showing all integrations, then getting comprehensive details on the HPE Alletra integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc to understand why it shows DOWN status, and finally show me alternative integration types
+Diagnose our integration health by listing all current integrations, performing detailed analysis on INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc and INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, then showing available integration types for redundancy
+Investigate monitoring issues by first getting all integration statuses, then deep diving into detailed configuration of the problematic HPE Alletra integration, and exploring what backup integration types are available
+
+## CATEGORY 4: CAPACITY PLANNING AND EXPANSION ANALYSIS (Strategic Multi-Tool Workflows)
+Plan our integration expansion strategy by first inventorying all current integrations, analyzing detailed capabilities of our storage integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, then exploring all available integration types to identify gaps and opportunities
+Develop a comprehensive monitoring roadmap starting with current integration inventory, detailed analysis of our VMware integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and complete review of available integration types for strategic planning
+Create an integration architecture plan by examining all current integrations, getting detailed technical specifications for INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and analyzing available integration types for optimal coverage
+
+## CATEGORY 5: INCIDENT RESPONSE AND OPERATIONAL INTELLIGENCE (Complex Multi-Action Scenarios)
+Respond to a critical monitoring alert by first checking all integration statuses, then performing detailed diagnostics on integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc which shows DOWN status, and finally exploring alternative integration types for immediate replacement
+Handle a service degradation incident by listing all integrations to identify affected systems, getting comprehensive details on the failing vcenter integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and researching available integration types for rapid recovery
+Manage a complex outage scenario by inventorying all integration health, deep diving into the problematic redfish integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and evaluating all available integration types for business continuity
+
+## CATEGORY 6: ADVANCED CONFIGURATION AND OPTIMIZATION (Multi-Integration Deep Analysis)
+Optimize our integration portfolio by first reviewing all current integrations, then analyzing the detailed configuration and performance metrics of INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally comparing with advanced integration types available for better performance
+Enhance our monitoring effectiveness by examining all integration statuses, performing detailed analysis of the compute integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd configuration, and exploring next-generation integration types for improved capabilities
+Modernize our integration architecture by inventorying current capabilities, deep diving into the technical details of integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and researching cutting-edge integration types for technological advancement
+
+## CATEGORY 7: BUSINESS INTELLIGENCE AND REPORTING (Comprehensive Multi-Tool Analysis)
+Generate an executive dashboard by first collecting all integration data, then performing detailed analysis of our most critical integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally comparing our portfolio against all available integration types for strategic insights
+Create a comprehensive integration report starting with complete inventory, detailed technical assessment of vcenter integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and market analysis of available integration types for competitive positioning
+Develop operational intelligence by examining all current integrations, conducting detailed performance analysis of integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and evaluating emerging integration types for future opportunities
+
+## CATEGORY 8: RISK ASSESSMENT AND MITIGATION (Complex Multi-Step Analysis)
+Assess our integration risk profile by first cataloging all current integrations, then performing detailed vulnerability analysis of the HPE Alletra integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc with its DOWN status, and finally reviewing secure integration types for risk mitigation
+Evaluate business continuity risks by listing all integration dependencies, conducting detailed impact analysis of the critical vcenter integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and exploring redundant integration types for disaster recovery
+Perform comprehensive risk management by inventorying all integration points of failure, deep diving into the configuration vulnerabilities of integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and researching resilient integration types for risk reduction
+
+## CATEGORY 9: INTEGRATION LIFECYCLE MANAGEMENT (End-to-End Workflow Analysis)
+Manage our integration lifecycle by first auditing all current integrations, then analyzing the deployment status and configuration of INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally exploring next-generation integration types for technology refresh
+Plan integration evolution by examining all existing capabilities, performing detailed lifecycle analysis of our oldest integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and researching emerging integration types for modernization roadmap
+Orchestrate integration transformation by cataloging current state, conducting detailed migration assessment of integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and evaluating advanced integration types for digital transformation
+
+## CATEGORY 10: ADVANCED MONITORING AND OBSERVABILITY (Multi-Layer Analysis)
+Enhance our observability strategy by first mapping all current integrations, then analyzing the monitoring capabilities and limitations of integration INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc, and finally exploring advanced observability integration types for comprehensive monitoring
+Improve monitoring coverage by inventorying all integration touchpoints, conducting detailed telemetry analysis of the vcenter integration INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd, and researching next-gen monitoring integration types for full-stack visibility
+Optimize monitoring architecture by examining all current monitoring integrations, performing detailed metrics analysis of the redfish integration INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca, and evaluating cutting-edge monitoring integration types for predictive analytics 

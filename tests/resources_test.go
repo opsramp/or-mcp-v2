@@ -11,12 +11,12 @@ import (
 )
 
 func TestResourcesTool(t *testing.T) {
-	// Create a temporary log directory
-	logDir := filepath.Join(os.TempDir(), "or-mcp-test-logs")
+	// Create a log directory in the project root output/logs
+	logDir := filepath.Join("..", "output", "logs")
 	logFile := "resources-test.log"
 
 	// Clean up after the test
-	defer os.RemoveAll(logDir)
+	defer os.Remove(filepath.Join(logDir, logFile))
 
 	// Initialize the logger
 	customLogger, err := common.InitLogger(common.DEBUG, logDir, logFile)
