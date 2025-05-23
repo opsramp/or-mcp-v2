@@ -123,7 +123,7 @@ make analyze-results
 Our testing platform works with **real OpsRamp integration data**, including:
 
 - **Actual Integration IDs**: `INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc`, `INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca`
-- **Real User Emails**: `220203-murthy.chelankuri@hpe.com`
+- **Real User Emails**: `user-XXXXX@example.com` (redacted)
 - **Live Authentication**: Real API keys and authentication configs
 - **Operational Metadata**: Installation times, versions, states, profiles
 
@@ -210,8 +210,8 @@ make clean              # Clean build artifacts
 - **Advanced complexity**: Average score 9.2/10
 
 ### Real Integration Data
-- **HPE Employee Email**: `220203-murthy.chelankuri@hpe.com`
-- **Authentication Key**: `4mfxXKZ5UeuCDFKkPzSfGgGu7nW3jhUR` (example from logs)
+- **User Email**: `user-XXXXX@example.com` (redacted)
+- **Authentication Key**: `XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` (redacted)
 - **Server Correlation**: Error correlation between client logs and server responses
 - **Structured Payloads**: Complete request/response traces with timestamps
 

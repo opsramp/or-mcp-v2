@@ -673,7 +673,7 @@ class Agent:
                 "version": "7.0.0",
                 "updateAvailable": True,
                 "state": "Deployed",
-                "installedBy": "220203-murthy.chelankuri@hpe.com",
+                "installedBy": "user-XXXXX@example.com",
                 "installedTime": "2025-02-18T15:34:32+0000",
                 "modifiedTime": "2025-02-18T17:02:06+0000"
             },
@@ -686,7 +686,7 @@ class Agent:
                 "version": "7.0.0",
                 "updateAvailable": True,
                 "state": "Deployed",
-                "installedBy": "220203-murthy.chelankuri@hpe.com",
+                "installedBy": "user-XXXXX@example.com",
                 "installedTime": "2025-02-18T15:25:00+0000",
                 "modifiedTime": "2025-02-18T15:25:45+0000"
             },
@@ -696,7 +696,7 @@ class Agent:
                 "category": "COMPUTE_INTEGRATION",
                 "status": "enabled",
                 "ipAddress": "10.54.58.51",
-                "installedBy": "220203-murthy.chelankuri@hpe.com",
+                "installedBy": "user-XXXXX@example.com",
                 "installedTime": "2025-02-18T15:40:23+0000",
                 "modifiedTime": "2025-02-18T16:50:52+0000"
             }
