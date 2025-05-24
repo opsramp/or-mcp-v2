@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -296,6 +296,88 @@ test-with-client: build dirs config
 		exit 1; \
 	fi
 
+# SECURITY SCANNING TARGETS
+# ========================
+
+# Comprehensive security scan (runs all security checks)
+security-full: dirs
+	@echo "========================================================"
+	@echo "🛡️  COMPREHENSIVE SECURITY SCAN"
+	@echo "========================================================"
+	@./tests/security/comprehensive-security-scan.sh
+
+# Quick security scan (Go code + secrets)
+security-scan: security-go security-secrets
+	@echo "========================================================"
+	@echo "✅ Quick security scan complete!"
+	@echo "========================================================"
+
+# Go code security scan
+security-go: dirs
+	@echo "========================================================"
+	@echo "🐹 Go Code Security Scan"
+	@echo "========================================================"
+	@./tests/security/go-security.sh
+
+# Python code security scan
+security-python: dirs
+	@echo "========================================================"
+	@echo "🐍 Python Code Security Scan"
+	@echo "========================================================"
+	@./tests/security/python-security.sh
+
+# Secret detection scan
+security-secrets: dirs
+	@echo "========================================================"
+	@echo "🔐 Secret Detection Scan"
+	@echo "========================================================"
+	@./tests/security/secret-scan.sh
+
+# Dependency vulnerability scan
+security-deps: dirs
+	@echo "========================================================"
+	@echo "📦 Dependency Vulnerability Scan"
+	@echo "========================================================"
+	@./tests/security/dependency-scan.sh
+
+# Clean security reports
+security-clean:
+	@echo "========================================================"
+	@echo "🧹 Cleaning security reports..."
+	@echo "========================================================"
+	@rm -rf tests/security/reports/*
+	@echo "✅ Security reports cleaned"
+
+# Security help
+security-help:
+	@echo "========================================================"
+	@echo "🛡️  SECURITY SCANNING HELP"
+	@echo "========================================================"
+	@echo "Available security targets:"
+	@echo "  security-full    - Run comprehensive security scan (all checks)"
+	@echo "  security-scan    - Run quick security scan (Go + secrets)"
+	@echo "  security-go      - Scan Go code for security vulnerabilities"
+	@echo "  security-python  - Scan Python code for security vulnerabilities"
+	@echo "  security-secrets - Detect hardcoded credentials and secrets"
+	@echo "  security-deps    - Scan dependencies for vulnerabilities"
+	@echo "  security-clean   - Clean all security reports"
+	@echo "  security-help    - Show this security help"
+	@echo ""
+	@echo "Security reports are generated in: tests/security/reports/"
+	@echo ""
+	@echo "🚨 SECURITY LEVELS:"
+	@echo "  Exit Code 0 = ✅ PASS (no issues found)"
+	@echo "  Exit Code 1 = ⚠️  WARNINGS (issues found, review recommended)"
+	@echo "  Exit Code 2 = 🚨 CRITICAL (critical issues, immediate action required)"
+	@echo ""
+	@echo "🔧 TOOLS USED:"
+	@echo "  - gosec:      Go static security analyzer"
+	@echo "  - bandit:     Python security linter"
+	@echo "  - govulncheck: Go vulnerability database checker"
+	@echo "  - pip-audit:  Python package vulnerability scanner"
+	@echo "  - custom:     Secret detection with regex patterns"
+	@echo ""
+
 # Show help
 help:
 	@echo "========================================================"
@@ -315,6 +397,11 @@ help:
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
 	@echo "  test            - Run server unit tests"
+	@echo ""
+	@echo "Security targets:"
+	@echo "  security-full   - Run comprehensive security scan"
+	@echo "  security-scan   - Run quick security scan"
+	@echo "  security-help   - Show detailed security help"
 	@echo ""
 	@echo "Forked MCP-GO library targets:"
 	@echo "  mcp-go-build    - Build the forked MCP-GO library"

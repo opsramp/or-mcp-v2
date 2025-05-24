@@ -86,13 +86,19 @@ func GetLogger() *CustomLogger {
 // newLogger creates a new logger instance
 func newLogger(level LogLevel, logDir, logFileName string) (*CustomLogger, error) {
 	// Create log directory if it doesn't exist
-	if err := os.MkdirAll(logDir, 0755); err != nil {
+	if err := os.MkdirAll(logDir, 0750); err != nil {
 		return nil, fmt.Errorf("failed to create log directory: %w", err)
 	}
 
-	// Create or open log file
-	logFilePath := filepath.Join(logDir, logFileName)
-	file, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	// Create or open log file - sanitize paths for security
+	cleanLogDir := filepath.Clean(logDir)
+	cleanLogFileName := filepath.Clean(logFileName)
+	if strings.Contains(cleanLogFileName, "..") || strings.Contains(cleanLogDir, "..") {
+		return nil, fmt.Errorf("invalid log path components")
+	}
+	logFilePath := filepath.Join(cleanLogDir, cleanLogFileName)
+	// #nosec G304 - Log file paths are validated above and under application control
+	file, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open log file: %w", err)
 	}

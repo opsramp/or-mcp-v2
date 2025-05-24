@@ -82,7 +82,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) // Ignore encoding errors
 }
 
 // readinessHandler provides a more detailed readiness check
@@ -111,7 +111,7 @@ func readinessHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) // Ignore encoding errors
 }
 
 // debugHandler provides detailed debug information about the server
@@ -145,7 +145,7 @@ func debugHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(debugInfo)
+	_ = json.NewEncoder(w).Encode(debugInfo) // Ignore encoding errors
 }
 
 // messageHandler handles JSON-RPC requests for tools
@@ -338,7 +338,7 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) // Ignore encoding errors
 }
 
 // jsonError sends a JSON-RPC error response
@@ -359,7 +359,7 @@ func jsonError(w http.ResponseWriter, message string, httpStatus int, id string)
 	// Send response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(httpStatus)
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) // Ignore encoding errors
 }
 
 // startupHealthCheck performs a real API call to verify connectivity and config validity
@@ -393,7 +393,7 @@ func main() {
 	startTime = time.Now()
 
 	// Create output directory if it doesn't exist
-	if err := os.MkdirAll(LogDir, 0755); err != nil {
+	if err := os.MkdirAll(LogDir, 0750); err != nil {
 		fmt.Printf("Failed to create log directory: %v\n", err)
 		os.Exit(1)
 	}

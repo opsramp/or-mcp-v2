@@ -25,7 +25,7 @@ const (
 
 func main() {
 	// Create output directory if it doesn't exist
-	if err := os.MkdirAll(LogDir, 0755); err != nil {
+	if err := os.MkdirAll(LogDir, 0750); err != nil {
 		log.Printf("Failed to create log directory: %v", err)
 	}
 

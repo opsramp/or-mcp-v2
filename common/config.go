@@ -60,7 +60,13 @@ func loadConfigFromFile(configPath string) (*Config, error) {
 		}
 	}
 
-	data, err := os.ReadFile(configPath)
+	// Sanitize config path for security
+	cleanConfigPath := filepath.Clean(configPath)
+	if strings.Contains(cleanConfigPath, "..") {
+		return nil, fmt.Errorf("invalid config path: %s", configPath)
+	}
+
+	data, err := os.ReadFile(cleanConfigPath)
 	if err != nil {
 		return nil, err
 	}

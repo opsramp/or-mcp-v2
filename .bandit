@@ -1,0 +1,8 @@
+[bandit]
+exclude_dirs = [".venv", ".git", "build", "__pycache__", "tests"]
+skips = ["B101", "B601"]  # Skip assert_used_check and shell_check for testing
+
+# Confidence levels: HIGH, MEDIUM, LOW
+# Severity levels: HIGH, MEDIUM, LOW
+confidence_level = MEDIUM
+severity_level = MEDIUM

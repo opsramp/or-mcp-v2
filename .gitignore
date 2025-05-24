@@ -45,3 +45,4 @@ scripts/resources/output/
 *.bak
 .DS_Store
 config.yaml
+tests/security/reports/

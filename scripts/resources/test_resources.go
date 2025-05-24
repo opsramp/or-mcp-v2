@@ -24,7 +24,7 @@ const (
 // main is the entry point for the test script
 func main() {
 	// Create output directory if it doesn't exist
-	if err := os.MkdirAll(TestLogDir, 0755); err != nil {
+	if err := os.MkdirAll(TestLogDir, 0750); err != nil {
 		fmt.Printf("Failed to create log directory: %v\n", err)
 		os.Exit(1)
 	}
