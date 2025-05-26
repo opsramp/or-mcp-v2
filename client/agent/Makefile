@@ -1,4 +1,4 @@
-.PHONY: all setup test clean run-example help test-basic test-complex test-comprehensive test-all analyze-results run-interactive test-interactive test-single
+.PHONY: all setup test clean run-example help test-basic test-complex test-comprehensive test-all analyze-results run-interactive test-interactive test-single chat-interactive
 
 # Variables
 PYTHON := python3
@@ -34,7 +34,9 @@ test:
 test-basic:
 	@echo "$(GREEN)Running basic integration tests (3 prompts)...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py --max-tests 3
+	cd $(TEST_DIR) && OPENAI_MODEL=gpt-4-turbo $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
+		--prompts-file test_data/basic_integration_prompts.txt \
+		--max-tests 3
 
 # Medium test with 10 prompts  
 test-medium:
@@ -122,6 +124,18 @@ run-batch:
 run-prompt:
 	@echo "$(GREEN)Running single prompt example...$(NC)"
 	$(PYTHON) examples/chat_client.py --prompt "List all integrations"
+	
+# True interactive mode - Chat directly with the agent
+chat-interactive: setup
+	@echo "$(GREEN)Starting interactive chat with AI agent...$(NC)"
+	@echo "$(YELLOW)Type your questions directly and the agent will respond in real-time$(NC)"
+	@echo "$(YELLOW)Press Ctrl+C to exit the chat session$(NC)"
+	@echo "$(YELLOW)Example questions to try:$(NC)"
+	@echo "  - \"List all integrations in our environment\""
+	@echo "  - \"Show me all resources with critical status\""
+	@echo "  - \"Generate a report of our infrastructure\""
+	@echo ""
+	$(PYTHON) examples/chat_client.py
 
 # Development and debugging
 dev-test:
@@ -141,7 +155,7 @@ run-interactive:
 	@echo "$(GREEN)Running enhanced interactive testing mode...$(NC)"
 	@echo "$(YELLOW)This uses our proven comprehensive testing engine for reliable tool usage$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && OPENAI_MODEL=gpt-4-turbo $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file test_data/interactive_test_scenarios.txt \
 		--max-tests 5
 
@@ -334,18 +348,19 @@ help:
 	@echo "  cleanup-test-data-organized    - Clean up old test data"
 	@echo ""
 	@echo "$(YELLOW)Interactive Commands:$(NC)"
-	@echo "  run-interactive - Run enhanced interactive testing (RECOMMENDED)"
-	@echo "  run-example     - Run original chat example"
-	@echo "  run-prompt      - Run with single prompt"
-	@echo "  run-batch       - Run batch processor example"
+	@echo "  chat-interactive - Start true interactive chat with the agent (RECOMMENDED)"
+	@echo "  run-interactive  - Run enhanced interactive testing with predefined prompts"
+	@echo "  run-example      - Run original chat example"
+	@echo "  run-prompt       - Run with single prompt"
+	@echo "  run-batch        - Run batch processor example"
 	@echo ""
 	@echo "$(YELLOW)Interactive Testing Commands:$(NC)"
 	@echo "  test-interactive  - Interactive test with predefined scenarios"
 	@echo "  test-single       - Single question interactive test"
 	@echo ""
 	@echo "$(YELLOW)Examples:$(NC)"
-	@echo "  make run-interactive                               # Enhanced interactive mode"
-	@echo "  make test-interactive                              # Interactive testing"
-	@echo "  make test-basic                                    # Quick 3-prompt test"
-	@echo "  make test-custom PROMPTS_FILE=my_prompts.txt       # Custom prompts"
-	@echo "  make test-custom PROMPTS_FILE=test_data/ultra_complex_integration_prompts.txt MAX_TESTS=2"
+	@echo "  make chat-interactive                               # True interactive chat mode"
+	@echo "  make run-interactive                                # Enhanced interactive mode with preset prompts"
+	@echo "  make test-basic                                     # Quick 3-prompt test"
+	@echo "  make test-custom PROMPTS_FILE=my_prompts.txt        # Custom prompts"
+	@echo "  make test-single QUESTION=\"Show all AWS resources\" # Test a specific question"

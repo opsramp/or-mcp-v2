@@ -1,0 +1,5 @@
+Tell me about both our integrations and resources in one summary
+List the integrations first, and then show what resources we have
+I need a complete picture of our environment - show all integrations and resources
+Generate a report that shows each integration and how many resources it has
+For each integration type we have, tell me how many resources exist of that type 

@@ -27,8 +27,15 @@ git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
 
 # 2. Set up Python environment (creates virtual env and installs dependencies)
-make python-setup
+make python-setup  # Requires Python 3.8+
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# If make python-setup fails, try manual setup:
+# python3 -m venv .venv
+# source .venv/bin/activate
+# pip install -e client/agent 
+# pip install -e "client/agent[all]"
+# pip install -e client/python
 
 # 3. Configure (see CONFIGURATION_GUIDE.md for details)
 cp config.yaml.template config.yaml
@@ -37,7 +44,10 @@ cd client/agent && cp .env.template .env && cd ../..
 # 4. Build and run
 make all && make health-check
 
-# 5. Test the platform
+# 5. Chat directly with the agent (simplest way)
+make chat-interactive
+
+# 6. Run automated tests
 cd client/agent
 make test-integrations-basic-organized
 make test-resources-basic-organized
@@ -75,8 +85,9 @@ make test-complete-organized
 # Multi-provider testing (LLM comparison)
 make test-all-providers-organized
 
-# Interactive testing
-make run-interactive
+# Interactive modes
+make chat-interactive     # True interactive chat
+make run-interactive      # Test with preset prompts
 ```
 
 ## 🎯 Use Cases

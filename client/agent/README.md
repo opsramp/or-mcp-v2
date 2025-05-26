@@ -60,7 +60,19 @@ make setup
 make check-server
 ```
 
-### Step 2: Run Basic Tests
+### Step 2: Chat Directly with the Agent
+
+```bash
+# Start a true interactive chat with the AI agent
+make chat-interactive
+```
+
+This puts you in a real-time chat with the agent where you can ask questions like:
+- "What integrations do we have in our environment?"
+- "Show me all AWS resources with high CPU usage"
+- "Generate a report of our infrastructure"
+
+### Step 3: Run Automated Tests
 
 ```bash
 # Test integration functionality
@@ -73,7 +85,7 @@ make test-resources-basic-organized
 make test-complete-organized
 ```
 
-### Step 3: Generate Reports
+### Step 4: Generate Reports
 
 ```bash
 # Generate HTML test report

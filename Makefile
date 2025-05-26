@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup chat-interactive
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -457,6 +457,7 @@ help:
 	@echo "  kill-server     - Find and shut down any running MCP server"
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
+	@echo "  chat-interactive- Start an interactive chat with the AI agent"
 	@echo "  test            - Run server unit tests"
 	@echo "  test-resources-basic      - Run basic resource management tests"
 	@echo "  test-resources-coverage   - Run resource tests with coverage report"
@@ -519,3 +520,18 @@ python-setup:
 	@echo "⚠️  Remember to activate the virtual environment with:"
 	@echo "   source .venv/bin/activate"
 	@echo "========================================================" 
+
+# Start interactive chat with the AI agent
+chat-interactive: python-setup
+	@echo "========================================================"
+	@echo "🤖 Starting interactive chat with AI agent..."
+	@echo "========================================================"
+	@echo "This will start a real-time chat session where you can ask questions"
+	@echo "about your OpsRamp environment, integrations, and resources."
+	@echo ""
+	@echo "Example questions to try:"
+	@echo "  - \"List all integrations in our environment\""
+	@echo "  - \"Show me all resources with critical status\""
+	@echo "  - \"Generate a report of our infrastructure\""
+	@echo ""
+	@. .venv/bin/activate && cd client/agent && make chat-interactive

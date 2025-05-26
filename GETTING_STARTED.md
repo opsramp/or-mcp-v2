@@ -257,6 +257,50 @@ pip list | grep -E "(openai|anthropic|google|requests)"
 pip install openai anthropic google-generativeai requests
 ```
 
+### **Test Data Issues**
+
+**Issue**: Missing test data files for agent tests
+
+**Solutions**:
+```bash
+# Ensure test data directories exist
+mkdir -p client/agent/test_data
+mkdir -p client/agent/tests/shared/engines/test_data
+
+# Create prompt files for different test types
+# For basic integration tests (simpler version to avoid token limits):
+cat > client/agent/tests/shared/engines/test_data/basic_integration_prompts.txt << EOF
+List all integrations
+Show integration types
+What resources do we have?
+EOF
+
+# For comprehensive integration tests:
+cat > client/agent/tests/shared/engines/test_data/comprehensive_integration_prompts.txt << EOF
+List all available integrations
+Show me integration types available
+How do I create a new integration?
+How can I update an existing integration?
+How do I view integration details?
+EOF
+
+# For interactive mode:
+cat > client/agent/tests/shared/engines/test_data/interactive_test_scenarios.txt << EOF
+List all integrations
+Show me AWS integrations
+How do I create a new integration?
+List all available resource types
+Show me all resources
+EOF
+
+# Copy to alternative location that might be checked
+cp client/agent/tests/shared/engines/test_data/*.txt client/agent/test_data/
+
+# Verify test data files exist
+ls -la client/agent/test_data/
+ls -la client/agent/tests/shared/engines/test_data/
+```
+
 ### **Server Won't Start**
 
 **Issue**: `make all` fails or server doesn't start

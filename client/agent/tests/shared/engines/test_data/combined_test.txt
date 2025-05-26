@@ -1,0 +1,5 @@
+Show me a report of AWS integrations and their associated resources
+What resources are associated with the Azure integration?
+List all integrations and show the resource count for each
+Find all critical resources across all integrations
+Generate a comprehensive report of our infrastructure 
