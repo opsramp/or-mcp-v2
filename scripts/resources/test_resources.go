@@ -23,8 +23,12 @@ const (
 
 // main is the entry point for the test script
 func main() {
+	testResources()
+}
+
+func testResources() {
 	// Create output directory if it doesn't exist
-	if err := os.MkdirAll(TestLogDir, 0750); err != nil {
+	if err := os.MkdirAll(TestLogDir, 0755); err != nil {
 		fmt.Printf("Failed to create log directory: %v\n", err)
 		os.Exit(1)
 	}
@@ -42,35 +46,11 @@ func main() {
 	customLogger.Info("Log file: %s", filepath.Join(TestLogDir, TestLogFileName))
 
 	// Load configuration
-	// Try to load from the project root directory
-	configPath := "../../config.yaml"
-	customLogger.Info("Trying to load config from: %s", configPath)
-	config, err := common.LoadConfig(configPath)
+	config, err := common.LoadConfig("")
 	if err != nil {
-		customLogger.Warn("Failed to load config from %s: %v", configPath, err)
-		fmt.Printf("Failed to load config from %s: %v\n", configPath, err)
-
-		// Try alternate locations
-		configPath = "../config.yaml"
-		customLogger.Info("Trying to load config from: %s", configPath)
-		config, err = common.LoadConfig(configPath)
-		if err != nil {
-			customLogger.Warn("Failed to load config from %s: %v", configPath, err)
-			fmt.Printf("Failed to load config from %s: %v\n", configPath, err)
-
-			// Create a minimal default config
-			customLogger.Info("Using default configuration")
-			fmt.Println("Using default configuration")
-			config = &common.Config{
-				OpsRamp: common.OpsRampConfig{
-					TenantURL:  common.GetEnvOrDefault("OPSRAMP_TENANT_URL", "https://api.opsramp.com"),
-					AuthURL:    common.GetEnvOrDefault("OPSRAMP_AUTH_URL", "https://api.opsramp.com/auth/oauth/token"),
-					AuthKey:    common.GetEnvOrDefault("OPSRAMP_AUTH_KEY", ""),
-					AuthSecret: common.GetEnvOrDefault("OPSRAMP_AUTH_SECRET", ""),
-					TenantID:   common.GetEnvOrDefault("OPSRAMP_TENANT_ID", ""),
-				},
-			}
-		}
+		customLogger.Error("Failed to load config: %v", err)
+		fmt.Printf("Failed to load config: %v\n", err)
+		os.Exit(1)
 	}
 
 	// Create OpsRamp client
@@ -113,7 +93,6 @@ func testListResources(ctx context.Context, logger *common.CustomLogger) {
 	params := types.ResourceSearchParams{
 		PageSize: 10, // Limit to 10 resources for the test
 		PageNo:   1,
-		// Add any additional parameters as needed
 	}
 
 	response, err := resourcesAPI.Search(ctx, params)

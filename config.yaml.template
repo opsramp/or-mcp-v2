@@ -5,3 +5,20 @@ opsramp:
   auth_key: "YOUR_AUTH_KEY_HERE"
   auth_secret: "YOUR_AUTH_SECRET_HERE"
   tenant_id: "YOUR_TENANT_ID_HERE"
+  
+  # Resource management specific settings
+  resources:
+    default_page_size: 50
+    max_page_size: 1000
+    cache_ttl: 300  # 5 minutes
+    enable_bulk_operations: true
+    max_bulk_size: 100
+    
+    # Performance settings
+    request_timeout: 30  # seconds
+    retry_attempts: 3
+    retry_delay: 1000    # milliseconds
+    
+    # Monitoring settings
+    enable_metrics: true
+    metrics_interval: 60  # seconds

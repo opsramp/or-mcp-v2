@@ -1,114 +1,431 @@
-# OpsRamp AI Agent - Non-Interactive Mode
+# OpsRamp AI Agent - Non-Interactive Testing & Automation
 
-This document provides information about using the OpsRamp AI Agent in non-interactive modes.
+This document provides comprehensive information about using the OpsRamp AI Agent in non-interactive modes with the organized testing framework.
 
-## Available Modes
+## 🎯 Overview
 
-The OpsRamp AI Agent can be run in several different modes:
+The OpsRamp AI Agent supports multiple non-interactive modes for automation, testing, and batch processing:
 
-1. **Interactive Chat** - The default mode where you have a conversation with the agent
-2. **Single Prompt** - Process a single prompt and then exit
-3. **Batch Processing** - Process multiple prompts from a file
-4. **Simple Mode** - Run the agent without connecting to an actual MCP server (for testing/development)
+1. **Organized Testing Framework** - Comprehensive test suites for Integration and Resource functionality
+2. **Single Prompt Testing** - Process individual queries for validation
+3. **Batch Processing** - Process multiple prompts from structured files
+4. **Multi-Provider Testing** - Compare performance across AI providers
+5. **Evidence Collection** - Automated API payload capture and reporting
 
-## Setup
+## 🚀 Setup
 
-Before using any mode, make sure you've set up the agent by installing the required dependencies:
+Before using any mode, ensure the testing framework is properly set up:
 
 ```bash
-# From the client directory
+# Navigate to the agent directory
+cd client/agent
+
+# Setup the testing framework
 make setup
+
+# Verify MCP server connectivity
+make check-server
 ```
 
-## Running in Single Prompt Mode
+## 🧪 Organized Testing Framework
 
-To run the agent with a single prompt:
+### **Integration Management Testing**
+
+Test the `integrations` tool functionality with organized test suites:
 
 ```bash
-# Using the Makefile
-make run-prompt PROMPT="your prompt here"
+# Basic integration tests (5-10 prompts)
+make test-integrations-basic-organized
 
-# Or directly
-python examples/chat_client.py --prompt "your prompt here"
+# Advanced integration tests (20-30 prompts)
+make test-integrations-advanced-organized
+
+# All integration tests
+make test-integrations-all-organized
 ```
 
-### Options
+**Features**:
+- Real OpsRamp API integration (no mocks)
+- Token-efficient prompts to avoid OpenAI limits
+- Complete API payload capture
+- Structured output in `tests/integration/output/`
 
-- `--server-url` - MCP server URL (default: http://localhost:8080)
-- `--llm-provider` - LLM provider to use (default: openai, options: openai, anthropic)
-- `--env-file` - Path to a specific .env file for configuration
-- `--json` - Output in JSON format
-- `--simple-mode` - Run without connecting to an MCP server
+### **Resource Management Testing**
 
-Example with options:
+Test the `resources` tool functionality with comprehensive test suites:
 
 ```bash
-make run-prompt PROMPT="List all integrations" SIMPLE_MODE=true
+# Basic resource tests (5-10 prompts)
+make test-resources-basic-organized
+
+# Comprehensive resource tests (20-30 prompts)
+make test-resources-comprehensive-organized
+
+# Ultra-complex resource tests (50+ prompts)
+make test-resources-ultra-organized
+
+# All resource tests
+make test-resources-all-organized
 ```
 
-## Running in Batch Mode
+**Features**:
+- Real OpsRamp API integration (no mocks)
+- Pagination and filtering support
+- Performance metrics collection
+- Structured output in `tests/resources/output/`
 
-To process multiple prompts from a file:
+### **Multi-Provider Testing**
+
+Compare AI model performance across different providers:
 
 ```bash
-# Using the Makefile with default input file (agent/examples/sample_prompts.txt)
-make run-batch
+# Test all providers (OpenAI, Anthropic, Google)
+make test-all-providers-organized
 
-# Using the Makefile with a specific input file
-make run-batch INPUT_FILE=path/to/your/prompts.txt
+# Test integration functionality across providers
+make test-providers-integration-organized
 
-# Or directly
-python examples/batch_process.py --input path/to/your/prompts.txt
+# Test resource functionality across providers
+make test-providers-resources-organized
 ```
 
-### Prompt File Format
+**Providers Supported**:
+- **OpenAI**: GPT-3.5-Turbo, GPT-4
+- **Anthropic**: Claude-3-Haiku, Claude-3-Sonnet
+- **Google**: Gemini-1.5-Flash, Gemini-1.5-Pro
 
-The prompt file should contain one prompt per line. Empty lines and lines starting with `#` are ignored:
+### **Master Test Commands**
+
+Run comprehensive test suites:
+
+```bash
+# Run complete test suite (all categories)
+make test-complete-organized
+
+# Run all tests and generate HTML report
+make test-complete-organized && make generate-test-report-html
+```
+
+## 📊 Evidence Collection & Reporting
+
+### **Automated Report Generation**
+
+Generate comprehensive reports in multiple formats:
+
+```bash
+# Generate HTML report with visual dashboards
+make generate-test-report-html
+
+# Generate JSON report for automation
+make generate-test-report-json
+
+# Generate text report for simple analysis
+make generate-test-report-organized
+```
+
+### **Evidence Management**
+
+Manage test evidence and API payloads:
+
+```bash
+# Show test evidence summary
+make show-test-evidence-organized
+
+# Clean up old test data (30+ days)
+make cleanup-test-data-organized
+
+# Show what would be cleaned (dry run)
+make cleanup-test-data-dry-organized
+```
+
+## 🎯 Single Prompt Testing
+
+For immediate validation and debugging:
+
+```bash
+# Test a specific question
+make test-single QUESTION="List all integrations"
+
+# Test integration-specific query
+make test-single QUESTION="Show me the first 3 integrations with their status"
+
+# Test resource-specific query
+make test-single QUESTION="Show me first 5 resources"
+```
+
+**Options**:
+- Uses the core testing engine for consistency
+- Captures API payloads for evidence
+- Provides detailed execution logs
+- Supports all AI providers
+
+## 📁 Custom Batch Processing
+
+Process custom prompt files with the organized framework:
+
+```bash
+# Custom prompts file with specific test count
+make test-custom PROMPTS_FILE=my_prompts.txt MAX_TESTS=5
+
+# Use specific test data directory
+make test-custom PROMPTS_FILE=tests/integration/test_data/basic_integration_prompts.txt
+```
+
+### **Prompt File Format**
+
+Create structured prompt files for testing:
 
 ```
-# This is a comment
+# Integration Management Prompts
 List all integrations
-Show me the integrations related to VMware
-Tell me about hpe-alletra-LabRat
+Show me the first 3 integrations
+What integrations are currently enabled?
+
+# Resource Management Prompts  
+Show me first 5 resources
+List resource types available
+Get basic resource inventory
 ```
 
-### Batch Processing Options
+**Best Practices**:
+- Use token-efficient prompts to avoid provider limits
+- Group related prompts by functionality
+- Include complexity levels (basic → advanced → ultra)
+- Add comments for organization
 
-- `--input`, `-i` - Input file with prompts (required)
-- `--output`, `-o` - Output file for results (default: print to stdout)
-- `--format`, `-f` - Output format (default: text, options: text, json)
-- `--verbose`, `-v` - Print results to stdout even if output file is specified
-- `--server-url` - MCP server URL (default: http://localhost:8080)
-- `--llm-provider` - LLM provider to use (default: openai, options: openai, anthropic)
-- `--env-file` - Path to a specific .env file for configuration
-- `--simple-mode` - Run without connecting to an MCP server
+## 🔧 Advanced Configuration
 
-Example with options:
+### **Environment Variables**
+
+Configure the testing framework with environment variables:
 
 ```bash
-make run-batch INPUT_FILE=prompts.txt SIMPLE_MODE=true
+# AI Provider Configuration
+export OPENAI_API_KEY="sk-proj-..."
+export ANTHROPIC_API_KEY="sk-ant-api03-..."
+export GOOGLE_API_KEY="..."
+
+# Model Selection
+export OPENAI_MODEL="gpt-4"
+export ANTHROPIC_MODEL="claude-3-sonnet-20240229"
+export GOOGLE_MODEL="gemini-1.5-pro"
+
+# MCP Server Configuration
+export MCP_SERVER_URL="http://localhost:8080"
 ```
 
-## Running in Simple Mode
+### **Test Configuration Options**
 
-Simple mode lets you run the agent without connecting to an actual MCP server. This is useful for:
-
-- Testing the client without a server
-- Developing and debugging client features
-- Running demos when MCP is not available
-- Generating mock responses
-
-To use simple mode, add the `SIMPLE_MODE=true` parameter to any of the commands:
+Customize test execution with parameters:
 
 ```bash
-# Interactive chat in simple mode
-make run-agent SIMPLE_MODE=true
+# Specify maximum number of tests
+make test-custom PROMPTS_FILE=prompts.txt MAX_TESTS=10
 
-# Single prompt in simple mode
-make run-prompt PROMPT="List all integrations" SIMPLE_MODE=true
+# Use specific AI provider
+OPENAI_MODEL=gpt-3.5-turbo make test-integrations-basic-organized
 
-# Batch processing in simple mode
-make run-batch INPUT_FILE=prompts.txt SIMPLE_MODE=true
+# Enable debug mode
+DEBUG=true make test-resources-basic-organized
 ```
 
-Simple mode will return a placeholder response rather than trying to connect to the MCP server. 
+## 📈 Performance Monitoring
+
+### **Real-Time Analysis**
+
+Monitor test performance and results:
+
+```bash
+# Show latest test results
+make analyze-results
+
+# Monitor test execution in real-time
+tail -f tests/integration/output/logs/*.log
+
+# Check API payload evidence
+ls -la tests/evidence/api_payloads/
+```
+
+### **Performance Metrics**
+
+The framework tracks comprehensive metrics:
+
+- **Success Rate**: Percentage of successful tests
+- **Response Time**: Average API response time
+- **Token Efficiency**: Prompts processed per minute
+- **Error Rate**: Failed requests and tool calls
+- **Provider Comparison**: Cross-platform performance
+
+## 🛠️ Development & Debugging
+
+### **Development Testing**
+
+Use development-focused commands for debugging:
+
+```bash
+# Single test for development
+make dev-test
+
+# Interactive testing mode
+make run-interactive
+
+# Check server connectivity
+make check-server
+```
+
+### **Debugging Options**
+
+Debug test execution and API interactions:
+
+```bash
+# Enable verbose logging
+DEBUG=true make test-integrations-basic-organized
+
+# View detailed API payloads
+cat tests/integration/output/payloads/*.jsonl | jq .
+
+# Analyze test failures
+grep -i error tests/integration/output/logs/*.log
+```
+
+## 🎉 Automation Integration
+
+### **CI/CD Pipeline Integration**
+
+Integrate the testing framework into CI/CD pipelines:
+
+```bash
+#!/bin/bash
+# CI/CD Test Script
+
+# Setup
+cd client/agent
+make setup
+
+# Verify connectivity
+make check-server || exit 1
+
+# Run basic validation tests
+make test-integrations-basic-organized || exit 1
+make test-resources-basic-organized || exit 1
+
+# Generate evidence report
+make generate-test-report-json
+
+# Archive results
+cp tests/evidence/test_reports/*.json $CI_ARTIFACTS_DIR/
+```
+
+### **Scheduled Testing**
+
+Set up automated testing schedules:
+
+```bash
+# Crontab example for daily testing
+0 2 * * * cd /path/to/agent && make test-complete-organized && make generate-test-report-html
+
+# Weekly comprehensive testing
+0 1 * * 0 cd /path/to/agent && make test-all-providers-organized && make cleanup-test-data-organized
+```
+
+## 📋 Output Structure
+
+### **Organized Output Directories**
+
+The framework maintains organized output structure:
+
+```
+tests/
+├── integration/output/
+│   ├── logs/           # Integration test execution logs
+│   ├── payloads/       # Integration API evidence
+│   └── reports/        # Integration test reports
+├── resources/output/
+│   ├── logs/           # Resource test execution logs
+│   ├── payloads/       # Resource API evidence
+│   └── reports/        # Resource test reports
+├── multi_provider/output/
+│   ├── logs/           # Multi-provider test logs
+│   ├── payloads/       # Provider comparison evidence
+│   └── reports/        # Provider comparison reports
+└── evidence/
+    ├── api_payloads/   # Consolidated API evidence
+    ├── test_reports/   # Generated reports archive
+    └── screenshots/    # Visual evidence (if applicable)
+```
+
+### **File Naming Conventions**
+
+Consistent naming for easy identification:
+
+- **Logs**: `test_execution_YYYYMMDD_HHMMSS.log`
+- **Payloads**: `api_payloads_YYYYMMDD_HHMMSS.jsonl`
+- **Reports**: `test_report_daily_YYYYMMDD_HHMMSS.html`
+
+## 🔍 Troubleshooting
+
+### **Common Issues**
+
+**Issue: "MCP server is not accessible"**
+```bash
+# Check server status
+make check-server
+
+# Start server (from project root)
+cd ../../ && make run &
+```
+
+**Issue: "Token limit exceeded"**
+```bash
+# Use basic test variants
+make test-integrations-basic-organized
+
+# Switch to Anthropic models
+export ANTHROPIC_MODEL="claude-3-haiku-20240307"
+make test-resources-basic-organized
+```
+
+**Issue: "No test evidence found"**
+```bash
+# Run tests to generate evidence
+make test-resources-basic-organized
+
+# Check evidence directories
+make show-test-evidence-organized
+```
+
+### **Debug Commands**
+
+Comprehensive debugging toolkit:
+
+```bash
+# Check framework status
+make check-server
+make analyze-results
+
+# View recent logs
+tail -20 tests/integration/output/logs/*.log
+
+# Validate test data files
+ls -la tests/*/test_data/
+
+# Check API evidence
+find tests/ -name "*.jsonl" -exec wc -l {} \;
+```
+
+## 📞 Support
+
+For issues with non-interactive modes:
+
+1. **Check Documentation**: Review this guide and `tests/README.md`
+2. **Run Diagnostics**: Use `make check-server` and `make analyze-results`
+3. **Review Evidence**: Check `tests/evidence/` for API payloads and reports
+4. **Generate Reports**: Use `make generate-test-report-html` for detailed analysis
+5. **Contact Support**: Provide test logs and evidence files
+
+---
+
+**Ready for automation?** Start with `make test-integrations-basic-organized` to validate your setup, then explore the comprehensive non-interactive testing capabilities!
+
+*Framework Version: 2.0 (Organized)*  
+*Status: Production Ready ✅* 

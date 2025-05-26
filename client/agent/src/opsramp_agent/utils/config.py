@@ -67,19 +67,21 @@ def load_env_from_file(env_file: Optional[str] = None) -> Dict[str, str]:
     
     return loaded_vars
 
-def get_api_keys(openai_api_key: Optional[str] = None, anthropic_api_key: Optional[str] = None) -> Dict[str, Optional[str]]:
+def get_api_keys(openai_api_key: Optional[str] = None, anthropic_api_key: Optional[str] = None, gemini_api_key: Optional[str] = None) -> tuple:
     """
     Get API keys from provided parameters or environment variables.
     
     Args:
         openai_api_key: OpenAI API key provided directly
         anthropic_api_key: Anthropic API key provided directly
+        gemini_api_key: Google Gemini API key provided directly
         
     Returns:
-        Tuple of (openai_api_key, anthropic_api_key)
+        Tuple of (openai_api_key, anthropic_api_key, gemini_api_key)
     """
     # Use provided keys or fall back to environment variables
     openai_key = openai_api_key or os.environ.get("OPENAI_API_KEY")
     anthropic_key = anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY")
+    gemini_key = gemini_api_key or os.environ.get("GEMINI_API_KEY")
     
-    return openai_key, anthropic_key 
+    return openai_key, anthropic_key, gemini_key 

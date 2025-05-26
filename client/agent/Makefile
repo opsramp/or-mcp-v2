@@ -34,19 +34,19 @@ test:
 test-basic:
 	@echo "$(GREEN)Running basic integration tests (3 prompts)...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py --max-tests 3
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py --max-tests 3
 
 # Medium test with 10 prompts  
 test-medium:
 	@echo "$(GREEN)Running medium integration tests (10 prompts)...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py --max-tests 10
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py --max-tests 10
 
 # Ultra-complex scenarios
 test-complex:
 	@echo "$(GREEN)Running ultra-complex integration tests...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file test_data/ultra_complex_integration_prompts.txt \
 		--max-tests 5
 
@@ -54,7 +54,7 @@ test-complex:
 test-comprehensive:
 	@echo "$(GREEN)Running FULL comprehensive integration test suite...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file test_data/comprehensive_integration_prompts.txt
 
 # Run all test suites
@@ -92,7 +92,7 @@ test-custom:
 		exit 1; \
 	fi
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file $(PROMPTS_FILE) \
 		$(if $(MAX_TESTS),--max-tests $(MAX_TESTS))
 
@@ -127,7 +127,7 @@ run-prompt:
 dev-test:
 	@echo "$(GREEN)Running single test for development...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py --max-tests 1
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py --max-tests 1
 
 # Check MCP server connection
 check-server:
@@ -141,7 +141,7 @@ run-interactive:
 	@echo "$(GREEN)Running enhanced interactive testing mode...$(NC)"
 	@echo "$(YELLOW)This uses our proven comprehensive testing engine for reliable tool usage$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file test_data/interactive_test_scenarios.txt \
 		--max-tests 5
 
@@ -150,7 +150,7 @@ test-interactive:
 	@echo "$(GREEN)Running interactive test scenarios...$(NC)"
 	@mkdir -p $(OUTPUT_DIR)
 	@echo "Testing common integration queries..."
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file test_data/comprehensive_integration_prompts.txt \
 		--max-tests 5
 
@@ -164,9 +164,130 @@ test-single:
 		exit 1; \
 	fi
 	@echo "$(QUESTION)" > $(OUTPUT_DIR)/single_question.txt
-	cd $(TEST_DIR) && $(PYTHON) enhanced_real_mcp_integration_test.py \
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
 		--prompts-file ../$(OUTPUT_DIR)/single_question.txt \
 		--max-tests 1
+
+# Test individual integrations functionality
+test-integrations-basic:
+	@echo "Testing basic integrations functionality..."
+	@mkdir -p tests/$(OUTPUT_DIR)
+	@echo "What integrations do we have?" > tests/$(OUTPUT_DIR)/integrations_basic_test.txt
+	@cd tests && python3 shared/engines/enhanced_real_mcp_integration_test.py --max-tests 1 --prompts-file $(OUTPUT_DIR)/integrations_basic_test.txt
+	@echo "✅ Basic integrations test completed"
+
+# Test individual resources functionality  
+test-resources-basic:
+	@echo "Testing basic resources functionality..."
+	@mkdir -p tests/$(OUTPUT_DIR)
+	@echo "What resources do we have?" > tests/$(OUTPUT_DIR)/resources_basic_test.txt
+	@cd tests && python3 shared/engines/enhanced_real_mcp_integration_test.py --max-tests 1 --prompts-file $(OUTPUT_DIR)/resources_basic_test.txt
+	@echo "✅ Basic resources test completed"
+
+# Test resources with dedicated prompts file
+test-resources-comprehensive:
+	@echo "$(GREEN)Running comprehensive resources tests...$(NC)"
+	@mkdir -p $(OUTPUT_DIR)
+	cd $(TEST_DIR) && $(PYTHON) shared/engines/enhanced_real_mcp_integration_test.py \
+		--prompts-file test_data/resource_management_prompts.txt \
+		--max-tests 10
+
+# Test both integrations and resources together
+test-all-tools:
+	@echo "$(GREEN)Testing all tools (integrations + resources)...$(NC)"
+	@$(MAKE) test-integrations-basic
+	@$(MAKE) test-resources-basic
+	@echo "$(GREEN)All tools tested successfully!$(NC)"
+
+# Resources-specific test targets
+test-resources-all: test-resources-basic test-resources-comprehensive
+	@echo "$(GREEN)All resources tests completed!$(NC)"
+
+# ORGANIZED TEST COMMANDS - Integration and Resources Testing
+
+# Integration Testing (Organized)
+test-integrations-basic-organized:
+	@echo "$(GREEN)Running organized basic integration tests...$(NC)"
+	@cd tests && python integration/scripts/run_integration_tests.py --complexity basic
+
+test-integrations-advanced-organized:
+	@echo "$(GREEN)Running organized advanced integration tests...$(NC)"
+	@cd tests && python integration/scripts/run_integration_tests.py --complexity advanced
+
+test-integrations-all-organized:
+	@echo "$(GREEN)Running all organized integration tests...$(NC)"
+	@cd tests && python integration/scripts/run_integration_tests.py --complexity all
+
+# Resource Testing (Organized)
+test-resources-basic-organized:
+	@echo "$(GREEN)Running organized basic resource tests...$(NC)"
+	@cd tests && python resources/scripts/run_resource_tests.py --complexity basic
+
+test-resources-comprehensive-organized:
+	@echo "$(GREEN)Running organized comprehensive resource tests...$(NC)"
+	@cd tests && python resources/scripts/run_resource_tests.py --complexity comprehensive
+
+test-resources-ultra-organized:
+	@echo "$(GREEN)Running organized ultra-complex resource tests...$(NC)"
+	@cd tests && python resources/scripts/run_resource_tests.py --complexity ultra
+
+test-resources-all-organized:
+	@echo "$(GREEN)Running all organized resource tests...$(NC)"
+	@cd tests && python resources/scripts/run_resource_tests.py --complexity all
+
+# Multi-Provider Testing (Organized)
+test-all-providers-organized:
+	@echo "$(GREEN)Running organized multi-provider tests...$(NC)"
+	@cd tests && python multi_provider/scripts/test_all_providers.py
+
+test-providers-integration-organized:
+	@echo "$(GREEN)Testing integration functionality across all providers...$(NC)"
+	@cd tests && python multi_provider/scripts/test_all_providers.py --functionality integration
+
+test-providers-resources-organized:
+	@echo "$(GREEN)Testing resource functionality across all providers...$(NC)"
+	@cd tests && python multi_provider/scripts/test_all_providers.py --functionality resources
+
+# Master Test Commands (Organized)
+test-complete-organized:
+	@echo "$(GREEN)Running complete organized test suite...$(NC)"
+	@$(MAKE) test-integrations-basic-organized
+	@$(MAKE) test-resources-basic-organized
+	@$(MAKE) test-all-providers-organized
+	@echo "$(GREEN)Complete organized test suite finished!$(NC)"
+
+# Test Data Management (Organized)
+cleanup-test-data-organized:
+	@echo "$(YELLOW)Cleaning up old test data...$(NC)"
+	@cd tests && python shared/utilities/cleanup_test_data.py
+
+cleanup-test-data-dry-organized:
+	@echo "$(YELLOW)Showing what test data would be cleaned...$(NC)"
+	@cd tests && python shared/utilities/cleanup_test_data.py --dry-run
+
+# Evidence and Reporting (Organized)
+generate-test-report-organized:
+	@echo "$(GREEN)Generating comprehensive test report...$(NC)"
+	@cd tests && python shared/utilities/generate_test_report.py
+
+generate-test-report-html:
+	@echo "$(GREEN)Generating HTML test report...$(NC)"
+	@cd tests && python shared/utilities/generate_test_report.py --format html
+
+generate-test-report-json:
+	@echo "$(GREEN)Generating JSON test report...$(NC)"
+	@cd tests && python shared/utilities/generate_test_report.py --format json
+
+show-test-evidence-organized:
+	@echo "$(YELLOW)Organized Test Evidence Summary:$(NC)"
+	@echo "Integration Evidence:"
+	@ls -la tests/integration/output/payloads/ 2>/dev/null || echo "  No integration payloads found"
+	@echo "Resource Evidence:"  
+	@ls -la tests/resources/output/payloads/ 2>/dev/null || echo "  No resource payloads found"
+	@echo "Multi-Provider Evidence:"
+	@ls -la tests/multi_provider/output/payloads/ 2>/dev/null || echo "  No multi-provider payloads found"
+	@echo "Consolidated Evidence:"
+	@ls -la tests/evidence/ 2>/dev/null || echo "  No consolidated evidence found"
 
 help:
 	@echo "$(GREEN)OpsRamp AI Agent - Enhanced Makefile$(NC)"
@@ -185,9 +306,32 @@ help:
 	@echo "  test-custom     - Custom test (requires PROMPTS_FILE=...)"
 	@echo "  dev-test        - Single test for development"
 	@echo ""
+	@echo "$(YELLOW)Tool-Specific Testing:$(NC)"
+	@echo "  test-integrations-basic     - Test integrations tool basic functionality"
+	@echo "  test-resources-basic        - Test resources tool basic functionality"
+	@echo "  test-resources-comprehensive - Test resources with dedicated prompts"
+	@echo "  test-resources-all          - Run all resources tests"
+	@echo "  test-all-tools              - Test both integrations and resources"
+	@echo ""
+	@echo "$(YELLOW)Organized Testing (Recommended):$(NC)"
+	@echo "  test-integrations-basic-organized     - Organized integration basic tests"
+	@echo "  test-integrations-advanced-organized  - Organized integration advanced tests"
+	@echo "  test-integrations-all-organized       - All organized integration tests"
+	@echo "  test-resources-basic-organized        - Organized resource basic tests"
+	@echo "  test-resources-comprehensive-organized - Organized resource comprehensive tests"
+	@echo "  test-resources-ultra-organized        - Organized resource ultra-complex tests"
+	@echo "  test-resources-all-organized          - All organized resource tests"
+	@echo "  test-all-providers-organized          - Organized multi-provider tests"
+	@echo "  test-complete-organized               - Complete organized test suite"
+	@echo ""
 	@echo "$(YELLOW)Analysis Commands:$(NC)"
 	@echo "  analyze-results - Show latest test results summary"
 	@echo "  check-server    - Check if MCP server is running"
+	@echo "  generate-test-report-organized - Generate comprehensive test report"
+	@echo "  generate-test-report-html      - Generate HTML test report"
+	@echo "  generate-test-report-json      - Generate JSON test report"
+	@echo "  show-test-evidence-organized   - Show organized test evidence summary"
+	@echo "  cleanup-test-data-organized    - Clean up old test data"
 	@echo ""
 	@echo "$(YELLOW)Interactive Commands:$(NC)"
 	@echo "  run-interactive - Run enhanced interactive testing (RECOMMENDED)"

@@ -3,17 +3,12 @@ Exception classes for the HPE OpsRamp MCP client.
 """
 
 class MCPError(Exception):
-    """Base exception for all MCP-related errors."""
-    
+    """Base exception for MCP client errors."""
     def __init__(self, message, code=None, data=None):
-        super().__init__(message)
+        self.message = message
         self.code = code
         self.data = data
-        
-    def __str__(self):
-        if self.code:
-            return f"{self.args[0]} (code: {self.code})"
-        return self.args[0]
+        super().__init__(message)
 
 
 class ConnectionError(MCPError):
@@ -32,7 +27,7 @@ class ToolError(MCPError):
 
 
 class JSONRPCError(MCPError):
-    """Raised when there's an error in the JSON-RPC protocol."""
+    """Raised when there's a JSON-RPC protocol error."""
     
     # Standard JSON-RPC error codes
     PARSE_ERROR = -32700
@@ -48,4 +43,19 @@ class JSONRPCError(MCPError):
         message = error.get('message', 'Unknown JSON-RPC error')
         code = error.get('code', 0)
         data = error.get('data')
-        return cls(message, code, data) 
+        return cls(message, code, data)
+
+
+class ResourceError(MCPError):
+    """Raised when there's an error with resource management operations."""
+    
+    # Resource-specific error codes
+    RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND"
+    RESOURCE_ACCESS_DENIED = "RESOURCE_ACCESS_DENIED"
+    RESOURCE_INVALID_PARAMS = "RESOURCE_INVALID_PARAMS"
+    RESOURCE_API_ERROR = "RESOURCE_API_ERROR"
+    
+    def __init__(self, message, code=None, data=None, resource_id=None, action=None):
+        super().__init__(message, code, data)
+        self.resource_id = resource_id
+        self.action = action 

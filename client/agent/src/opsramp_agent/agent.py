@@ -28,6 +28,12 @@ try:
 except ImportError:
     HAS_ANTHROPIC = False
 
+try:
+    import google.generativeai as genai
+    HAS_GEMINI = True
+except ImportError:
+    HAS_GEMINI = False
+
 from .utils.config import load_env_from_file, get_api_keys
 
 logger = logging.getLogger(__name__)
@@ -458,6 +464,7 @@ class Agent:
         llm_provider: str = "openai",
         openai_api_key: Optional[str] = None,
         anthropic_api_key: Optional[str] = None,
+        gemini_api_key: Optional[str] = None,
         model: Optional[str] = None,
         connection_timeout: int = 60,
         env_file: Optional[str] = None,
@@ -469,10 +476,11 @@ class Agent:
         
         Args:
             server_url: The URL of the MCP server
-            llm_provider: The LLM provider to use ('openai' or 'anthropic')
+            llm_provider: The LLM provider to use ('openai', 'anthropic', or 'gemini')
             openai_api_key: OpenAI API key (can also be set via OPENAI_API_KEY env var or .env file)
             anthropic_api_key: Anthropic API key (can also be set via ANTHROPIC_API_KEY env var or .env file)
-            model: The model to use (defaults to gpt-4 for OpenAI and claude-2 for Anthropic)
+            gemini_api_key: Google Gemini API key (can also be set via GEMINI_API_KEY env var or .env file)
+            model: The model to use (defaults to gpt-4 for OpenAI, claude-3-haiku for Anthropic, gemini-1.5-flash for Gemini)
             connection_timeout: Connection timeout in seconds
             env_file: Path to .env file containing config variables
             simple_mode: Whether to run in simple mode without MCP connection
@@ -486,19 +494,20 @@ class Agent:
         self._initialized = False
         self.tools = []
         
-        # Load environment variables from file if provided
-        if env_file:
-            load_env_from_file(env_file)
+        # Load environment variables from file if provided, or auto-detect .env file
+        load_env_from_file(env_file)
         
         # Get API keys from arguments, environment variables or .env file
-        self.openai_api_key, self.anthropic_api_key = get_api_keys(openai_api_key, anthropic_api_key)
+        self.openai_api_key, self.anthropic_api_key, self.gemini_api_key = get_api_keys(openai_api_key, anthropic_api_key, gemini_api_key)
         
         # Set default model based on provider
         if model is None:
             if self.llm_provider == "openai":
                 self.model = "gpt-4"
             elif self.llm_provider == "anthropic":
-                self.model = "claude-2"
+                self.model = "claude-3-haiku-20240307"
+            elif self.llm_provider == "gemini":
+                self.model = "gemini-1.5-flash"
             else:
                 raise ValueError(f"Unsupported LLM provider: {self.llm_provider}")
         else:
@@ -507,6 +516,7 @@ class Agent:
         # Initialize LLM clients
         self.openai_client = None
         self.anthropic_client = None
+        self.gemini_client = None
         
         if self.llm_provider == "openai":
             if not self.openai_api_key:
@@ -525,6 +535,16 @@ class Agent:
                 self.anthropic_client = anthropic.Anthropic(api_key=self.anthropic_api_key)
             except ImportError:
                 raise ValueError("anthropic package is required for Anthropic provider")
+                
+        elif self.llm_provider == "gemini":
+            if not self.gemini_api_key:
+                raise ValueError("Google Gemini API key is required for Gemini provider")
+            try:
+                import google.generativeai as genai
+                genai.configure(api_key=self.gemini_api_key)
+                self.gemini_client = genai.GenerativeModel(self.model)
+            except ImportError:
+                raise ValueError("google-generativeai package is required for Gemini provider")
         
         # Create MCP client if not in simple mode
         if not self.simple_mode:
@@ -539,19 +559,9 @@ class Agent:
         
         self.conversation_history = []
         
-        # In simple mode, initialize with mock tools immediately
-        if self.simple_mode:
-            self.tools = [
-                {
-                    "name": "integrations",
-                    "description": "Manage OpsRamp integrations",
-                    "parameters": {
-                        "action": "The action to perform (list, get, create, update, delete, enable, disable)",
-                        "id": "Integration ID for get, update, delete, enable, disable actions"
-                    }
-                }
-            ]
-            self._initialized = True
+        # Initialize with empty tools - will be populated on connect
+        self.tools = []
+        self._initialized = False
     
     async def connect(self) -> None:
         """
@@ -623,13 +633,6 @@ class Agent:
         try:
             logger.info(f"Direct tool call: {tool_name} with args: {arguments}")
             
-            # If in simple mode, return mock data
-            if self.simple_mode:
-                if tool_name == "integrations":
-                    return await self._mock_integrations_call(arguments)
-                else:
-                    return {"result": f"Mock result for {tool_name}", "arguments": arguments}
-                
             # Call the tool with the MCP client
             if self.mcp_client and self.mcp_client.is_initialized:
                 return await self.mcp_client.call_tool(
@@ -641,77 +644,14 @@ class Agent:
                 # For integrations, we can call directly
                 if tool_name == "integrations":
                     return await self.direct_call_integrations(arguments)
+                elif tool_name == "resources":
+                    return await self.direct_call_resources(arguments)
                 else:
                     raise MCPError(f"Tool not available: {tool_name}")
                     
         except Exception as e:
             logger.error(f"Error calling tool {tool_name}: {str(e)}", exc_info=True)
             raise
-        
-    async def _mock_integrations_call(self, arguments: Dict[str, Any]) -> Any:
-        """
-        Provide mock responses for integrations tool in simple mode.
-        
-        Args:
-            arguments: Integration tool arguments
-            
-        Returns:
-            Mock integration data
-        """
-        action = arguments.get("action", "")
-        if not action:
-            raise ValueError("Action is required for integrations tool")
-        
-        # Mock integrations for testing
-        mock_integrations = [
-            {
-                "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
-                "displayName": "hpe-alletra-LabRat",
-                "category": "SDK APP",
-                "status": "Installed",
-                "app": "hpe-alletra",
-                "version": "7.0.0",
-                "updateAvailable": True,
-                "state": "Deployed",
-                "installedBy": "user-XXXXX@example.com",
-                "installedTime": "2025-02-18T15:34:32+0000",
-                "modifiedTime": "2025-02-18T17:02:06+0000"
-            },
-            {
-                "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
-                "displayName": "redfish-server-LabRat",
-                "category": "SDK APP",
-                "status": "Installed",
-                "app": "redfish-server",
-                "version": "7.0.0",
-                "updateAvailable": True,
-                "state": "Deployed",
-                "installedBy": "user-XXXXX@example.com",
-                "installedTime": "2025-02-18T15:25:00+0000",
-                "modifiedTime": "2025-02-18T15:25:45+0000"
-            },
-            {
-                "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
-                "displayName": "vcenter-58.51",
-                "category": "COMPUTE_INTEGRATION",
-                "status": "enabled",
-                "ipAddress": "10.54.58.51",
-                "installedBy": "user-XXXXX@example.com",
-                "installedTime": "2025-02-18T15:40:23+0000",
-                "modifiedTime": "2025-02-18T16:50:52+0000"
-            }
-        ]
-        
-        if action == "list":
-            return mock_integrations
-        elif action == "get" and "id" in arguments:
-            integration_id = arguments["id"]
-            for integration in mock_integrations:
-                if integration["id"] == integration_id:
-                    return integration
-            raise ValueError(f"Integration with ID {integration_id} not found")
-        else:
-            return {"action": action, "status": "success", "message": f"Mock integration {action} operation"}
     
     async def direct_call_integrations(self, arguments: Dict[str, Any]) -> Any:
         """
@@ -773,6 +713,210 @@ class Agent:
             logger.error(f"Error in direct integrations call: {str(e)}", exc_info=True)
             raise MCPError(f"Error in direct integrations call: {str(e)}")
 
+    async def direct_call_resources(self, arguments: Dict[str, Any]) -> Any:
+        """
+        Directly call the resources tool using HTTP API with smart pagination and filtering.
+        
+        Args:
+            arguments: Resources tool arguments
+            
+        Returns:
+            Resources tool result
+        """
+        try:
+            logger.info(f"Direct resources tool call with args: {arguments}")
+            
+            # Smart pagination and filtering for token efficiency
+            optimized_args = self._optimize_resource_query(arguments)
+            
+            # Create JSON-RPC request for resources tool
+            request_data = create_jsonrpc_request(
+                method="tool",
+                params={"tool": "resources", **optimized_args}
+            )
+            
+            # Send request to server
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.server_url}/message",
+                    json=request_data,
+                    headers={"Content-Type": "application/json"},
+                    timeout=aiohttp.ClientTimeout(total=self.request_timeout)
+                ) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        if "result" in result:
+                            return result["result"]
+                        elif "error" in result:
+                            raise MCPError(f"Resources tool error: {result['error']}")
+                        else:
+                            return result
+                    else:
+                        error_text = await response.text()
+                        raise MCPError(f"HTTP {response.status}: {error_text}")
+                        
+        except aiohttp.ClientError as e:
+            logger.error(f"HTTP error calling resources tool: {str(e)}", exc_info=True)
+            raise MCPError(f"Failed to call resources tool: {str(e)}")
+        except Exception as e:
+            logger.error(f"Error calling resources tool: {str(e)}", exc_info=True)
+            raise
+
+    def _optimize_resource_query(self, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Optimize resource queries to prevent token overload by adding smart pagination and filtering.
+        
+        Args:
+            arguments: Original resource query arguments
+            
+        Returns:
+            Optimized arguments with pagination and filtering
+        """
+        optimized = arguments.copy()
+        action = arguments.get("action", "list")
+        
+        # For list actions, add pagination to prevent token overload
+        if action == "list":
+            # Default to small page size for token efficiency
+            if "pageSize" not in optimized:
+                optimized["pageSize"] = 10  # Limit to 10 resources by default
+            
+            # Ensure page size doesn't exceed safe limits
+            if optimized.get("pageSize", 10) > 25:
+                optimized["pageSize"] = 25  # Cap at 25 resources max
+                
+            # Default to first page
+            if "pageNo" not in optimized:
+                optimized["pageNo"] = 1
+        
+        # For getMinimal, ensure it's truly minimal
+        elif action == "getMinimal":
+            if "pageSize" not in optimized:
+                optimized["pageSize"] = 20  # Slightly higher for minimal data
+            if optimized.get("pageSize", 20) > 50:
+                optimized["pageSize"] = 50  # Cap at 50 for minimal queries
+                
+        logger.info(f"Optimized resource query: {optimized}")
+        return optimized
+
+    def _interpret_resource_query(self, message: str) -> Optional[Dict[str, Any]]:
+        """
+        Interpret user resource queries and determine optimal action and parameters.
+        
+        Args:
+            message: User's message
+            
+        Returns:
+            Optimized resource query arguments or None if not a resource query
+        """
+        lower_msg = message.lower()
+        
+        # Check for minimal/overview queries
+        if any(keyword in lower_msg for keyword in ["minimal", "overview", "summary", "quick", "dashboard", "basic"]):
+            return {"action": "getMinimal", "pageSize": 15}
+        
+        # Check for specific resource type queries
+        if "virtual machine" in lower_msg or "vm" in lower_msg:
+            return {"action": "list", "filters": {"type": "Virtual Machine"}, "pageSize": 10}
+        elif "server" in lower_msg:
+            return {"action": "list", "filters": {"type": "Server"}, "pageSize": 10}
+        elif "network" in lower_msg:
+            return {"action": "list", "filters": {"type": "Network"}, "pageSize": 10}
+        elif "storage" in lower_msg:
+            return {"action": "list", "filters": {"type": "Storage"}, "pageSize": 10}
+        elif "temperature" in lower_msg:
+            return {"action": "list", "filters": {"type": "Temperature Sensor"}, "pageSize": 10}
+        elif "memory" in lower_msg or "dimm" in lower_msg:
+            return {"action": "list", "filters": {"type": "Memory"}, "pageSize": 10}
+        
+        # Check for count/statistics queries
+        if any(keyword in lower_msg for keyword in ["how many", "count", "total", "statistics", "types"]):
+            return {"action": "getMinimal", "pageSize": 100}  # Get more for counting
+        
+        # Check for first/limited queries
+        if "first" in lower_msg:
+            # Extract number if mentioned
+            import re
+            numbers = re.findall(r'\d+', message)
+            page_size = int(numbers[0]) if numbers else 5
+            return {"action": "list", "pageSize": min(page_size, 15)}  # Cap at 15
+        
+        # Default for general resource queries
+        if any(keyword in lower_msg for keyword in ["resource", "infrastructure", "device", "hardware"]):
+            return {"action": "getMinimal", "pageSize": 10}
+        
+        return None
+
+    def _format_resource_response(self, result: Any, args: Dict[str, Any]) -> str:
+        """
+        Format resource tool response for user consumption.
+        
+        Args:
+            result: Resource tool result
+            args: Original query arguments
+            
+        Returns:
+            Formatted response string
+        """
+        action = args.get("action", "list")
+        
+        try:
+            # Handle different result formats
+            resources = []
+            if isinstance(result, list):
+                resources = result
+            elif isinstance(result, dict):
+                if "results" in result:
+                    resources = result["results"]
+                elif "resources" in result:
+                    resources = result["resources"]
+                else:
+                    resources = [result]  # Single resource
+            
+            if not resources:
+                return "No resources found matching your criteria."
+            
+            # Format based on action type
+            if action == "getMinimal":
+                response = f"📊 **Resource Overview** ({len(resources)} resources found):\n\n"
+                for i, resource in enumerate(resources[:20], 1):  # Limit display
+                    name = resource.get("name", "Unknown")
+                    resource_type = resource.get("type", "Unknown")
+                    status = resource.get("status", "Unknown")
+                    response += f"{i}. **{name}** ({resource_type}) - Status: {status}\n"
+                
+                if len(resources) > 20:
+                    response += f"\n... and {len(resources) - 20} more resources. Use specific filters for detailed view."
+                    
+            else:  # list action
+                filters = args.get("filters", {})
+                filter_desc = f" (filtered by {filters})" if filters else ""
+                response = f"🔍 **Resources Found{filter_desc}** ({len(resources)} resources):\n\n"
+                
+                for i, resource in enumerate(resources[:15], 1):  # Limit display
+                    name = resource.get("name", "Unknown")
+                    resource_type = resource.get("type", "Unknown")
+                    status = resource.get("status", "Unknown")
+                    host = resource.get("hostName", "")
+                    ip = resource.get("ipAddress", "")
+                    
+                    response += f"{i}. **{name}**\n"
+                    response += f"   Type: {resource_type}, Status: {status}\n"
+                    if host:
+                        response += f"   Host: {host}\n"
+                    if ip:
+                        response += f"   IP: {ip}\n"
+                    response += "\n"
+                
+                if len(resources) > 15:
+                    response += f"... and {len(resources) - 15} more resources. Use pagination or more specific filters to see more."
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error formatting resource response: {str(e)}")
+            return f"Found {len(resources) if isinstance(resources, list) else 'some'} resources, but had trouble formatting the response. Raw data available on request."
+
     async def chat(self, message: str) -> str:
         """
         Process a user message through the LLM and execute any tool calls.
@@ -791,6 +935,8 @@ class Agent:
         
         # Fast path for common queries that we can handle directly
         lower_msg = message.lower()
+        
+        # Handle integration queries
         if "list all integration" in lower_msg or "show me the integration" in lower_msg or "what integration" in lower_msg:
             try:
                 # Direct call to integrations tool with list action
@@ -826,6 +972,22 @@ class Agent:
                 return response
             except Exception as e:
                 logger.error(f"Fast path for integrations list failed: {str(e)}")
+                # Continue with normal flow if fast path fails
+        
+        # Handle resource queries with smart optimization
+        elif any(keyword in lower_msg for keyword in ["resource", "infrastructure", "device", "server", "hardware"]):
+            try:
+                # Determine the best action and parameters based on the query
+                resource_args = self._interpret_resource_query(message)
+                if resource_args:
+                    result = await self.direct_call_tool("resources", resource_args)
+                    
+                    # Format the result based on action type
+                    response = self._format_resource_response(result, resource_args)
+                    self.conversation_history.append({"role": "assistant", "content": response})
+                    return response
+            except Exception as e:
+                logger.error(f"Fast path for resources query failed: {str(e)}")
                 # Continue with normal flow if fast path fails
         
         # Create system prompt with available tools
@@ -942,9 +1104,65 @@ When users ask about WHO installed integrations, user emails, or installation in
 - Check integration status before enable/disable operations
 - Use "getType" to understand requirements before creating integrations"""
         
-        return f"""You are an expert AI assistant for OpsRamp IT Operations Management, specializing in HPE OpsRamp Integrations.
+        # Define resources tool description with supported actions
+        resources_tool_description = """COMPREHENSIVE RESOURCES TOOL EXPERTISE:
 
-You have deep expertise in HPE OpsRamp integrations and can help users manage their integration ecosystem. You understand the complete lifecycle of integrations including discovery, configuration, monitoring, and troubleshooting.
+The "resources" tool is your primary interface for managing HPE OpsRamp resources (devices, servers, network equipment, etc.). It supports these actions:
+
+=== DISCOVERY & LISTING OPERATIONS ===
+1. "list" - Lists all resources in the environment
+   Use for: "show me all resources", "what devices do we have", "list our infrastructure"
+   Optional filters: site, group, type, status
+   Example: {"name": "resources", "arguments": {"action": "list"}}
+   Example with filters: {"name": "resources", "arguments": {"action": "list", "filters": {"type": "Virtual Machine", "site": "Main Datacenter"}}}
+
+2. "getMinimal" - Get lightweight resource listing for performance
+   Use for: Quick overviews, dashboards, performance-sensitive queries
+   Returns: Basic info (id, name, type, status) without detailed metrics
+   Example: {"name": "resources", "arguments": {"action": "getMinimal"}}
+
+=== DETAILED INSPECTION OPERATIONS ===
+3. "get" - Get detailed information about a specific resource
+   Required: "id" (resource ID)
+   Use for: Deep resource analysis, troubleshooting, configuration details
+   Example: {"name": "resources", "arguments": {"action": "get", "id": "RES-vm-001"}}
+
+=== RESOURCE TYPES SUPPORTED ===
+- Virtual Machines (VMs)
+- Physical Servers 
+- Network Equipment (switches, routers, firewalls)
+- Storage Systems
+- Cloud Instances (AWS EC2, Azure VMs, GCP Compute)
+- Containers and Kubernetes Nodes
+- Applications and Services
+- Load Balancers
+
+=== SMART QUERY INTERPRETATION ===
+When users ask questions, intelligently choose the right action:
+
+• "What resources do we have?" → use "list"
+• "Show me all virtual machines" → use "list" with type filter
+• "Tell me about server X" → use "get" with resource ID
+• "Quick overview of infrastructure" → use "getMinimal"
+• "Show me resources in datacenter Y" → use "list" with site filter
+• "What's the status of device Z?" → use "get" for detailed status
+
+=== FILTERING CAPABILITIES ===
+The resources tool supports filtering by:
+- site: Filter by physical location or site name
+- group: Filter by resource group or category
+- type: Filter by resource type (VM, Server, Network, etc.)
+- status: Filter by operational status (ACTIVE, DOWN, MAINTENANCE, etc.)
+
+=== BEST PRACTICES ===
+- Use "getMinimal" for large-scale queries to improve performance
+- Use "list" with filters for category-based queries
+- Use "get" for detailed troubleshooting and resource analysis
+- Apply appropriate filters to narrow down large result sets"""
+        
+        return f"""You are an expert AI assistant for OpsRamp IT Operations Management, specializing in HPE OpsRamp Integrations and Resource Management.
+
+You have deep expertise in HPE OpsRamp integrations and resource management, and can help users manage their complete IT infrastructure ecosystem. You understand integration lifecycle management, resource monitoring, and infrastructure operations.
 
 You have access to the following tools through the OpsRamp MCP server:
 
@@ -952,24 +1170,28 @@ You have access to the following tools through the OpsRamp MCP server:
 
 {integrations_tool_description}
 
-When the user asks you to perform an action related to integrations, you should:
-1. Identify which integration action is appropriate (list, get, getDetailed, etc.)
+{resources_tool_description}
+
+When the user asks you to perform an action related to integrations or resources, you should:
+1. Identify which tool and action is appropriate (integrations: list/get/getDetailed, resources: list/get/getMinimal)
 2. Determine the correct parameters needed for that action
-3. Call the integrations tool with the appropriate action and parameters
+3. Call the appropriate tool with the correct action and parameters
 
 For tool calls, use the following format:
 ```tool
 {{"name": "tool_name", "arguments": {{"param1": "value1", "param2": "value2"}}}}
 ```
 
-For example, if the user asks about what integrations they have, respond with:
-```tool
-{{"name": "integrations", "arguments": {{"action": "list"}}}}
-```
+Examples:
+- For integrations: ```tool
+{{"name": "integrations", "arguments": {{"action": "list"}}}}```
 
-If a user mentions a specific integration by ID or name, consider using the "getDetailed" action instead of "get" to provide more comprehensive information.
+- For resources: ```tool
+{{"name": "resources", "arguments": {{"action": "list", "filters": {{"type": "Virtual Machine"}}}}}}```
 
-If you don't need to call a tool, just respond normally with your knowledge of OpsRamp integrations. Maintain a professional, expert tone focused on helping users manage their OpsRamp integration environment effectively.
+If a user mentions a specific integration or resource by ID or name, consider using the detailed actions ("getDetailed" for integrations, "get" for resources) to provide comprehensive information.
+
+If you don't need to call a tool, just respond normally with your knowledge of OpsRamp. Maintain a professional, expert tone focused on helping users manage their OpsRamp environment effectively.
 """
     
     async def _get_llm_response(self, system_prompt: str) -> Any:
@@ -1011,6 +1233,32 @@ If you don't need to call a tool, just respond normally with your knowledge of O
                             "required": ["action"]
                         }
                     }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "resources",
+                        "description": "Manage OpsRamp resources with comprehensive actions for discovery, configuration, and lifecycle management",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "action": {
+                                    "type": "string",
+                                    "enum": ["list", "get", "getMinimal"],
+                                    "description": "The action to perform: list (all resources), get (detailed info), getMinimal (lightweight listing)"
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "description": "Resource ID for get action"
+                                },
+                                "filters": {
+                                    "type": "object",
+                                    "description": "Filter criteria for listing resources"
+                                }
+                            },
+                            "required": ["action"]
+                        }
+                    }
                 }
             ]
             
@@ -1024,11 +1272,39 @@ If you don't need to call a tool, just respond normally with your knowledge of O
             return response
         
         elif self.llm_provider == "anthropic":
+            # Convert conversation history to Anthropic format (remove system messages)
+            anthropic_messages = []
+            for msg in self.conversation_history:
+                if msg["role"] != "system":
+                    anthropic_messages.append(msg)
+            
             response = await asyncio.to_thread(
                 self.anthropic_client.messages.create,
                 model=self.model,
+                max_tokens=4096,  # Required parameter for Anthropic
                 system=system_prompt,
-                messages=self.conversation_history
+                messages=anthropic_messages if anthropic_messages else [{"role": "user", "content": "Hello"}]
+            )
+            return response
+        
+        elif self.llm_provider == "gemini":
+            # Convert conversation to Gemini format
+            gemini_messages = []
+            
+            # Add system prompt as first user message
+            gemini_messages.append(f"System: {system_prompt}\n\n")
+            
+            # Add conversation history
+            for msg in self.conversation_history:
+                role = "User" if msg["role"] == "user" else "Assistant"
+                gemini_messages.append(f"{role}: {msg['content']}\n")
+            
+            # Combine all messages
+            full_prompt = "".join(gemini_messages)
+            
+            response = await asyncio.to_thread(
+                self.gemini_client.generate_content,
+                full_prompt
             )
             return response
     
@@ -1040,6 +1316,11 @@ If you don't need to call a tool, just respond normally with your knowledge of O
         elif self.llm_provider == "anthropic":
             # For Anthropic, we need to check for the tool call format in the text
             content = llm_response.content[0].text
+            return "```tool" in content
+        
+        elif self.llm_provider == "gemini":
+            # For Gemini, check for tool call format in the text
+            content = llm_response.text
             return "```tool" in content
     
     def _extract_tool_calls(self, llm_response: Any) -> List[Dict[str, Any]]:
@@ -1057,6 +1338,19 @@ If you don't need to call a tool, just respond normally with your knowledge of O
         
         elif self.llm_provider == "anthropic":
             content = llm_response.content[0].text
+            
+            # Extract tool calls from the markdown blocks
+            for part in content.split("```tool"):
+                if "```" in part:
+                    tool_json = part.split("```")[0].strip()
+                    try:
+                        tool_call = json.loads(tool_json)
+                        tool_calls.append(tool_call)
+                    except json.JSONDecodeError:
+                        pass
+        
+        elif self.llm_provider == "gemini":
+            content = llm_response.text
             
             # Extract tool calls from the markdown blocks
             for part in content.split("```tool"):
@@ -1101,6 +1395,16 @@ If you don't need to call a tool, just respond normally with your knowledge of O
         
         elif self.llm_provider == "anthropic":
             content = llm_response.content[0].text
+            
+            # Remove tool call blocks
+            for part in content.split("```tool"):
+                if "```" in part:
+                    content = content.replace(f"```tool{part.split('```')[0]}```", "")
+            
+            return content.strip()
+        
+        elif self.llm_provider == "gemini":
+            content = llm_response.text
             
             # Remove tool call blocks
             for part in content.split("```tool"):

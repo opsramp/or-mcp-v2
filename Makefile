@@ -104,6 +104,65 @@ test: dirs mcp-go-test
 	@echo "========================================================"
 	$(GO) test -v ./tests/...
 
+# Test resource management components
+test-resources-basic: dirs
+	@echo "========================================================"
+	@echo "🧪 Running basic resource management tests..."
+	@echo "========================================================"
+	$(GO) test -v ./pkg/types/... -run ".*Resource.*"
+	$(GO) test -v ./pkg/tools/... -run ".*Resource.*"
+
+# Test resource management with coverage
+test-resources-coverage: dirs
+	@echo "========================================================"
+	@echo "🧪 Running resource management tests with coverage..."
+	@echo "========================================================"
+	$(GO) test -v -coverprofile=coverage.out ./pkg/types/... ./pkg/tools/... -run ".*Resource.*"
+	$(GO) tool cover -html=coverage.out -o coverage.html
+	@echo "✅ Coverage report generated: coverage.html"
+
+# Test resource management API integration
+test-resources-integration: build dirs config
+	@echo "========================================================"
+	@echo "🧪 Running resource management integration tests..."
+	@echo "========================================================"
+	@echo "Starting server for resource testing..."
+	@PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME) > $(OUTPUT_DIR)/server.log 2>&1 & \
+	echo $$! > .server.pid; \
+	echo "Server started with PID $$(cat .server.pid)"; \
+	echo "Waiting for server to initialize..."; \
+	sleep 3; \
+	\
+	echo "Testing resource management endpoints..."; \
+	curl -s "http://localhost:$(PORT)/health" | grep -q '"status":"ok"' && \
+	echo "✅ Server health check passed" || echo "❌ Server health check failed"; \
+	\
+	echo "Stopping server..."; \
+	if [ -f .server.pid ]; then \
+		kill -15 $$(cat .server.pid) 2>/dev/null || true; \
+		rm .server.pid; \
+	fi; \
+	echo "✅ Resource management integration test complete"
+
+# Test resource management against real OpsRamp API
+test-resources-real-api: dirs config
+	@echo "========================================================"
+	@echo "🌐 Running resource management real API tests..."
+	@echo "========================================================"
+	@if [ ! -f config.yaml ]; then \
+		echo "❌ config.yaml not found"; \
+		echo "Please create config.yaml with your OpsRamp credentials"; \
+		echo "You can copy from config.yaml.template and fill in your values"; \
+		exit 1; \
+	fi
+	@./scripts/test_resources_real_api.sh
+
+# Run comprehensive resource management tests
+test-resources-all: test-resources-basic test-resources-coverage test-resources-integration test-resources-real-api
+	@echo "========================================================"
+	@echo "✅ All resource management tests completed!"
+	@echo "========================================================"
+
 # Run a specific test file
 test-file: dirs
 	@echo "========================================================"
@@ -397,6 +456,11 @@ help:
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
 	@echo "  test            - Run server unit tests"
+	@echo "  test-resources-basic      - Run basic resource management tests"
+	@echo "  test-resources-coverage   - Run resource tests with coverage report"
+	@echo "  test-resources-integration- Run resource management integration tests"
+	@echo "  test-resources-real-api   - Run resource tests against real OpsRamp API"
+	@echo "  test-resources-all        - Run all resource management tests"
 	@echo ""
 	@echo "Security targets:"
 	@echo "  security-full   - Run comprehensive security scan"

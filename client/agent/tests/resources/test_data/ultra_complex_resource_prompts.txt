@@ -1,0 +1,74 @@
+# ULTRA-COMPLEX OPSRAMP RESOURCE MANAGEMENT PROMPTS - MULTI-TOOL SCENARIOS
+# These prompts are specifically designed to trigger multiple tool calls and complex analysis workflows
+# Using real resource data from our OpsRamp environment
+
+## CATEGORY 1: ULTRA DEEP COMPARATIVE ANALYSIS (Multi-Tool Multi-Action)
+First show me all our resources, then get detailed information on the temperature sensor 01-Front Ambient, and finally analyze the performance correlation between all temperature sensors across our infrastructure
+Show me a comprehensive comparison by first listing all our resources, then getting detailed info on each memory module individually (P1 DIMM 1-4, P1 DIMM 5-8, P2 DIMM 1-4), and finally providing capacity planning recommendations
+Perform a complete audit by listing all resources, getting detailed information on the storage device 1.6TB NVMe SSD and the network equipment at 10.54.58.51, then analyzing storage and network performance correlations
+Give me a full ecosystem analysis starting with all current resources, detailed analysis of the CPU temperature sensors (02-CPU 1, 03-CPU 2), comprehensive review of memory modules, and finally recommendations for thermal management optimization
+
+## CATEGORY 2: SECURITY AND COMPLIANCE DEEP DIVE (Multi-Resource Analysis)
+Analyze the security posture of all our resources by first listing them all, then getting detailed configuration information for the network equipment at 10.54.58.51 to examine its access controls, and comparing with security best practices for infrastructure monitoring
+Perform a comprehensive security audit by examining all resources, then deep diving into the monitoring configuration of critical hardware like memory modules and storage devices, and finally reviewing what security monitoring gaps exist
+Conduct a compliance review starting with all current resources, detailed security analysis of temperature monitoring systems for environmental compliance, and assessment of hardware monitoring coverage for regulatory requirements
+
+## CATEGORY 3: TROUBLESHOOTING WORKFLOWS (Multi-Step Diagnostic Analysis)
+Help me troubleshoot our thermal management by first showing all resources, then getting comprehensive details on temperature sensors (01-Front Ambient, 02-CPU 1, 03-CPU 2) to understand thermal patterns, and finally recommending cooling optimization strategies
+Diagnose our memory subsystem health by listing all current resources, performing detailed analysis on all DIMM modules (P1 DIMM 1-4, P1 DIMM 5-8, P2 DIMM 1-4) to identify potential failures, then providing memory optimization recommendations
+Investigate storage performance issues by first getting all resource statuses, then deep diving into detailed configuration of the 1.6TB NVMe SSD and related storage components, and exploring performance optimization opportunities
+
+## CATEGORY 4: CAPACITY PLANNING AND EXPANSION ANALYSIS (Strategic Multi-Tool Workflows)
+Plan our infrastructure expansion strategy by first inventorying all current resources, analyzing detailed capacity utilization of our storage device 1.6TB NVMe SSD and memory modules, then developing a comprehensive capacity roadmap with growth projections
+Develop a comprehensive hardware refresh roadmap starting with current resource inventory, detailed analysis of aging components like memory modules and temperature sensors, and complete review of hardware lifecycle management for strategic planning
+Create an infrastructure optimization plan by examining all current resources, getting detailed performance specifications for critical components (CPU sensors, memory, storage), and analyzing upgrade paths for maximum performance improvement
+
+## CATEGORY 5: INCIDENT RESPONSE AND OPERATIONAL INTELLIGENCE (Complex Multi-Action Scenarios)
+Respond to a critical thermal alert by first checking all resource statuses, then performing detailed diagnostics on temperature sensors (01-Front Ambient, 02-CPU 1, 03-CPU 2) showing abnormal readings, and finally developing immediate and long-term thermal management solutions
+Handle a memory subsystem degradation incident by listing all resources to identify affected systems, getting comprehensive details on failing memory modules (P1 DIMM series), and researching memory replacement and optimization strategies for rapid recovery
+Manage a complex storage performance outage by inventorying all resource health, deep diving into the problematic 1.6TB NVMe SSD performance metrics, and evaluating storage optimization and redundancy options for business continuity
+
+## CATEGORY 6: ADVANCED CONFIGURATION AND OPTIMIZATION (Multi-Resource Deep Analysis)
+Optimize our hardware monitoring portfolio by first reviewing all current resources, then analyzing the detailed configuration and performance metrics of critical components (temperature sensors, memory modules, storage), and finally implementing advanced monitoring configurations for better performance
+Enhance our infrastructure effectiveness by examining all resource statuses, performing detailed analysis of the thermal management system (all temperature sensors) and memory subsystem configuration, and exploring next-generation monitoring capabilities for improved reliability
+Modernize our hardware architecture by inventorying current capabilities, deep diving into the technical details of storage and network resources (1.6TB NVMe SSD, 10.54.58.51 equipment), and researching cutting-edge infrastructure technologies for technological advancement
+
+## CATEGORY 7: BUSINESS INTELLIGENCE AND REPORTING (Comprehensive Multi-Tool Analysis)
+Generate an executive infrastructure dashboard by first collecting all resource data, then performing detailed analysis of our most critical components (storage, memory, thermal management), and finally creating strategic recommendations for infrastructure investment and optimization
+Create a comprehensive hardware report starting with complete inventory, detailed technical assessment of memory subsystem (all DIMM modules) and storage performance, and market analysis of hardware upgrade opportunities for competitive positioning
+Develop operational intelligence by examining all current resources, conducting detailed performance analysis of temperature management systems and network infrastructure, and evaluating emerging hardware technologies for future opportunities
+
+## CATEGORY 8: RISK ASSESSMENT AND MITIGATION (Complex Multi-Step Analysis)
+Assess our infrastructure risk profile by first cataloging all current resources, then performing detailed vulnerability analysis of critical components like the storage device showing potential wear patterns, and finally reviewing hardware redundancy options for risk mitigation
+Evaluate business continuity risks by listing all resource dependencies, conducting detailed impact analysis of critical infrastructure components (memory modules, storage, thermal management), and exploring redundant hardware configurations for disaster recovery
+Perform comprehensive risk management by inventorying all infrastructure points of failure, deep diving into the configuration vulnerabilities of network equipment and storage systems, and researching resilient hardware architectures for risk reduction
+
+## CATEGORY 9: RESOURCE LIFECYCLE MANAGEMENT (End-to-End Workflow Analysis)
+Manage our hardware lifecycle by first auditing all current resources, then analyzing the deployment status and health of aging components like memory modules and storage devices, and finally exploring next-generation hardware technologies for technology refresh
+Plan infrastructure evolution by examining all existing capabilities, performing detailed lifecycle analysis of our oldest hardware components (temperature sensors, memory modules), and researching emerging hardware technologies for modernization roadmap
+Orchestrate hardware transformation by cataloging current state, conducting detailed migration assessment of storage and memory subsystems, and evaluating advanced hardware technologies for digital infrastructure transformation
+
+## CATEGORY 10: ADVANCED MONITORING AND OBSERVABILITY (Multi-Layer Analysis)
+Enhance our observability strategy by first mapping all current resources, then analyzing the monitoring capabilities and limitations of our thermal management system (all temperature sensors) and memory monitoring, and finally exploring advanced observability technologies for comprehensive infrastructure monitoring
+Improve monitoring coverage by inventorying all resource touchpoints, conducting detailed telemetry analysis of storage device performance and network equipment monitoring, and researching next-gen monitoring technologies for full-stack infrastructure visibility
+Optimize monitoring architecture by examining all current monitored resources, performing detailed metrics analysis of critical components (CPU thermal sensors, memory modules, storage), and evaluating cutting-edge monitoring technologies for predictive analytics and proactive maintenance
+
+## CATEGORY 11: THERMAL MANAGEMENT OPTIMIZATION (Specialized Multi-Resource Analysis)
+Optimize our thermal management strategy by first listing all resources, then analyzing detailed temperature patterns from sensors 01-Front Ambient, 02-CPU 1, and 03-CPU 2, and finally developing comprehensive cooling optimization and thermal monitoring enhancement plans
+Design advanced thermal monitoring by examining all current resources, performing detailed thermal analysis of CPU temperature sensors and ambient temperature monitoring, and creating thermal management strategies for maximum hardware longevity and performance
+Plan thermal infrastructure improvements by inventorying all temperature-sensitive resources, deep diving into thermal sensor data patterns and cooling system performance, and researching advanced thermal management technologies for next-generation cooling solutions
+
+## CATEGORY 12: MEMORY SUBSYSTEM OPTIMIZATION (Advanced Multi-DIMM Analysis)
+Optimize our memory architecture by first cataloging all resources, then performing detailed analysis of memory module performance across all DIMM slots (P1 DIMM 1-4, P1 DIMM 5-8, P2 DIMM 1-4), and finally developing memory optimization strategies for maximum system performance
+Analyze memory subsystem health by examining all current resources, conducting detailed performance analysis of each memory module individually, and creating comprehensive memory monitoring and optimization recommendations for enhanced system reliability
+Plan memory infrastructure evolution by inventorying all memory-related resources, deep diving into DIMM performance patterns and memory utilization trends, and researching next-generation memory technologies for future infrastructure upgrades
+
+## CATEGORY 13: STORAGE AND NETWORK CONVERGENCE (Integrated Infrastructure Analysis)
+Analyze storage and network integration by first listing all resources, then performing detailed analysis of the 1.6TB NVMe SSD performance and network equipment at 10.54.58.51, and finally developing converged infrastructure optimization strategies for maximum data throughput
+Optimize storage-network performance by examining all current resources, conducting detailed analysis of storage device capabilities and network infrastructure performance, and creating integrated optimization plans for enhanced data flow and storage efficiency
+Plan converged infrastructure strategy by inventorying all storage and network resources, deep diving into performance correlations between storage and network components, and researching software-defined infrastructure technologies for next-generation convergence
+
+## CATEGORY 14: PREDICTIVE MAINTENANCE AND AI-DRIVEN OPTIMIZATION (Advanced Analytics Scenarios)
+Implement predictive maintenance by first cataloging all resources, then analyzing historical performance patterns of critical components (temperature sensors, memory modules, storage), and finally developing AI-driven maintenance scheduling and failure prediction models
+Design intelligent infrastructure management by examining all current resources, performing detailed trend analysis of hardware performance metrics and failure patterns, and creating machine learning models for proactive infrastructure optimization and maintenance
+Develop autonomous infrastructure optimization by inventorying all monitored resources, deep diving into performance analytics and optimization opportunities, and researching AI-driven infrastructure management technologies for self-optimizing systems 

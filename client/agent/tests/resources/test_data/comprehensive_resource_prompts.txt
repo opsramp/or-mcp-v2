@@ -1,0 +1,147 @@
+# COMPREHENSIVE OPSRAMP RESOURCE MANAGEMENT PROMPTS
+# These prompts are designed to trigger multiple tool calls and cover all resource management scenarios
+# Each prompt is categorized by the complexity and type of operations it should trigger
+
+## CATEGORY 1: DISCOVERY & INVENTORY (Basic Multi-Tool Scenarios)
+Show me all our resources and tell me which ones need attention
+List all resources and give me details on the physical servers
+What resources do we have and what's the status of each one?
+Display all our resources and highlight any that are down or in maintenance
+Show me our resource inventory and explain what each type does
+List our resources and tell me about available device types we haven't deployed yet
+
+## CATEGORY 2: COMPARATIVE ANALYSIS (Multi-Resource Analysis)
+Compare all our virtual machines and tell me which ones are performing best
+Show me the differences between our physical servers and virtual machines
+What's the difference between our storage devices and network equipment?
+Compare the deployment dates of all our resources and identify the newest ones
+Analyze all our resources and tell me which categories we're missing
+Show me which of our resources have high CPU utilization and prioritize them
+
+## CATEGORY 3: DETAILED TROUBLESHOOTING (Deep Analysis Queries)
+Give me comprehensive details on the resource with hostname 10.54.58.51 and analyze any issues
+The temperature sensor 01-Front Ambient shows critical readings - give me full details and troubleshooting steps
+Analyze the detailed configuration of our memory module P1 DIMM 1-4 and check for problems
+Show me complete details on all our resources that have connection issues
+Deep dive into the storage device 1.6TB NVMe SSD and explain its current state
+Give me detailed analysis of why the network equipment at 10.54.58.51 might be showing performance issues
+
+## CATEGORY 4: OPERATIONAL WORKFLOWS (Multi-Step Operations)
+I need to understand how to add a new server - show me the creation process and requirements
+Walk me through putting the memory module P1 DIMM 1-4 into maintenance mode temporarily
+Show me how to update monitoring configuration for the storage device
+I want to add monitoring for new temperature sensors - show me the setup process
+Guide me through enabling monitoring for a disabled resource and verify it's working properly
+Help me decommission an old server safely - show me the process and what to check first
+
+## CATEGORY 5: COMPLIANCE & SECURITY ANALYSIS
+Audit all our resources for security compliance - check access controls and monitoring status
+Show me which resources have proper monitoring configured and their security status
+Analyze all resource configurations and identify potential security vulnerabilities
+List resources by their monitoring types and recommend security improvements
+Check all our resources for proper access management and flag any issues
+Review resource access patterns and identify unused or unmonitored resources
+
+## CATEGORY 6: CAPACITY & PERFORMANCE PLANNING
+Analyze our resource ecosystem and recommend what additional monitoring we need
+Show me resource utilization patterns and identify overloaded or underutilized systems
+Compare our current resources with capacity requirements and suggest expansion opportunities
+Evaluate our monitoring coverage gaps by analyzing current resource health data
+Assess resource health across all categories and recommend optimization strategies
+Plan resource roadmap by analyzing current capacity vs projected growth
+
+## CATEGORY 7: INCIDENT RESPONSE & DIAGNOSIS
+Something is wrong with our storage monitoring - diagnose all related storage resources
+Our temperature alerts stopped working - check all temperature sensor resources and troubleshoot
+We're missing metrics from the memory modules - investigate all DIMM resources fully
+The network equipment at 10.54.58.51 stopped reporting - give me complete diagnostic information
+Resource monitoring seems inconsistent - analyze all resources and identify patterns
+We have performance gaps - analyze which resources might be down or misconfigured
+
+## CATEGORY 8: UPGRADE & MAINTENANCE PLANNING
+Show me all resources that need maintenance and plan a maintenance sequence
+Plan maintenance windows for resources showing critical status
+Identify which resources are running older firmware and prioritize updates
+Show me the lifecycle status of all our resources and recommend maintenance actions
+Plan resource updates considering dependencies and business impact
+Evaluate our resource health against maintenance schedules and create update roadmap
+
+## CATEGORY 9: BUSINESS IMPACT ANALYSIS
+Analyze which resources are critical for our infrastructure operations
+Show me resource coverage across our IT environment and identify gaps
+Evaluate the business impact if each critical resource went down
+Prioritize resources by importance and monitoring coverage
+Assess our resource portfolio and recommend consolidation opportunities
+Show me which systems lack monitoring coverage and business risk implications
+
+## CATEGORY 10: COMPLEX TECHNICAL QUERIES
+The temperature sensor shows critical readings but normal status - explain this contradiction
+The memory module P1 DIMM 1-4 has error counters increasing - investigate why
+Why does the storage device show available space but performance degradation?
+Analyze the monitoring configuration for all our temperature sensors
+The network equipment shows connectivity but packet loss - explain this issue
+Compare the health metrics across all our memory modules and identify anomalies
+
+## CATEGORY 11: RESOURCE TYPE EXPLORATION
+What storage devices are available for monitoring that we haven't implemented yet?
+Show me all available server types and compare with what we currently have
+Explore network monitoring options and recommend additions to our current setup
+What memory monitoring capabilities exist beyond what we're currently using?
+Investigate CPU monitoring possibilities for our environment
+Show me all available resource categories and assess our coverage in each
+
+## CATEGORY 12: REPORTING & DOCUMENTATION
+Generate a comprehensive report of our entire resource ecosystem
+Document the current state of all resources with detailed analysis
+Create a resource inventory report with recommendations
+Summarize our resource portfolio for management review
+Generate detailed documentation for each critical resource
+Prepare resource status report for quarterly review
+
+## CATEGORY 13: ADVANCED CONFIGURATION SCENARIOS
+Show me how to configure high availability monitoring for critical resources
+Plan disaster recovery for our resource monitoring setup
+Configure monitoring redundancy across multiple resource types
+Set up automated alerting for critical resource failures
+Design resource architecture for maximum reliability
+Plan resource configuration for multi-site deployment
+
+## CATEGORY 14: REAL-TIME OPERATIONS
+Check current operational status of all resources right now
+Monitor real-time health of critical infrastructure resources
+Investigate current performance issues across all resources
+Assess immediate impact of any resource failures
+Real-time troubleshooting of resource performance issues
+Current status check and immediate remediation recommendations
+
+## CATEGORY 15: FUTURE PLANNING & STRATEGY
+Design resource strategy for next 6 months based on current capacity
+Plan resource expansion to cover additional infrastructure components
+Evaluate emerging resource types for future implementation
+Strategic assessment of resource portfolio evolution needs
+Long-term resource architecture planning and roadmap development
+Innovation opportunities in our resource monitoring approach
+
+## CATEGORY 16: HARDWARE-SPECIFIC SCENARIOS
+Analyze all our temperature sensors and identify cooling system health
+Deep dive into memory module performance across all P1 and P2 DIMM slots
+Investigate storage device health and predict failure patterns
+Monitor network equipment performance and bandwidth utilization
+Assess CPU performance across all processing units
+Evaluate chipset health and system-level performance metrics
+
+## CATEGORY 17: SITE & LOCATION MANAGEMENT
+Show me resources grouped by physical location and assess distribution
+Analyze resource density across different sites and recommend optimization
+Plan resource deployment for new site locations
+Evaluate geographic redundancy of critical resources
+Assess site-level resource dependencies and single points of failure
+Design multi-site resource monitoring and management strategy
+
+## CATEGORY 18: AUTOMATION & ORCHESTRATION
+Automate resource health checks and create monitoring workflows
+Design automated response to resource failure scenarios
+Plan orchestrated maintenance across resource dependencies
+Create automated capacity planning based on resource utilization trends
+Implement automated alerting and escalation for resource issues
+Design self-healing resource monitoring and recovery systems 

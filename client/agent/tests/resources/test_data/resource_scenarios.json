@@ -1,0 +1,33 @@
+{
+  "basic_scenarios": [
+    {
+      "name": "resource_discovery",
+      "description": "Basic resource discovery and listing",
+      "prompts": [
+        "Show me first 5 resources",
+        "List resource types available",
+        "Get basic resource inventory"
+      ]
+    },
+    {
+      "name": "resource_filtering",
+      "description": "Resource filtering by type and status",
+      "prompts": [
+        "Show me only virtual machines",
+        "List active resources only",
+        "Display network equipment"
+      ]
+    }
+  ],
+  "comprehensive_scenarios": [
+    {
+      "name": "resource_analysis",
+      "description": "Comprehensive resource analysis",
+      "prompts": [
+        "Analyze resource utilization patterns",
+        "Show resource performance metrics",
+        "Identify resource bottlenecks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3422 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>tools: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/accounts.go (0.0%)</option>
+				
+				<option value="file1">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/devices.go (0.0%)</option>
+				
+				<option value="file2">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/events.go (0.0%)</option>
+				
+				<option value="file3">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/integrations.go (0.0%)</option>
+				
+				<option value="file4">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/integrations_api.go (0.0%)</option>
+				
+				<option value="file5">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/jobs.go (0.0%)</option>
+				
+				<option value="file6">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/monitoring.go (0.0%)</option>
+				
+				<option value="file7">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/policies.go (0.0%)</option>
+				
+				<option value="file8">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/resources.go (44.1%)</option>
+				
+				<option value="file9">github.com/vobbilis/codegen/or-mcp-v2/pkg/tools/resources_api.go (36.9%)</option>
+				
+				<option value="file10">github.com/vobbilis/codegen/or-mcp-v2/pkg/types/resources.go (3.9%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type AccountsTool struct{}
+
+func NewAccountsMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "accounts",
+                Description: "Manage OpsRamp accounts and their configurations.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Account ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Account configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, accountsToolHandler
+}</span>
+
+func accountsToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;AccountsTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual OpsRamp logic
+func (at *AccountsTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list accounts
+        return []interface{}{}, nil
+}</span>
+func (at *AccountsTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get account
+        return struct{}{}, nil
+}</span>
+func (at *AccountsTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create account
+        return struct{}{}, nil
+}</span>
+func (at *AccountsTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update account
+        return struct{}{}, nil
+}</span>
+func (at *AccountsTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete account
+        return nil
+}</span>
+func (at *AccountsTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable account
+        return nil
+}</span>
+func (at *AccountsTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable account
+        return nil
+}</span>
+func (at *AccountsTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list account types
+        return []interface{}{}, nil
+}</span>
+func (at *AccountsTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get account type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type DevicesTool struct{}
+
+// NewDevicesMcpTool returns the MCP tool definition and handler for devices
+func NewDevicesMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "devices",
+                Description: "Manage HPE OpsRamp devices and their configurations.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Device ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Device configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, devicesToolHandler
+}</span>
+
+func devicesToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;DevicesTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual OpsRamp logic
+func (dt *DevicesTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list devices
+        return []interface{}{}, nil
+}</span>
+func (dt *DevicesTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get device
+        return struct{}{}, nil
+}</span>
+func (dt *DevicesTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create device
+        return struct{}{}, nil
+}</span>
+func (dt *DevicesTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update device
+        return struct{}{}, nil
+}</span>
+func (dt *DevicesTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete device
+        return nil
+}</span>
+func (dt *DevicesTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable device
+        return nil
+}</span>
+func (dt *DevicesTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable device
+        return nil
+}</span>
+func (dt *DevicesTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list device types
+        return []interface{}{}, nil
+}</span>
+func (dt *DevicesTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get device type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type EventsTool struct{}
+
+func NewEventsMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "events",
+                Description: "Manage HPE OpsRamp events and event rules.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Event ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Event configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, eventsToolHandler
+}</span>
+
+func eventsToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;EventsTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual OpsRamp logic
+func (et *EventsTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list events
+        return []interface{}{}, nil
+}</span>
+func (et *EventsTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get event
+        return struct{}{}, nil
+}</span>
+func (et *EventsTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create event
+        return struct{}{}, nil
+}</span>
+func (et *EventsTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update event
+        return struct{}{}, nil
+}</span>
+func (et *EventsTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete event
+        return nil
+}</span>
+func (et *EventsTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable event
+        return nil
+}</span>
+func (et *EventsTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable event
+        return nil
+}</span>
+func (et *EventsTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list event types
+        return []interface{}{}, nil
+}</span>
+func (et *EventsTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get event type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package tools
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "time"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+        "github.com/vobbilis/codegen/or-mcp-v2/common"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+)
+
+// IntegrationsTool provides MCP methods for managing integrations
+
+// IntegrationsAPI defines the contract for integration operations
+// Implementations: real API client, mocks, etc.
+type IntegrationsAPI interface {
+        List(ctx context.Context) ([]types.Integration, error)
+        Get(ctx context.Context, id string) (*types.Integration, error)
+        GetDetailed(ctx context.Context, id string) (*types.DetailedIntegration, error)
+        Create(ctx context.Context, config map[string]interface{}) (*types.Integration, error)
+        Update(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error)
+        Delete(ctx context.Context, id string) error
+        Enable(ctx context.Context, id string) error
+        Disable(ctx context.Context, id string) error
+        ListTypes(ctx context.Context) ([]types.IntegrationType, error)
+        GetType(ctx context.Context, id string) (*types.IntegrationType, error)
+}
+
+type IntegrationsTool struct {
+        api    IntegrationsAPI
+        logger *common.CustomLogger
+}
+
+// NewIntegrationsTool creates a new IntegrationsTool with the provided API implementation
+func NewIntegrationsTool(api IntegrationsAPI) *IntegrationsTool <span class="cov0" title="0">{
+        // Get the logger
+        logger := common.GetLogger()
+
+        return &amp;IntegrationsTool{
+                api:    api,
+                logger: logger,
+        }
+}</span>
+
+// NewIntegrationsMcpTool returns the MCP tool definition and handler for integrations
+func NewIntegrationsMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        // Get the logger
+        logger := common.GetLogger()
+
+        // Load configuration
+        config, err := common.LoadConfig("")
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error("Failed to load config for OpsRamp Integrations API: %v", err)
+                logger.Warn("Falling back to mock implementation")
+                mockAPI := &amp;MockIntegrationsAPI{}
+                return createIntegrationsTool(mockAPI)
+        }</span>
+
+        // Create and initialize the real API implementation
+        <span class="cov0" title="0">api, err := NewOpsRampIntegrationsAPI(&amp;config.OpsRamp)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error("Failed to initialize OpsRamp Integrations API: %v", err)
+                logger.Warn("Falling back to mock implementation")
+                // Fall back to mock implementation if initialization fails
+                mockAPI := &amp;MockIntegrationsAPI{}
+                return createIntegrationsTool(mockAPI)
+        }</span>
+
+        <span class="cov0" title="0">logger.Info("Successfully initialized OpsRamp Integrations API")
+        return createIntegrationsTool(api)</span>
+}
+
+// createIntegrationsTool creates the MCP tool with the given API implementation
+func createIntegrationsTool(api IntegrationsAPI) (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                        Name:        "integrations",
+                        Description: "Manage HPE OpsRamp integrations and their configurations.",
+                        InputSchema: mcp.ToolInputSchema{
+                                Type: "object",
+                                Properties: map[string]interface{}{
+                                        "action": map[string]interface{}{
+                                                "type":        "string",
+                                                "description": "Action to perform: list, get, getDetailed, create, update, delete, enable, disable, listTypes, getType",
+                                        },
+                                        "id": map[string]interface{}{
+                                                "type":        "string",
+                                                "description": "Integration ID (for get, update, delete, enable, disable, getType)",
+                                        },
+                                        "config": map[string]interface{}{
+                                                "type":        "object",
+                                                "description": "Integration configuration (for create and update)",
+                                        },
+                                },
+                                Required: []string{"action"},
+                        },
+                }, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) </span><span class="cov0" title="0">{
+                        return IntegrationsToolHandler(ctx, req, api)
+                }</span>
+}
+
+// IntegrationsToolHandler routes requests to the correct method
+// Exported for testing purposes
+func IntegrationsToolHandler(ctx context.Context, req mcp.CallToolRequest, api IntegrationsAPI) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        // Extract arguments using the helper methods
+        action := req.GetString("action", "")
+        id := req.GetString("id", "")
+
+        // Get arguments as a map
+        args := req.GetArguments()
+
+        // Extract config map if it exists
+        var config map[string]interface{}
+        if configArg, exists := args["config"]; exists &amp;&amp; configArg != nil </span><span class="cov0" title="0">{
+                if configMap, ok := configArg.(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                        config = configMap
+                }</span>
+        }
+
+        // Log the tool execution
+        <span class="cov0" title="0">logger := common.GetLogger()
+        logger.LogToolExecution("integrations", action, args)
+
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                logger.Info("Executing List integrations")
+                result, err = api.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                logger.Info("Executing Get integration with ID: %s", id)
+                result, err = api.Get(ctx, id)</span>
+        case "getDetailed":<span class="cov0" title="0">
+                logger.Info("Executing GetDetailed integration with ID: %s", id)
+                result, err = api.GetDetailed(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                logger.Info("Executing Create integration")
+                result, err = api.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                logger.Info("Executing Update integration with ID: %s", id)
+                result, err = api.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                logger.Info("Executing Delete integration with ID: %s", id)
+                err = api.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                logger.Info("Executing Enable integration with ID: %s", id)
+                err = api.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                logger.Info("Executing Disable integration with ID: %s", id)
+                err = api.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                logger.Info("Executing List integration types")
+                integrationTypes, err := api.ListTypes(ctx)
+                if err != nil </span><span class="cov0" title="0">{
+                        logger.Error("Error listing integration types: %v", err)
+                        return nil, err
+                }</span>
+
+                // Log the results for debugging
+                <span class="cov0" title="0">typesCount := len(integrationTypes)
+                logger.Debug("Found %d integration types", typesCount)
+
+                if typesCount &gt; 0 </span><span class="cov0" title="0">{
+                        // Log a sample of the integration types
+                        sampleSize := min(3, typesCount)
+                        for i := 0; i &lt; sampleSize; i++ </span><span class="cov0" title="0">{
+                                intType := integrationTypes[i]
+                                logger.Debug("Integration type %d: ID=%s, Name=%s, Category=%s", i, intType.ID, intType.Name, intType.Category)
+                        }</span>
+                } else<span class="cov0" title="0"> {
+                        logger.Warn("No integration types found")
+                }</span>
+
+                // Set the result
+                <span class="cov0" title="0">result = integrationTypes</span>
+        case "getType":<span class="cov0" title="0">
+                logger.Info("Executing Get integration type with ID: %s", id)
+                result, err = api.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                logger.Error("Unknown action: %s", action)
+                err = server.ErrToolNotFound</span>
+        }
+
+        // Log the result
+        <span class="cov0" title="0">logger.LogToolResult("integrations", action, result, err)
+
+        // If there's an error, return it
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Convert the result to a JSON string
+        <span class="cov0" title="0">resultJSON, err := json.Marshal(result)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error("Failed to marshal result to JSON: %v", err)
+                return nil, err
+        }</span>
+
+        // Log the JSON result
+        <span class="cov0" title="0">logger.Debug("Result JSON: %s", string(resultJSON))
+
+        // Create the MCP tool result
+        toolResult := &amp;mcp.CallToolResult{
+                Content: []mcp.Content{
+                        mcp.TextContent{
+                                Text: string(resultJSON),
+                        },
+                },
+        }
+
+        return toolResult, nil</span>
+}
+
+// MockIntegrationsAPI is a simple mock implementation of IntegrationsAPI
+type MockIntegrationsAPI struct{}
+
+func (m *MockIntegrationsAPI) List(ctx context.Context) ([]types.Integration, error) <span class="cov0" title="0">{
+        // Return mock data
+        return []types.Integration{
+                {
+                        ID:     "int-001",
+                        Name:   "Mock Integration 1",
+                        Type:   "api",
+                        Status: "active",
+                },
+                {
+                        ID:     "int-002",
+                        Name:   "Mock Integration 2",
+                        Type:   "webhook",
+                        Status: "inactive",
+                },
+        }, nil
+}</span>
+
+func (m *MockIntegrationsAPI) Get(ctx context.Context, id string) (*types.Integration, error) <span class="cov0" title="0">{
+        return &amp;types.Integration{
+                ID:     id,
+                Name:   "Mock Integration",
+                Type:   "api",
+                Status: "active",
+        }, nil
+}</span>
+
+func (m *MockIntegrationsAPI) Create(ctx context.Context, config map[string]interface{}) (*types.Integration, error) <span class="cov0" title="0">{
+        name, _ := config["name"].(string)
+        return &amp;types.Integration{
+                ID:     "new-int-001",
+                Name:   name,
+                Type:   "api",
+                Status: "active",
+        }, nil
+}</span>
+
+func (m *MockIntegrationsAPI) Update(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error) <span class="cov0" title="0">{
+        name, _ := config["name"].(string)
+        return &amp;types.Integration{
+                ID:     id,
+                Name:   name,
+                Type:   "api",
+                Status: "active",
+        }, nil
+}</span>
+
+func (m *MockIntegrationsAPI) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        return nil
+}</span>
+
+func (m *MockIntegrationsAPI) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        return nil
+}</span>
+
+func (m *MockIntegrationsAPI) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        return nil
+}</span>
+
+func (m *MockIntegrationsAPI) ListTypes(ctx context.Context) ([]types.IntegrationType, error) <span class="cov0" title="0">{
+        return []types.IntegrationType{
+                {
+                        ID:          "api",
+                        Name:        "API Integration",
+                        Description: "Integration with external APIs",
+                        Category:    "external",
+                },
+                {
+                        ID:          "webhook",
+                        Name:        "Webhook Integration",
+                        Description: "Integration with webhooks",
+                        Category:    "external",
+                },
+        }, nil
+}</span>
+
+func (m *MockIntegrationsAPI) GetType(ctx context.Context, id string) (*types.IntegrationType, error) <span class="cov0" title="0">{
+        switch id </span>{
+        case "api":<span class="cov0" title="0">
+                return &amp;types.IntegrationType{
+                        ID:          "api",
+                        Name:        "API Integration",
+                        Description: "Integration with external APIs",
+                        Category:    "external",
+                }, nil</span>
+        case "webhook":<span class="cov0" title="0">
+                return &amp;types.IntegrationType{
+                        ID:          "webhook",
+                        Name:        "Webhook Integration",
+                        Description: "Integration with webhooks",
+                        Category:    "external",
+                }, nil</span>
+        default:<span class="cov0" title="0">
+                return nil, fmt.Errorf("integration type with ID %s not found", id)</span>
+        }
+}
+
+func (m *MockIntegrationsAPI) GetDetailed(ctx context.Context, id string) (*types.DetailedIntegration, error) <span class="cov0" title="0">{
+        // Get the basic integration first
+        integration, err := m.Get(ctx, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Create an extended integration
+        <span class="cov0" title="0">extIntegration := types.ExtendedIntegration{
+                Integration:     *integration,
+                DisplayName:     "Mock Detailed Integration",
+                App:             "mock-app",
+                Version:         "1.0.0",
+                Category:        "Mock Category",
+                State:           "Active",
+                InstalledBy:     "admin",
+                InstalledTime:   time.Now().Format(time.RFC3339),
+                ModifiedBy:      "admin",
+                ModifiedTime:    time.Now().Format(time.RFC3339),
+                UpdateAvailable: false,
+        }
+
+        // Create a detailed integration with mock data
+        detailed := &amp;types.DetailedIntegration{
+                ExtendedIntegration: extIntegration,
+                Resources: []types.IntegrationResource{
+                        {
+                                ID:           "res-001",
+                                Name:         "Mock Resource 1",
+                                Type:         "Server",
+                                Status:       "Up",
+                                DiscoveredAt: time.Now(),
+                        },
+                        {
+                                ID:           "res-002",
+                                Name:         "Mock Resource 2",
+                                Type:         "Database",
+                                Status:       "Down",
+                                DiscoveredAt: time.Now().Add(-24 * time.Hour),
+                        },
+                },
+                Metrics: []types.Metric{
+                        {
+                                Name:        "CPU Usage",
+                                Description: "CPU usage percentage",
+                                Unit:        "%",
+                                Type:        "Gauge",
+                        },
+                        {
+                                Name:        "Memory Usage",
+                                Description: "Memory usage percentage",
+                                Unit:        "%",
+                                Type:        "Gauge",
+                        },
+                },
+                Alerts: []types.Alert{
+                        {
+                                ID:          "alert-001",
+                                Name:        "High CPU Usage",
+                                Severity:    "Critical",
+                                Status:      "Active",
+                                CreatedTime: time.Now().Add(-1 * time.Hour),
+                        },
+                },
+                LastDiscoveryRun: &amp;types.DiscoveryRunInfo{
+                        StartTime: time.Now().Add(-2 * time.Hour),
+                        EndTime:   time.Now().Add(-1 * time.Hour),
+                        Status:    "Completed",
+                        Resources: 2,
+                },
+        }
+
+        return detailed, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package tools
+
+import (
+        "bytes"
+        "context"
+        "encoding/json"
+        "fmt"
+        "io"
+        "net/http"
+        "net/url"
+        "strings"
+        "time"
+
+        "github.com/vobbilis/codegen/or-mcp-v2/common"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+)
+
+// OpsRampIntegrationsAPI implements the real OpsRamp API client
+type OpsRampIntegrationsAPI struct {
+        config     *common.OpsRampConfig
+        httpClient *http.Client
+        baseURL    string
+        authURL    string
+        authToken  string
+        tokenExp   time.Time
+        logger     *common.CustomLogger
+}
+
+// NewOpsRampIntegrationsAPI creates a new client for accessing the OpsRamp API
+func NewOpsRampIntegrationsAPI(config *common.OpsRampConfig) (*OpsRampIntegrationsAPI, error) <span class="cov0" title="0">{
+        if config == nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("config cannot be nil")
+        }</span>
+
+        // Validate required config fields
+        <span class="cov0" title="0">if config.TenantURL == "" || config.AuthURL == "" ||
+                config.AuthKey == "" || config.AuthSecret == "" ||
+                config.TenantID == "" </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("invalid OpsRamp configuration: missing required fields")
+        }</span>
+
+        // Check if using placeholder values
+        <span class="cov0" title="0">if strings.Contains(config.TenantURL, "your-tenant-instance") ||
+                strings.Contains(config.AuthKey, "YOUR_AUTH_KEY") ||
+                strings.Contains(config.AuthSecret, "YOUR_AUTH_SECRET") ||
+                strings.Contains(config.TenantID, "YOUR_TENANT_ID") </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("invalid OpsRamp configuration: contains placeholder values")
+        }</span>
+
+        <span class="cov0" title="0">api := &amp;OpsRampIntegrationsAPI{
+                httpClient: &amp;http.Client{
+                        Timeout: 30 * time.Second,
+                },
+                config:  config,
+                baseURL: config.TenantURL,
+                logger:  common.GetLogger(),
+        }
+
+        // Authenticate to verify credentials immediately
+        err := api.authenticate(context.Background())
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to authenticate with OpsRamp API: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return api, nil</span>
+}
+
+// authenticate obtains a new OAuth token from OpsRamp
+func (a *OpsRampIntegrationsAPI) authenticate(ctx context.Context) error <span class="cov0" title="0">{
+        data := url.Values{}
+        data.Set("grant_type", "client_credentials")
+        data.Set("client_id", a.config.AuthKey)
+        data.Set("client_secret", a.config.AuthSecret)
+
+        req, err := http.NewRequestWithContext(ctx, "POST", a.config.AuthURL, strings.NewReader(data.Encode()))
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error creating auth request: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+        resp, err := a.httpClient.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error during auth request: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        body, err := io.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error reading auth response: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if resp.StatusCode != http.StatusOK </span><span class="cov0" title="0">{
+                return fmt.Errorf("auth request failed with status %d: %s", resp.StatusCode, string(body))
+        }</span>
+
+        <span class="cov0" title="0">var authResp struct {
+                AccessToken string `json:"access_token"`
+                ExpiresIn   int    `json:"expires_in"`
+        }
+
+        if err := json.Unmarshal(body, &amp;authResp); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error unmarshaling auth response: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">a.authToken = authResp.AccessToken
+        // Set expiry time with a small buffer to ensure we refresh before actual expiry
+        a.tokenExp = time.Now().Add(time.Duration(authResp.ExpiresIn-60) * time.Second)
+
+        return nil</span>
+}
+
+// ensureAuth ensures a valid authentication token is available
+func (a *OpsRampIntegrationsAPI) ensureAuth(ctx context.Context) error <span class="cov0" title="0">{
+        if a.authToken == "" || time.Now().After(a.tokenExp) </span><span class="cov0" title="0">{
+                return a.authenticate(ctx)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// makeRequest makes an authenticated request to the OpsRamp API
+func (a *OpsRampIntegrationsAPI) makeRequest(ctx context.Context, method, path string, body interface{}) ([]byte, error) <span class="cov0" title="0">{
+        // Ensure we have a valid auth token
+        if err := a.ensureAuth(ctx); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">var reqBody []byte
+        var err error
+
+        if body != nil </span><span class="cov0" title="0">{
+                reqBody, err = json.Marshal(body)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("error marshaling request body: %w", err)
+                }</span>
+        }
+
+        // Format according to OpsRamp API documentation
+        // The URL should be in the format: {baseURL}/api/v2/tenants/{tenantId}/integrations/{path}
+        <span class="cov0" title="0">fullURL := fmt.Sprintf("%s/api/v2/tenants/%s/integrations/%s", a.baseURL, a.config.TenantID, path)
+        a.logger.Debug("Making API request to URL: %s", fullURL)
+        a.logger.Debug("Request method: %s, path: %s", method, path)
+        a.logger.Debug("Base URL: %s, Tenant ID: %s", a.baseURL, a.config.TenantID)
+
+        req, err := http.NewRequestWithContext(ctx, method, fullURL, bytes.NewBuffer(reqBody))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error creating request: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">req.Header.Set("Content-Type", "application/json")
+        req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.authToken))
+
+        resp, err := a.httpClient.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error making request: %w", err)
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        respBody, err := io.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error reading response body: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">if resp.StatusCode &lt; 200 || resp.StatusCode &gt;= 300 </span><span class="cov0" title="0">{
+                a.logger.Error("API request failed with status %d: %s", resp.StatusCode, string(respBody))
+                return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(respBody))
+        }</span>
+
+        <span class="cov0" title="0">return respBody, nil</span>
+}
+
+// List returns all integrations
+func (a *OpsRampIntegrationsAPI) List(ctx context.Context) ([]types.Integration, error) <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/search
+        respBody, err := a.makeRequest(ctx, "GET", "installed/search", nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error listing integrations: %w", err)
+        }</span>
+
+        // Log the raw response for debugging
+        <span class="cov0" title="0">a.logger.Debug("Raw response: %s", string(respBody))
+
+        // Try to parse as a structured response first
+        var structuredResp struct {
+                Results []types.Integration `json:"results"`
+        }
+
+        if err := json.Unmarshal(respBody, &amp;structuredResp); err != nil </span><span class="cov0" title="0">{
+                // If that fails, try parsing as a direct array
+                var directArray []types.Integration
+                if err2 := json.Unmarshal(respBody, &amp;directArray); err2 != nil </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("error unmarshaling integration list: %w (array error: %w)", err, err2)
+                }</span>
+                <span class="cov0" title="0">return directArray, nil</span>
+        }
+
+        // If we got a structured response with results field
+        <span class="cov0" title="0">if len(structuredResp.Results) &gt; 0 </span><span class="cov0" title="0">{
+                return structuredResp.Results, nil
+        }</span>
+
+        // Final fallback: try to parse as a direct array
+        <span class="cov0" title="0">var directArray []types.Integration
+        if err := json.Unmarshal(respBody, &amp;directArray); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error unmarshaling integration list: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return directArray, nil</span>
+}
+
+// Get returns a specific integration by ID
+func (a *OpsRampIntegrationsAPI) Get(ctx context.Context, id string) (*types.Integration, error) <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/{installedIntgId}
+        respBody, err := a.makeRequest(ctx, "GET", fmt.Sprintf("installed/%s", id), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error getting integration %s: %w", id, err)
+        }</span>
+
+        // Log the raw response for debugging
+        <span class="cov0" title="0">a.logger.Debug("Raw response: %s", string(respBody))
+
+        var integration types.Integration
+        if err := json.Unmarshal(respBody, &amp;integration); err != nil </span><span class="cov0" title="0">{
+                // Check if this might be a response with a nested field
+                var wrappedResp map[string]types.Integration
+                if err2 := json.Unmarshal(respBody, &amp;wrappedResp); err2 != nil </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("error unmarshaling integration: %w", err)
+                }</span>
+
+                // Check common wrapper fields
+                <span class="cov0" title="0">for _, field := range []string{"integration", "result", "data"} </span><span class="cov0" title="0">{
+                        if wrapped, ok := wrappedResp[field]; ok </span><span class="cov0" title="0">{
+                                return &amp;wrapped, nil
+                        }</span>
+                }
+
+                <span class="cov0" title="0">return nil, fmt.Errorf("error unmarshaling integration: %w", err)</span>
+        }
+
+        // Ensure ID is set
+        <span class="cov0" title="0">if integration.ID == "" </span><span class="cov0" title="0">{
+                integration.ID = id
+        }</span>
+
+        <span class="cov0" title="0">return &amp;integration, nil</span>
+}
+
+// GetDetailed returns detailed information about an integration
+func (a *OpsRampIntegrationsAPI) GetDetailed(ctx context.Context, id string) (*types.DetailedIntegration, error) <span class="cov0" title="0">{
+        // Using same endpoint as Get with additional processing if needed
+        respBody, err := a.makeRequest(ctx, "GET", fmt.Sprintf("installed/%s", id), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error getting detailed integration %s: %w", id, err)
+        }</span>
+
+        // Log the raw response for debugging
+        <span class="cov0" title="0">a.logger.Debug("Raw response: %s", string(respBody))
+
+        var integration types.DetailedIntegration
+        if err := json.Unmarshal(respBody, &amp;integration); err != nil </span><span class="cov0" title="0">{
+                // Check if this might be a response with a nested field
+                var wrappedResp map[string]types.DetailedIntegration
+                if err2 := json.Unmarshal(respBody, &amp;wrappedResp); err2 != nil </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("error unmarshaling detailed integration: %w", err)
+                }</span>
+
+                // Check common wrapper fields
+                <span class="cov0" title="0">for _, field := range []string{"integration", "result", "data"} </span><span class="cov0" title="0">{
+                        if wrapped, ok := wrappedResp[field]; ok </span><span class="cov0" title="0">{
+                                return &amp;wrapped, nil
+                        }</span>
+                }
+
+                <span class="cov0" title="0">return nil, fmt.Errorf("error unmarshaling detailed integration: %w", err)</span>
+        }
+
+        // Ensure ID is set
+        <span class="cov0" title="0">if integration.ID == "" </span><span class="cov0" title="0">{
+                integration.ID = id
+        }</span>
+
+        <span class="cov0" title="0">return &amp;integration, nil</span>
+}
+
+// Create creates a new integration
+func (a *OpsRampIntegrationsAPI) Create(ctx context.Context, config map[string]interface{}) (*types.Integration, error) <span class="cov0" title="0">{
+        // Get the integration name from the config
+        intgName, ok := config["name"].(string)
+        if !ok || intgName == "" </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("integration name is required")
+        }</span>
+
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/install/{uniqueName}
+        <span class="cov0" title="0">respBody, err := a.makeRequest(ctx, "POST", fmt.Sprintf("install/%s", intgName), config)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error creating integration: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">var integration types.Integration
+        if err := json.Unmarshal(respBody, &amp;integration); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error unmarshaling created integration: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;integration, nil</span>
+}
+
+// Update updates an existing integration
+func (a *OpsRampIntegrationsAPI) Update(ctx context.Context, id string, config map[string]interface{}) (*types.Integration, error) <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/{installedIntgId}
+        respBody, err := a.makeRequest(ctx, "POST", fmt.Sprintf("installed/%s", id), config)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error updating integration %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">var integration types.Integration
+        if err := json.Unmarshal(respBody, &amp;integration); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error unmarshaling updated integration: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;integration, nil</span>
+}
+
+// Delete removes an integration
+func (a *OpsRampIntegrationsAPI) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/{installedIntgId}
+        _, err := a.makeRequest(ctx, "DELETE", fmt.Sprintf("installed/%s", id), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error deleting integration %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Enable enables an integration
+func (a *OpsRampIntegrationsAPI) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/{installedIntgId}/{actions}
+        // where actions is 'enable'
+        _, err := a.makeRequest(ctx, "POST", fmt.Sprintf("installed/%s/enable", id), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error enabling integration %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Disable disables an integration
+func (a *OpsRampIntegrationsAPI) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/installed/{installedIntgId}/{actions}
+        // where actions is 'disable'
+        _, err := a.makeRequest(ctx, "POST", fmt.Sprintf("installed/%s/disable", id), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error disabling integration %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// ListTypes returns all integration types
+func (a *OpsRampIntegrationsAPI) ListTypes(ctx context.Context) ([]types.IntegrationType, error) <span class="cov0" title="0">{
+        // Based on OpsRamp API docs: /api/v2/tenants/{tenantId}/integrations/available/search
+        respBody, err := a.makeRequest(ctx, "GET", "available/search", nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error listing integration types: %w", err)
+        }</span>
+
+        // Log the raw response for debugging
+        <span class="cov0" title="0">a.logger.Debug("Raw response: %s", string(respBody))
+
+        // The response appears to be a direct array of integration objects
+        var rawIntegrationTypes []map[string]interface{}
+        err = json.Unmarshal(respBody, &amp;rawIntegrationTypes)
+        if err != nil </span><span class="cov0" title="0">{
+                a.logger.Error("Failed to unmarshal integration types as array: %v", err)
+
+                // Try other formats as fallback
+
+                // Try to parse as a structured response with results
+                var structuredResp struct {
+                        Results []map[string]interface{} `json:"results"`
+                }
+                err1 := json.Unmarshal(respBody, &amp;structuredResp)
+                if err1 == nil &amp;&amp; len(structuredResp.Results) &gt; 0 </span><span class="cov0" title="0">{
+                        rawIntegrationTypes = structuredResp.Results
+                }</span> else<span class="cov0" title="0"> {
+                        return nil, fmt.Errorf("error unmarshaling integration types: %w", err)
+                }</span>
+        }
+
+        // Convert the raw integration types to our structured format
+        <span class="cov0" title="0">var integrationTypes []types.IntegrationType
+        for _, raw := range rawIntegrationTypes </span><span class="cov0" title="0">{
+                intType := types.IntegrationType{
+                        ID:          getString(raw, "id"),
+                        Name:        getString(raw, "name"),
+                        Description: getString(raw, "description"),
+                        Category:    getString(raw, "category"),
+                }
+
+                // If category is missing, try to get it from subCategory
+                if intType.Category == "" </span><span class="cov0" title="0">{
+                        if subCat, ok := raw["subCategory"]; ok </span><span class="cov0" title="0">{
+                                intType.Category = fmt.Sprintf("%v", subCat)
+                        }</span> else<span class="cov0" title="0"> if subCatJson, ok := raw["subCategoryJson"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                                if name, ok := subCatJson["name"].(string); ok </span><span class="cov0" title="0">{
+                                        intType.Category = name
+                                }</span> else<span class="cov0" title="0"> if displayName, ok := subCatJson["displayName"].(string); ok </span><span class="cov0" title="0">{
+                                        intType.Category = displayName
+                                }</span>
+                        }
+                }
+
+                // Use displayName if name is missing
+                <span class="cov0" title="0">if intType.Name == "" &amp;&amp; raw["displayName"] != nil </span><span class="cov0" title="0">{
+                        intType.Name = fmt.Sprintf("%v", raw["displayName"])
+                }</span>
+
+                <span class="cov0" title="0">integrationTypes = append(integrationTypes, intType)</span>
+        }
+
+        <span class="cov0" title="0">return integrationTypes, nil</span>
+}
+
+// Helper function to safely get string values from map
+func getString(m map[string]interface{}, key string) string <span class="cov0" title="0">{
+        if val, ok := m[key]; ok &amp;&amp; val != nil </span><span class="cov0" title="0">{
+                return fmt.Sprintf("%v", val)
+        }</span>
+        <span class="cov0" title="0">return ""</span>
+}
+
+// GetType returns a specific integration type
+func (a *OpsRampIntegrationsAPI) GetType(ctx context.Context, id string) (*types.IntegrationType, error) <span class="cov0" title="0">{
+        // There's no specific endpoint for getting integration type by ID
+        // So we'll get all types and filter by ID
+        types, err := a.ListTypes(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error getting integration types: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">for _, integrationType := range types </span><span class="cov0" title="0">{
+                if integrationType.ID == id </span><span class="cov0" title="0">{
+                        return &amp;integrationType, nil
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil, fmt.Errorf("integration type with ID %s not found", id)</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type JobsTool struct{}
+
+func NewJobsMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "jobs",
+                Description: "Manage HPE OpsRamp jobs and job executions.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Job ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Job configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, jobsToolHandler
+}</span>
+
+func jobsToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;JobsTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual HPE OpsRamp logic
+func (jt *JobsTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list jobs
+        return []interface{}{}, nil
+}</span>
+func (jt *JobsTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get job
+        return struct{}{}, nil
+}</span>
+func (jt *JobsTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create job
+        return struct{}{}, nil
+}</span>
+func (jt *JobsTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update job
+        return struct{}{}, nil
+}</span>
+func (jt *JobsTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete job
+        return nil
+}</span>
+func (jt *JobsTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable job
+        return nil
+}</span>
+func (jt *JobsTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable job
+        return nil
+}</span>
+func (jt *JobsTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list job types
+        return []interface{}{}, nil
+}</span>
+func (jt *JobsTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get job type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type MonitoringTool struct{}
+
+func NewMonitoringMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "monitoring",
+                Description: "Manage HPE OpsRamp monitoring configurations and policies.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Monitoring ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Monitoring configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, monitoringToolHandler
+}</span>
+
+func monitoringToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;MonitoringTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual OpsRamp logic
+func (mt *MonitoringTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list monitoring configs
+        return []interface{}{}, nil
+}</span>
+func (mt *MonitoringTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get monitoring config
+        return struct{}{}, nil
+}</span>
+func (mt *MonitoringTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create monitoring config
+        return struct{}{}, nil
+}</span>
+func (mt *MonitoringTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update monitoring config
+        return struct{}{}, nil
+}</span>
+func (mt *MonitoringTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete monitoring config
+        return nil
+}</span>
+func (mt *MonitoringTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable monitoring config
+        return nil
+}</span>
+func (mt *MonitoringTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable monitoring config
+        return nil
+}</span>
+func (mt *MonitoringTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list monitoring types
+        return []interface{}{}, nil
+}</span>
+func (mt *MonitoringTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get monitoring type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+)
+
+type PoliciesTool struct{}
+
+func NewPoliciesMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov0" title="0">{
+        return mcp.Tool{
+                Name:        "policies",
+                Description: "Manage HPE OpsRamp policies and their configurations.",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform: list, get, create, update, delete, enable, disable, listTypes, getType",
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Policy ID (for get, update, delete, enable, disable, getType)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Policy configuration (for create and update)",
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }, policiesToolHandler
+}</span>
+
+func policiesToolHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) <span class="cov0" title="0">{
+        args := req.GetArguments()
+        action, _ := args["action"].(string)
+        id, _ := args["id"].(string)
+        config, _ := args["config"].(map[string]interface{})
+
+        tool := &amp;PoliciesTool{}
+        var err error
+        var result interface{}
+
+        switch action </span>{
+        case "list":<span class="cov0" title="0">
+                result, err = tool.List(ctx)</span>
+        case "get":<span class="cov0" title="0">
+                result, err = tool.Get(ctx, id)</span>
+        case "create":<span class="cov0" title="0">
+                result, err = tool.Create(ctx, config)</span>
+        case "update":<span class="cov0" title="0">
+                result, err = tool.Update(ctx, id, config)</span>
+        case "delete":<span class="cov0" title="0">
+                err = tool.Delete(ctx, id)</span>
+        case "enable":<span class="cov0" title="0">
+                err = tool.Enable(ctx, id)</span>
+        case "disable":<span class="cov0" title="0">
+                err = tool.Disable(ctx, id)</span>
+        case "listTypes":<span class="cov0" title="0">
+                result, err = tool.ListTypes(ctx)</span>
+        case "getType":<span class="cov0" title="0">
+                result, err = tool.GetType(ctx, id)</span>
+        default:<span class="cov0" title="0">
+                err = server.ErrToolNotFound</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return &amp;mcp.CallToolResult{
+                        IsError: true,
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                }, nil
+        }</span>
+
+        // Convert result to string if it exists
+        <span class="cov0" title="0">resultText := "OK"
+        if result != nil </span><span class="cov0" title="0">{
+                resultText = fmt.Sprintf("%v", result)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: resultText}},
+        }, nil</span>
+}
+
+// Implementation stubs for actual OpsRamp logic
+func (pt *PoliciesTool) List(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list policies
+        return []interface{}{}, nil
+}</span>
+func (pt *PoliciesTool) Get(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get policy
+        return struct{}{}, nil
+}</span>
+func (pt *PoliciesTool) Create(ctx context.Context, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement create policy
+        return struct{}{}, nil
+}</span>
+func (pt *PoliciesTool) Update(ctx context.Context, id string, config map[string]interface{}) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement update policy
+        return struct{}{}, nil
+}</span>
+func (pt *PoliciesTool) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement delete policy
+        return nil
+}</span>
+func (pt *PoliciesTool) Enable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement enable policy
+        return nil
+}</span>
+func (pt *PoliciesTool) Disable(ctx context.Context, id string) error <span class="cov0" title="0">{
+        // TODO: Implement disable policy
+        return nil
+}</span>
+func (pt *PoliciesTool) ListTypes(ctx context.Context) ([]interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement list policy types
+        return []interface{}{}, nil
+}</span>
+func (pt *PoliciesTool) GetType(ctx context.Context, id string) (interface{}, error) <span class="cov0" title="0">{
+        // TODO: Implement get policy type
+        return struct{}{}, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package tools
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+
+        "github.com/mark3labs/mcp-go/mcp"
+        "github.com/mark3labs/mcp-go/server"
+        "github.com/vobbilis/codegen/or-mcp-v2/common"
+        "github.com/vobbilis/codegen/or-mcp-v2/internal/adapters"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+)
+
+// ResourcesTool provides methods for managing OpsRamp resources
+type ResourcesTool struct {
+        adapter *adapters.ResourcesAdapter
+        logger  *common.CustomLogger
+}
+
+// NewResourcesMcpTool creates a new MCP tool for managing OpsRamp resources
+func NewResourcesMcpTool() (mcp.Tool, server.ToolHandlerFunc) <span class="cov8" title="1">{
+        // Get the OpsRamp client
+        opsRampClient := client.GetOpsRampClient()
+
+        // Create the adapter
+        adapter := adapters.NewResourcesAdapter(opsRampClient)
+
+        // Get the logger
+        logger := common.GetLogger()
+
+        // Create the tool
+        resourcesTool := &amp;ResourcesTool{
+                adapter: adapter,
+                logger:  logger,
+        }
+
+        // Define the tool schema
+        tool := mcp.Tool{
+                Name:        "resources",
+                Description: "Manage OpsRamp resources (devices, groups, etc.)",
+                InputSchema: mcp.ToolInputSchema{
+                        Type: "object",
+                        Properties: map[string]interface{}{
+                                "action": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Action to perform on resources",
+                                        "enum": []string{
+                                                "list", "get", "getDetailed", "getMinimal", "create", "update", "delete", "search",
+                                                "bulkUpdate", "bulkDelete", "getResourceTypes", "changeState",
+                                                "getMetrics", "getTags", "updateTags",
+                                        },
+                                },
+                                "id": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "Resource ID (for get, getDetailed, update, delete, changeState, getMetrics, getTags, updateTags)",
+                                },
+                                "config": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Resource configuration (for create and update)",
+                                },
+                                "params": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Search parameters (for search)",
+                                },
+                                "resourceIds": map[string]interface{}{
+                                        "type":        "array",
+                                        "description": "List of resource IDs (for bulkUpdate, bulkDelete)",
+                                        "items": map[string]interface{}{
+                                                "type": "string",
+                                        },
+                                },
+                                "updates": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Updates to apply to resources (for bulkUpdate)",
+                                },
+                                "state": map[string]interface{}{
+                                        "type":        "string",
+                                        "description": "State to set for a resource (for changeState)",
+                                },
+                                "metricRequest": map[string]interface{}{
+                                        "type":        "object",
+                                        "description": "Metrics request parameters (for getMetrics)",
+                                },
+                                "tags": map[string]interface{}{
+                                        "type":        "array",
+                                        "description": "Tags to set for a resource (for updateTags)",
+                                        "items": map[string]interface{}{
+                                                "type": "object",
+                                        },
+                                },
+                        },
+                        Required: []string{"action"},
+                },
+        }
+
+        return tool, resourcesToolHandler(resourcesTool)
+}</span>
+
+// resourcesToolHandler handles MCP tool requests for resources
+func resourcesToolHandler(tool *ResourcesTool) server.ToolHandlerFunc <span class="cov8" title="1">{
+        return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) </span><span class="cov8" title="1">{
+                // Extract arguments
+                args := req.GetArguments()
+                action, _ := args["action"].(string)
+                id, _ := args["id"].(string)
+                config, _ := args["config"].(map[string]interface{})
+                params, _ := args["params"].(map[string]interface{})
+                resourceIdsRaw, _ := args["resourceIds"].([]interface{})
+                updates, _ := args["updates"].(map[string]interface{})
+                state, _ := args["state"].(string)
+                metricRequest, _ := args["metricRequest"].(map[string]interface{})
+                tagsRaw, _ := args["tags"].([]interface{})
+
+                // Convert resourceIds from []interface{} to []string
+                var resourceIds []string
+                if resourceIdsRaw != nil </span><span class="cov0" title="0">{
+                        resourceIds = make([]string, len(resourceIdsRaw))
+                        for i, v := range resourceIdsRaw </span><span class="cov0" title="0">{
+                                if s, ok := v.(string); ok </span><span class="cov0" title="0">{
+                                        resourceIds[i] = s
+                                }</span>
+                        }
+                }
+
+                // Convert tags from []interface{} to []types.Tag
+                <span class="cov8" title="1">var tags []types.Tag
+                if tagsRaw != nil </span><span class="cov0" title="0">{
+                        tags = make([]types.Tag, 0, len(tagsRaw))
+                        for _, v := range tagsRaw </span><span class="cov0" title="0">{
+                                if tagMap, ok := v.(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                                        name, _ := tagMap["name"].(string)
+                                        value, _ := tagMap["value"].(string)
+                                        if name != "" </span><span class="cov0" title="0">{
+                                                tags = append(tags, types.Tag{
+                                                        Name:  name,
+                                                        Value: value,
+                                                })
+                                        }</span>
+                                }
+                        }
+                }
+
+                // Log the tool execution
+                <span class="cov8" title="1">tool.logger.LogToolExecution("resources", action, args)
+
+                var result interface{}
+                var err error
+
+                // Get the OpsRamp client
+                opsRampClient := client.GetOpsRampClient()
+
+                // Create the resources API
+                resourcesAPI := NewOpsRampResourcesAPI(opsRampClient)
+
+                // Execute the requested action
+                switch action </span>{
+                case "list":<span class="cov8" title="1">
+                        tool.logger.Info("Executing List resources")
+                        // List is just a search with default parameters
+                        searchParams := types.ResourceSearchParams{
+                                PageSize: 100,
+                                PageNo:   1,
+                        }
+                        result, err = resourcesAPI.Search(ctx, searchParams)</span>
+                case "get":<span class="cov8" title="1">
+                        tool.logger.Info("Executing Get resource with ID: %s", id)
+                        result, err = resourcesAPI.Get(ctx, id)</span>
+                case "getDetailed":<span class="cov0" title="0">
+                        tool.logger.Info("Executing GetDetailed resource with ID: %s", id)
+                        result, err = resourcesAPI.GetDetailed(ctx, id)</span>
+                case "getMinimal":<span class="cov8" title="1">
+                        tool.logger.Info("Executing GetMinimal resource with ID: %s", id)
+                        if id == "" </span><span class="cov8" title="1">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource ID provided for getMinimal"}},
+                                }, nil
+                        }</span>
+                        <span class="cov8" title="1">result, err = resourcesAPI.GetMinimal(ctx, id)</span>
+                case "create":<span class="cov0" title="0">
+                        tool.logger.Info("Executing Create resource")
+                        // Convert config to ResourceCreateRequest
+                        var createRequest types.ResourceCreateRequest
+                        configJSON, _ := json.Marshal(config)
+                        if err := json.Unmarshal(configJSON, &amp;createRequest); err != nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: fmt.Sprintf("Failed to parse create request: %v", err)}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">result, err = resourcesAPI.Create(ctx, createRequest)</span>
+                case "update":<span class="cov0" title="0">
+                        tool.logger.Info("Executing Update resource with ID: %s", id)
+                        // Convert config to ResourceUpdateRequest
+                        var updateRequest types.ResourceUpdateRequest
+                        configJSON, _ := json.Marshal(config)
+                        if err := json.Unmarshal(configJSON, &amp;updateRequest); err != nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: fmt.Sprintf("Failed to parse update request: %v", err)}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">result, err = resourcesAPI.Update(ctx, id, updateRequest)</span>
+                case "delete":<span class="cov0" title="0">
+                        tool.logger.Info("Executing Delete resource with ID: %s", id)
+                        err = resourcesAPI.Delete(ctx, id)</span>
+                case "search":<span class="cov8" title="1">
+                        tool.logger.Info("Executing Search resources with parameters")
+                        // Convert params to ResourceSearchParams
+                        var searchParams types.ResourceSearchParams
+                        paramsJSON, _ := json.Marshal(params)
+                        if err := json.Unmarshal(paramsJSON, &amp;searchParams); err != nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: fmt.Sprintf("Failed to parse search parameters: %v", err)}},
+                                }, nil
+                        }</span>
+                        <span class="cov8" title="1">result, err = resourcesAPI.Search(ctx, searchParams)</span>
+                case "bulkUpdate":<span class="cov0" title="0">
+                        tool.logger.Info("Executing BulkUpdate resources")
+                        if len(resourceIds) == 0 </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource IDs provided for bulk update"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">if updates == nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No updates provided for bulk update"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">bulkUpdateRequest := types.ResourceBulkUpdateRequest{
+                                ResourceIDs: resourceIds,
+                                Updates:     updates,
+                        }
+                        err = resourcesAPI.BulkUpdate(ctx, bulkUpdateRequest)</span>
+                case "bulkDelete":<span class="cov0" title="0">
+                        tool.logger.Info("Executing BulkDelete resources")
+                        if len(resourceIds) == 0 </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource IDs provided for bulk delete"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">bulkDeleteRequest := types.ResourceBulkDeleteRequest{
+                                ResourceIDs: resourceIds,
+                        }
+                        err = resourcesAPI.BulkDelete(ctx, bulkDeleteRequest)</span>
+                case "getResourceTypes":<span class="cov8" title="1">
+                        tool.logger.Info("Executing GetResourceTypes")
+                        result, err = resourcesAPI.GetResourceTypes(ctx)</span>
+                case "changeState":<span class="cov8" title="1">
+                        tool.logger.Info("Executing ChangeState for resource %s to %s", id, state)
+                        if id == "" </span><span class="cov8" title="1">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource ID provided for change state"}},
+                                }, nil
+                        }</span>
+                        <span class="cov8" title="1">if state == "" </span><span class="cov8" title="1">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No state provided for change state"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">stateChangeRequest := types.ResourceStateChangeRequest{
+                                State: state,
+                        }
+                        err = resourcesAPI.ChangeState(ctx, id, stateChangeRequest)</span>
+                case "getMetrics":<span class="cov0" title="0">
+                        tool.logger.Info("Executing GetMetrics for resource %s", id)
+                        if id == "" </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource ID provided for get metrics"}},
+                                }, nil
+                        }</span>
+                        // Convert metricRequest to ResourceMetricsRequest
+                        <span class="cov0" title="0">var metricsRequest types.ResourceMetricsRequest
+                        metricRequestJSON, _ := json.Marshal(metricRequest)
+                        if err := json.Unmarshal(metricRequestJSON, &amp;metricsRequest); err != nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: fmt.Sprintf("Failed to parse metrics request: %v", err)}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">result, err = resourcesAPI.GetMetrics(ctx, id, metricsRequest)</span>
+                case "getTags":<span class="cov0" title="0">
+                        tool.logger.Info("Executing GetTags for resource %s", id)
+                        if id == "" </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource ID provided for get tags"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">result, err = resourcesAPI.GetTags(ctx, id)</span>
+                case "updateTags":<span class="cov0" title="0">
+                        tool.logger.Info("Executing UpdateTags for resource %s", id)
+                        if id == "" </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No resource ID provided for update tags"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">if len(tags) == 0 </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "No tags provided for update tags"}},
+                                }, nil
+                        }</span>
+                        <span class="cov0" title="0">err = resourcesAPI.UpdateTags(ctx, id, tags)</span>
+                default:<span class="cov8" title="1">
+                        err = fmt.Errorf("unknown action: %s", action)</span>
+                }
+
+                // Log the tool result
+                <span class="cov8" title="1">tool.logger.LogToolResult("resources", action, result, err)
+
+                // Handle errors
+                if err != nil </span><span class="cov8" title="1">{
+                        return &amp;mcp.CallToolResult{
+                                IsError: true,
+                                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: err.Error()}},
+                        }, nil
+                }</span>
+
+                // Return the result
+                <span class="cov0" title="0">if result != nil </span><span class="cov0" title="0">{
+                        // Convert the result to JSON
+                        resultJSON, err := json.MarshalIndent(result, "", "  ")
+                        if err != nil </span><span class="cov0" title="0">{
+                                return &amp;mcp.CallToolResult{
+                                        IsError: true,
+                                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: fmt.Sprintf("Failed to marshal result: %v", err)}},
+                                }, nil
+                        }</span>
+
+                        <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                                Content: []mcp.Content{mcp.TextContent{Type: "text", Text: string(resultJSON)}},
+                        }, nil</span>
+                }
+
+                // Return a simple success message for actions that don't return a result
+                <span class="cov0" title="0">return &amp;mcp.CallToolResult{
+                        Content: []mcp.Content{mcp.TextContent{Type: "text", Text: "Operation completed successfully"}},
+                }, nil</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package tools
+
+import (
+        "context"
+        "fmt"
+        "net/url"
+        "strconv"
+        "time"
+
+        "github.com/vobbilis/codegen/or-mcp-v2/common"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
+        "github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+)
+
+// ResourcesAPI defines the contract for resource operations
+type ResourcesAPI interface {
+        // Search searches for resources based on the provided parameters
+        Search(ctx context.Context, params types.ResourceSearchParams) (*types.ResourceSearchResponse, error)
+
+        // Get retrieves a specific resource by ID
+        Get(ctx context.Context, id string) (*types.Resource, error)
+
+        // GetDetailed retrieves detailed information about a specific resource by ID
+        GetDetailed(ctx context.Context, id string) (*types.DetailedResource, error)
+
+        // Create creates a new resource
+        Create(ctx context.Context, resource types.ResourceCreateRequest) (*types.Resource, error)
+
+        // Update updates an existing resource
+        Update(ctx context.Context, id string, resource types.ResourceUpdateRequest) (*types.Resource, error)
+
+        // Delete deletes a resource by ID
+        Delete(ctx context.Context, id string) error
+
+        // BulkUpdate updates multiple resources at once
+        BulkUpdate(ctx context.Context, request types.ResourceBulkUpdateRequest) error
+
+        // BulkDelete deletes multiple resources at once
+        BulkDelete(ctx context.Context, request types.ResourceBulkDeleteRequest) error
+
+        // GetResourceTypes retrieves all available resource types
+        GetResourceTypes(ctx context.Context) ([]types.ResourceTypeInfo, error)
+
+        // ChangeState changes the state of a resource
+        ChangeState(ctx context.Context, id string, request types.ResourceStateChangeRequest) error
+
+        // GetMetrics retrieves metrics for a resource
+        GetMetrics(ctx context.Context, id string, request types.ResourceMetricsRequest) (*types.ResourceMetricsResponse, error)
+
+        // GetTags retrieves all tags for a resource
+        GetTags(ctx context.Context, id string) ([]types.Tag, error)
+
+        // UpdateTags updates the tags for a resource
+        UpdateTags(ctx context.Context, id string, tags []types.Tag) error
+
+        // GetMinimal retrieves minimal resource information for performance
+        GetMinimal(ctx context.Context, id string) (*types.ResourceMinimal, error)
+}
+
+// OpsRampResourcesAPI implements the ResourcesAPI interface for OpsRamp
+type OpsRampResourcesAPI struct {
+        client *client.OpsRampClient
+        logger *common.CustomLogger
+        config *ResourcesAPIConfig
+}
+
+// ResourcesAPIConfig holds configuration for the Resources API client
+type ResourcesAPIConfig struct {
+        RetryAttempts  int           `json:"retry_attempts"`
+        RetryDelay     time.Duration `json:"retry_delay"`
+        RequestTimeout time.Duration `json:"request_timeout"`
+        RateLimitDelay time.Duration `json:"rate_limit_delay"`
+        CircuitBreaker bool          `json:"circuit_breaker"`
+        MaxFailures    int           `json:"max_failures"`
+        ResetTimeout   time.Duration `json:"reset_timeout"`
+}
+
+// NewOpsRampResourcesAPI creates a new OpsRamp resources API client
+func NewOpsRampResourcesAPI(client *client.OpsRampClient) *OpsRampResourcesAPI <span class="cov8" title="1">{
+        // Get the logger
+        logger := common.GetLogger()
+
+        // Default configuration
+        config := &amp;ResourcesAPIConfig{
+                RetryAttempts:  3,
+                RetryDelay:     1 * time.Second,
+                RequestTimeout: 30 * time.Second,
+                RateLimitDelay: 5 * time.Second,
+                CircuitBreaker: true,
+                MaxFailures:    5,
+                ResetTimeout:   60 * time.Second,
+        }
+
+        return &amp;OpsRampResourcesAPI{
+                client: client,
+                logger: logger,
+                config: config,
+        }
+}</span>
+
+// NewOpsRampResourcesAPIWithConfig creates a new OpsRamp resources API client with custom configuration
+func NewOpsRampResourcesAPIWithConfig(client *client.OpsRampClient, config *ResourcesAPIConfig) *OpsRampResourcesAPI <span class="cov0" title="0">{
+        // Get the logger
+        logger := common.GetLogger()
+
+        return &amp;OpsRampResourcesAPI{
+                client: client,
+                logger: logger,
+                config: config,
+        }
+}</span>
+
+// Search searches for resources based on the provided parameters
+func (api *OpsRampResourcesAPI) Search(ctx context.Context, params types.ResourceSearchParams) (*types.ResourceSearchResponse, error) <span class="cov8" title="1">{
+        api.logger.Info("Searching for resources with parameters")
+
+        // Build query parameters
+        queryParams := url.Values{}
+
+        // Add pagination parameters
+        if params.PageNo &gt; 0 </span><span class="cov8" title="1">{
+                queryParams.Add("pageNo", strconv.Itoa(params.PageNo))
+        }</span>
+        <span class="cov8" title="1">if params.PageSize &gt; 0 </span><span class="cov8" title="1">{
+                queryParams.Add("pageSize", strconv.Itoa(params.PageSize))
+        }</span>
+
+        // Add sorting parameters
+        <span class="cov8" title="1">if params.SortName != "" </span><span class="cov0" title="0">{
+                queryParams.Add("sortName", params.SortName)
+        }</span>
+        <span class="cov8" title="1">queryParams.Add("isDescendingOrder", strconv.FormatBool(params.IsDescendingOrder))
+
+        // Add filter parameters
+        if params.QueryString != "" </span><span class="cov0" title="0">{
+                queryParams.Add("queryString", params.QueryString)
+        }</span>
+        <span class="cov8" title="1">if params.HostName != "" </span><span class="cov0" title="0">{
+                queryParams.Add("hostName", params.HostName)
+        }</span>
+        <span class="cov8" title="1">if params.DNSName != "" </span><span class="cov0" title="0">{
+                queryParams.Add("dnsName", params.DNSName)
+        }</span>
+        <span class="cov8" title="1">if params.ResourceName != "" </span><span class="cov0" title="0">{
+                queryParams.Add("resourceName", params.ResourceName)
+        }</span>
+        <span class="cov8" title="1">if params.AliasName != "" </span><span class="cov0" title="0">{
+                queryParams.Add("aliasName", params.AliasName)
+        }</span>
+        <span class="cov8" title="1">if params.ID != "" </span><span class="cov0" title="0">{
+                queryParams.Add("id", params.ID)
+        }</span>
+        <span class="cov8" title="1">if params.SerialNumber != "" </span><span class="cov0" title="0">{
+                queryParams.Add("serialNumber", params.SerialNumber)
+        }</span>
+        <span class="cov8" title="1">if params.IPAddress != "" </span><span class="cov0" title="0">{
+                queryParams.Add("ipAddress", params.IPAddress)
+        }</span>
+        <span class="cov8" title="1">if params.SystemUID != "" </span><span class="cov0" title="0">{
+                queryParams.Add("systemUID", params.SystemUID)
+        }</span>
+        <span class="cov8" title="1">if params.State != "" </span><span class="cov0" title="0">{
+                queryParams.Add("state", params.State)
+        }</span>
+        <span class="cov8" title="1">if params.Type != "" </span><span class="cov0" title="0">{
+                queryParams.Add("type", params.Type)
+        }</span>
+        <span class="cov8" title="1">if params.DeviceType != "" </span><span class="cov0" title="0">{
+                queryParams.Add("deviceType", params.DeviceType)
+        }</span>
+        <span class="cov8" title="1">if params.ResourceType != "" </span><span class="cov0" title="0">{
+                queryParams.Add("resourceType", params.ResourceType)
+        }</span>
+        <span class="cov8" title="1">if params.StartCreationDate != "" </span><span class="cov0" title="0">{
+                queryParams.Add("startCreationDate", params.StartCreationDate)
+        }</span>
+        <span class="cov8" title="1">if params.EndCreationDate != "" </span><span class="cov0" title="0">{
+                queryParams.Add("endCreationDate", params.EndCreationDate)
+        }</span>
+        <span class="cov8" title="1">if params.StartUpdationDate != "" </span><span class="cov0" title="0">{
+                queryParams.Add("startUpdationDate", params.StartUpdationDate)
+        }</span>
+        <span class="cov8" title="1">if params.EndUpdationDate != "" </span><span class="cov0" title="0">{
+                queryParams.Add("endUpdationDate", params.EndUpdationDate)
+        }</span>
+        <span class="cov8" title="1">if params.Tags != "" </span><span class="cov0" title="0">{
+                queryParams.Add("tags", params.Tags)
+        }</span>
+        <span class="cov8" title="1">if params.Template != "" </span><span class="cov0" title="0">{
+                queryParams.Add("template", params.Template)
+        }</span>
+        <span class="cov8" title="1">if params.AgentProfile != "" </span><span class="cov0" title="0">{
+                queryParams.Add("agentProfile", params.AgentProfile)
+        }</span>
+        <span class="cov8" title="1">if params.GatewayProfile != "" </span><span class="cov0" title="0">{
+                queryParams.Add("gatewayProfile", params.GatewayProfile)
+        }</span>
+        <span class="cov8" title="1">if params.InstanceID != "" </span><span class="cov0" title="0">{
+                queryParams.Add("instanceId", params.InstanceID)
+        }</span>
+        <span class="cov8" title="1">if params.AccountNumber != "" </span><span class="cov0" title="0">{
+                queryParams.Add("accountNumber", params.AccountNumber)
+        }</span>
+        <span class="cov8" title="1">if params.AgentInstalled != nil </span><span class="cov0" title="0">{
+                queryParams.Add("agentInstalled", strconv.FormatBool(*params.AgentInstalled))
+        }</span>
+        <span class="cov8" title="1">if params.DeviceGroup != "" </span><span class="cov0" title="0">{
+                queryParams.Add("deviceGroup", params.DeviceGroup)
+        }</span>
+        <span class="cov8" title="1">if params.ServiceGroup != "" </span><span class="cov0" title="0">{
+                queryParams.Add("serviceGroup", params.ServiceGroup)
+        }</span>
+        <span class="cov8" title="1">if params.DeviceLocation != "" </span><span class="cov0" title="0">{
+                queryParams.Add("deviceLocation", params.DeviceLocation)
+        }</span>
+        <span class="cov8" title="1">if params.IsEquals != "" </span><span class="cov0" title="0">{
+                queryParams.Add("isEquals", params.IsEquals)
+        }</span>
+        // Add new filter parameters
+        <span class="cov8" title="1">if params.AliasIP != "" </span><span class="cov0" title="0">{
+                queryParams.Add("aliasIp", params.AliasIP)
+        }</span>
+        <span class="cov8" title="1">if params.AppRoles != "" </span><span class="cov0" title="0">{
+                queryParams.Add("appRoles", params.AppRoles)
+        }</span>
+        <span class="cov8" title="1">if params.OSArchitecture != "" </span><span class="cov0" title="0">{
+                queryParams.Add("osArchitecture", params.OSArchitecture)
+        }</span>
+        <span class="cov8" title="1">if params.AssetManagedTime != "" </span><span class="cov0" title="0">{
+                queryParams.Add("assetManagedTime", params.AssetManagedTime)
+        }</span>
+        <span class="cov8" title="1">if params.FirstAssetManagedTime != "" </span><span class="cov0" title="0">{
+                queryParams.Add("firstAssetManagedTime", params.FirstAssetManagedTime)
+        }</span>
+        <span class="cov8" title="1">if params.Category != "" </span><span class="cov0" title="0">{
+                queryParams.Add("category", params.Category)
+        }</span>
+        <span class="cov8" title="1">if params.Make != "" </span><span class="cov0" title="0">{
+                queryParams.Add("make", params.Make)
+        }</span>
+        <span class="cov8" title="1">if params.Model != "" </span><span class="cov0" title="0">{
+                queryParams.Add("model", params.Model)
+        }</span>
+        <span class="cov8" title="1">if params.ProviderType != "" </span><span class="cov0" title="0">{
+                queryParams.Add("providerType", params.ProviderType)
+        }</span>
+        <span class="cov8" title="1">if params.ProviderUID != "" </span><span class="cov0" title="0">{
+                queryParams.Add("providerUID", params.ProviderUID)
+        }</span>
+
+        // Build the endpoint with query parameters
+        // Build the endpoint without query parameters
+        <span class="cov8" title="1">endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/search", api.client.GetTenantID())
+
+        // Add query parameters separately to avoid URL encoding issues
+        if len(queryParams) &gt; 0 </span><span class="cov8" title="1">{
+                endpoint = fmt.Sprintf("%s?%s", endpoint, queryParams.Encode())
+        }</span>
+
+        <span class="cov8" title="1">api.logger.Debug("Using endpoint: %s", endpoint) // Make the request
+        var response types.ResourceSearchResponse
+        err := api.client.Get(ctx, endpoint, &amp;response)
+        if err != nil </span><span class="cov8" title="1">{
+                api.logger.Error("Failed to search resources: %v", err)
+                return nil, fmt.Errorf("failed to search resources: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully searched resources, found %d results", len(response.Results))
+        return &amp;response, nil</span>
+}
+
+// Get retrieves a specific resource by ID
+func (api *OpsRampResourcesAPI) Get(ctx context.Context, id string) (*types.Resource, error) <span class="cov8" title="1">{
+        api.logger.Info("Getting resource with ID: %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var resource types.Resource
+        err := api.client.Get(ctx, endpoint, &amp;resource)
+        if err != nil </span><span class="cov8" title="1">{
+                api.logger.Error("Failed to get resource %s: %v", id, err)
+                return nil, fmt.Errorf("failed to get resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully retrieved resource: %s", resource.Name)
+        return &amp;resource, nil</span>
+}
+
+// GetDetailed retrieves detailed information about a specific resource by ID
+func (api *OpsRampResourcesAPI) GetDetailed(ctx context.Context, id string) (*types.DetailedResource, error) <span class="cov0" title="0">{
+        api.logger.Info("Getting detailed resource with ID: %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var detailedResource types.DetailedResource
+        err := api.client.Get(ctx, endpoint, &amp;detailedResource)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to get detailed resource %s: %v", id, err)
+                return nil, fmt.Errorf("failed to get detailed resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully retrieved detailed resource: %s", detailedResource.Name)
+        return &amp;detailedResource, nil</span>
+}
+
+// Create creates a new resource
+func (api *OpsRampResourcesAPI) Create(ctx context.Context, resource types.ResourceCreateRequest) (*types.Resource, error) <span class="cov0" title="0">{
+        api.logger.Info("Creating new resource of type: %s", resource.ResourceType)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources", api.client.GetTenantID())
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var createdResource types.Resource
+        err := api.client.Post(ctx, endpoint, resource, &amp;createdResource)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to create resource: %v", err)
+                return nil, fmt.Errorf("failed to create resource: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully created resource with ID: %s", createdResource.ID)
+        return &amp;createdResource, nil</span>
+}
+
+// Update updates an existing resource
+func (api *OpsRampResourcesAPI) Update(ctx context.Context, id string, resource types.ResourceUpdateRequest) (*types.Resource, error) <span class="cov0" title="0">{
+        api.logger.Info("Updating resource with ID: %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var updatedResource types.Resource
+        err := api.client.Post(ctx, endpoint, resource, &amp;updatedResource)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to update resource %s: %v", id, err)
+                return nil, fmt.Errorf("failed to update resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully updated resource: %s", updatedResource.Name)
+        return &amp;updatedResource, nil</span>
+}
+
+// Delete deletes a resource by ID
+func (api *OpsRampResourcesAPI) Delete(ctx context.Context, id string) error <span class="cov0" title="0">{
+        api.logger.Info("Deleting resource with ID: %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        err := api.client.Delete(ctx, endpoint)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to delete resource %s: %v", id, err)
+                return fmt.Errorf("failed to delete resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully deleted resource with ID: %s", id)
+        return nil</span>
+}
+
+// BulkUpdate updates multiple resources at once
+func (api *OpsRampResourcesAPI) BulkUpdate(ctx context.Context, request types.ResourceBulkUpdateRequest) error <span class="cov0" title="0">{
+        api.logger.Info("Bulk updating %d resources", len(request.ResourceIDs))
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/bulk-update", api.client.GetTenantID())
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        err := api.client.Post(ctx, endpoint, request, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to bulk update resources: %v", err)
+                return fmt.Errorf("failed to bulk update resources: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully bulk updated %d resources", len(request.ResourceIDs))
+        return nil</span>
+}
+
+// BulkDelete deletes multiple resources at once
+func (api *OpsRampResourcesAPI) BulkDelete(ctx context.Context, request types.ResourceBulkDeleteRequest) error <span class="cov0" title="0">{
+        api.logger.Info("Bulk deleting %d resources", len(request.ResourceIDs))
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/bulk-delete", api.client.GetTenantID())
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        err := api.client.Post(ctx, endpoint, request, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to bulk delete resources: %v", err)
+                return fmt.Errorf("failed to bulk delete resources: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully bulk deleted %d resources", len(request.ResourceIDs))
+        return nil</span>
+}
+
+// GetResourceTypes retrieves all available resource types
+func (api *OpsRampResourcesAPI) GetResourceTypes(ctx context.Context) ([]types.ResourceTypeInfo, error) <span class="cov8" title="1">{
+        api.logger.Info("Getting resource types")
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/types", api.client.GetTenantID())
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var response struct {
+                ResourceTypes []types.ResourceTypeInfo `json:"resourceTypes"`
+        }
+        err := api.client.Get(ctx, endpoint, &amp;response)
+        if err != nil </span><span class="cov8" title="1">{
+                api.logger.Error("Failed to get resource types: %v", err)
+                return nil, fmt.Errorf("failed to get resource types: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully retrieved %d resource types", len(response.ResourceTypes))
+        return response.ResourceTypes, nil</span>
+}
+
+// ChangeState changes the state of a resource
+func (api *OpsRampResourcesAPI) ChangeState(ctx context.Context, id string, request types.ResourceStateChangeRequest) error <span class="cov0" title="0">{
+        api.logger.Info("Changing state of resource %s to %s", id, request.State)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s/state", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        err := api.client.Post(ctx, endpoint, request, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to change state of resource %s: %v", id, err)
+                return fmt.Errorf("failed to change state of resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully changed state of resource %s to %s", id, request.State)
+        return nil</span>
+}
+
+// GetMetrics retrieves metrics for a resource
+func (api *OpsRampResourcesAPI) GetMetrics(ctx context.Context, id string, request types.ResourceMetricsRequest) (*types.ResourceMetricsResponse, error) <span class="cov0" title="0">{
+        api.logger.Info("Getting metrics for resource %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s/metrics", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var response types.ResourceMetricsResponse
+        err := api.client.Post(ctx, endpoint, request, &amp;response)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to get metrics for resource %s: %v", id, err)
+                return nil, fmt.Errorf("failed to get metrics for resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully retrieved metrics for resource %s", id)
+        return &amp;response, nil</span>
+}
+
+// GetTags retrieves all tags for a resource
+func (api *OpsRampResourcesAPI) GetTags(ctx context.Context, id string) ([]types.Tag, error) <span class="cov0" title="0">{
+        api.logger.Info("Getting tags for resource %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s/tags", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        var response struct {
+                Tags []types.Tag `json:"tags"`
+        }
+        err := api.client.Get(ctx, endpoint, &amp;response)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to get tags for resource %s: %v", id, err)
+                return nil, fmt.Errorf("failed to get tags for resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully retrieved %d tags for resource %s", len(response.Tags), id)
+        return response.Tags, nil</span>
+}
+
+// UpdateTags updates the tags for a resource
+func (api *OpsRampResourcesAPI) UpdateTags(ctx context.Context, id string, tags []types.Tag) error <span class="cov0" title="0">{
+        api.logger.Info("Updating tags for resource %s", id)
+
+        // Build the endpoint
+        endpoint := fmt.Sprintf("/api/v2/tenants/%s/resources/%s/tags", api.client.GetTenantID(), id)
+        api.logger.Debug("Using endpoint: %s", endpoint)
+
+        // Make the request
+        request := struct {
+                Tags []types.Tag `json:"tags"`
+        }{
+                Tags: tags,
+        }
+        err := api.client.Post(ctx, endpoint, request, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                api.logger.Error("Failed to update tags for resource %s: %v", id, err)
+                return fmt.Errorf("failed to update tags for resource %s: %w", id, err)
+        }</span>
+
+        <span class="cov0" title="0">api.logger.Info("Successfully updated tags for resource %s", id)
+        return nil</span>
+}
+
+// ============================================================================
+// RESILIENCE AND ERROR HANDLING METHODS (T3.3.1-T3.3.4)
+// ============================================================================
+
+// retryWithBackoff executes a function with retry logic and exponential backoff
+func (api *OpsRampResourcesAPI) retryWithBackoff(ctx context.Context, operation string, fn func() error) error <span class="cov8" title="1">{
+        var lastErr error
+
+        for attempt := 0; attempt &lt;= api.config.RetryAttempts; attempt++ </span><span class="cov8" title="1">{
+                if attempt &gt; 0 </span><span class="cov0" title="0">{
+                        delay := time.Duration(attempt) * api.config.RetryDelay
+                        api.logger.Debug("Retrying %s after %v (attempt %d/%d)", operation, delay, attempt, api.config.RetryAttempts)
+
+                        select </span>{
+                        case &lt;-time.After(delay):<span class="cov0" title="0"></span>
+                        case &lt;-ctx.Done():<span class="cov0" title="0">
+                                return ctx.Err()</span>
+                        }
+                }
+
+                <span class="cov8" title="1">lastErr = fn()
+                if lastErr == nil </span><span class="cov0" title="0">{
+                        if attempt &gt; 0 </span><span class="cov0" title="0">{
+                                api.logger.Info("Operation %s succeeded after %d retries", operation, attempt)
+                        }</span>
+                        <span class="cov0" title="0">return nil</span>
+                }
+
+                // Check if error is retryable
+                <span class="cov8" title="1">if !isRetryableError(lastErr) </span><span class="cov8" title="1">{
+                        api.logger.Debug("Non-retryable error for %s: %v", operation, lastErr)
+                        break</span>
+                }
+
+                // Check for rate limiting
+                <span class="cov0" title="0">if isRateLimitError(lastErr) </span><span class="cov0" title="0">{
+                        api.logger.Warn("Rate limit hit for %s, waiting %v", operation, api.config.RateLimitDelay)
+                        select </span>{
+                        case &lt;-time.After(api.config.RateLimitDelay):<span class="cov0" title="0"></span>
+                        case &lt;-ctx.Done():<span class="cov0" title="0">
+                                return ctx.Err()</span>
+                        }
+                }
+        }
+
+        <span class="cov8" title="1">return fmt.Errorf("operation %s failed after %d attempts: %w", operation, api.config.RetryAttempts, lastErr)</span>
+}
+
+// isRetryableError determines if an error is retryable
+func isRetryableError(err error) bool <span class="cov8" title="1">{
+        if err == nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        // Check for common retryable error patterns
+        <span class="cov8" title="1">errStr := err.Error()
+        retryablePatterns := []string{
+                "timeout",
+                "connection refused",
+                "connection reset",
+                "temporary failure",
+                "server unavailable",
+                "502", "503", "504", // HTTP status codes
+        }
+
+        for _, pattern := range retryablePatterns </span><span class="cov8" title="1">{
+                if containsSubstring(errStr, pattern) </span><span class="cov0" title="0">{
+                        return true
+                }</span>
+        }
+
+        <span class="cov8" title="1">return false</span>
+}
+
+// isRateLimitError determines if an error is due to rate limiting
+func isRateLimitError(err error) bool <span class="cov0" title="0">{
+        if err == nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov0" title="0">errStr := err.Error()
+        rateLimitPatterns := []string{
+                "rate limit",
+                "too many requests",
+                "429", // HTTP status code
+        }
+
+        for _, pattern := range rateLimitPatterns </span><span class="cov0" title="0">{
+                if containsSubstring(errStr, pattern) </span><span class="cov0" title="0">{
+                        return true
+                }</span>
+        }
+
+        <span class="cov0" title="0">return false</span>
+}
+
+// containsSubstring checks if a string contains a substring (case-insensitive)
+func containsSubstring(str, substr string) bool <span class="cov8" title="1">{
+        return len(str) &gt;= len(substr) &amp;&amp;
+                (str == substr ||
+                        str[:len(substr)] == substr ||
+                        str[len(str)-len(substr):] == substr ||
+                        hasSubstring(str, substr))
+}</span>
+
+// hasSubstring checks if a string contains a substring
+func hasSubstring(str, substr string) bool <span class="cov8" title="1">{
+        for i := 0; i &lt;= len(str)-len(substr); i++ </span><span class="cov8" title="1">{
+                if str[i:i+len(substr)] == substr </span><span class="cov0" title="0">{
+                        return true
+                }</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+// classifyError classifies errors into ResourceErrorType
+func (api *OpsRampResourcesAPI) classifyError(err error) *types.ResourceError <span class="cov8" title="1">{
+        if err == nil </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">errStr := err.Error()
+
+        // Check for specific error types
+        if containsSubstring(errStr, "not found") || containsSubstring(errStr, "404") </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypeNotFound, "RESOURCE_NOT_FOUND", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">if containsSubstring(errStr, "unauthorized") || containsSubstring(errStr, "401") </span><span class="cov8" title="1">{
+                return types.NewResourceError(types.ResourceErrorTypePermission, "UNAUTHORIZED", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">if containsSubstring(errStr, "forbidden") || containsSubstring(errStr, "403") </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypePermission, "FORBIDDEN", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">if isRateLimitError(err) </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypeRateLimit, "RATE_LIMIT_EXCEEDED", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">if containsSubstring(errStr, "timeout") </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypeTimeout, "REQUEST_TIMEOUT", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">if containsSubstring(errStr, "conflict") || containsSubstring(errStr, "409") </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypeConflict, "RESOURCE_CONFLICT", err.Error())
+        }</span>
+
+        <span class="cov0" title="0">if containsSubstring(errStr, "validation") || containsSubstring(errStr, "invalid") || containsSubstring(errStr, "400") </span><span class="cov0" title="0">{
+                return types.NewResourceError(types.ResourceErrorTypeValidation, "VALIDATION_ERROR", err.Error())
+        }</span>
+
+        // Default to server error
+        <span class="cov0" title="0">return types.NewResourceError(types.ResourceErrorTypeServerError, "SERVER_ERROR", err.Error())</span>
+}
+
+// GetMinimal retrieves minimal resource information for performance
+func (api *OpsRampResourcesAPI) GetMinimal(ctx context.Context, id string) (*types.ResourceMinimal, error) <span class="cov8" title="1">{
+        api.logger.Info("Getting minimal resource with ID: %s", id)
+
+        var resource *types.Resource
+        err := api.retryWithBackoff(ctx, "GetMinimal", func() error </span><span class="cov8" title="1">{
+                var err error
+                resource, err = api.Get(ctx, id)
+                return err
+        }</span>)
+
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return nil, api.classifyError(err)
+        }</span>
+
+        // Convert to minimal resource
+        <span class="cov0" title="0">minimal := &amp;types.ResourceMinimal{
+                ID:           resource.ID,
+                HostName:     resource.HostName,
+                IPAddress:    resource.IPAddress,
+                Name:         resource.Name,
+                ResourceName: resource.ResourceName,
+                Type:         resource.Type,
+                ResourceType: resource.ResourceType,
+                State:        resource.State,
+                Status:       resource.Status,
+                Location:     resource.Location,
+                Tags:         resource.Tags,
+                UpdatedDate:  resource.UpdatedDate,
+        }
+
+        api.logger.Info("Successfully retrieved minimal resource: %s", minimal.Name)
+        return minimal, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package types
+
+import (
+        "fmt"
+        "strings"
+)
+
+// Resource represents an OpsRamp resource
+type Resource struct {
+        ID                        string                 `json:"id"`
+        HostName                  string                 `json:"hostName"`
+        IPAddress                 string                 `json:"ipAddress"`
+        Identity                  string                 `json:"identity"`
+        CreatedDate               string                 `json:"createdDate"`
+        UpdatedDate               string                 `json:"updatedDate"`
+        Type                      string                 `json:"type"`
+        NativeType                string                 `json:"nativeType"`
+        State                     string                 `json:"state"`
+        Source                    string                 `json:"source"`
+        Status                    string                 `json:"status"`
+        AliasName                 string                 `json:"aliasName"`
+        Tags                      []Tag                  `json:"tags"`
+        Name                      string                 `json:"name"`
+        ResourceName              string                 `json:"resourceName"`
+        Consoles                  []string               `json:"consoles"`
+        Properties                map[string]interface{} `json:"properties"`
+        ClientUniqueID            string                 `json:"clientUniqueId"`
+        ResourceType              string                 `json:"resourceType"`
+        AgentInstalled            bool                   `json:"agentInstalled"`
+        AgentStatus               string                 `json:"agentStatus"`
+        AgentLastConnectedTime    string                 `json:"agentLastConnectedTime,omitempty"`
+        Location                  *Location              `json:"location,omitempty"`
+        ManagementProfile         *ManagementProfile     `json:"managementProfile,omitempty"`
+        DNSName                   string                 `json:"dnsName,omitempty"`
+        SerialNumber              string                 `json:"serialNumber,omitempty"`
+        Make                      string                 `json:"make,omitempty"`
+        Model                     string                 `json:"model,omitempty"`
+        SystemUID                 string                 `json:"systemUID,omitempty"`
+        ProviderUID               string                 `json:"providerUID,omitempty"`
+        ProviderType              string                 `json:"providerType,omitempty"`
+        Description               string                 `json:"description,omitempty"`
+        OS                        string                 `json:"os,omitempty"`
+        Category                  string                 `json:"category,omitempty"`
+        InstalledBy               string                 `json:"installedBy,omitempty"`
+        InstalledTime             string                 `json:"installedTime,omitempty"`
+        ModifiedTime              string                 `json:"modifiedTime,omitempty"`
+        ModifiedBy                string                 `json:"modifiedBy,omitempty"`
+        AccountLastDiscoveredTime string                 `json:"accountLastDiscoveredTime,omitempty"`
+}
+
+// Tag represents a resource tag
+type Tag struct {
+        Name  string `json:"name"`
+        Value string `json:"value"`
+}
+
+// Location represents a resource location
+type Location struct {
+        ID   interface{} `json:"id"`
+        Name string      `json:"name"`
+}
+
+// ManagementProfile represents a resource management profile
+type ManagementProfile struct {
+        ID   interface{} `json:"id"`
+        Name string      `json:"name"`
+}
+
+// ResourceSearchParams represents the parameters for searching resources
+type ResourceSearchParams struct {
+        PageNo                int    `json:"pageNo,omitempty"`
+        PageSize              int    `json:"pageSize,omitempty"`
+        IsDescendingOrder     bool   `json:"isDescendingOrder,omitempty"`
+        SortName              string `json:"sortName,omitempty"`
+        QueryString           string `json:"queryString,omitempty"`
+        IncludeStatus         bool   `json:"includeStatus,omitempty"`
+        HostName              string `json:"hostName,omitempty"`
+        DNSName               string `json:"dnsName,omitempty"`
+        ResourceName          string `json:"resourceName,omitempty"`
+        AliasName             string `json:"aliasName,omitempty"`
+        ID                    string `json:"id,omitempty"`
+        SerialNumber          string `json:"serialNumber,omitempty"`
+        IPAddress             string `json:"ipAddress,omitempty"`
+        SystemUID             string `json:"systemUID,omitempty"`
+        State                 string `json:"state,omitempty"`
+        Type                  string `json:"type,omitempty"`
+        DeviceType            string `json:"deviceType,omitempty"`
+        ResourceType          string `json:"resourceType,omitempty"`
+        StartCreationDate     string `json:"startCreationDate,omitempty"`
+        EndCreationDate       string `json:"endCreationDate,omitempty"`
+        StartUpdationDate     string `json:"startUpdationDate,omitempty"`
+        EndUpdationDate       string `json:"endUpdationDate,omitempty"`
+        Tags                  string `json:"tags,omitempty"`
+        Template              string `json:"template,omitempty"`
+        AgentProfile          string `json:"agentProfile,omitempty"`
+        GatewayProfile        string `json:"gatewayProfile,omitempty"`
+        InstanceID            string `json:"instanceId,omitempty"`
+        AccountNumber         string `json:"accountNumber,omitempty"`
+        AgentInstalled        *bool  `json:"agentInstalled,omitempty"`
+        DeviceGroup           string `json:"deviceGroup,omitempty"`
+        ServiceGroup          string `json:"serviceGroup,omitempty"`
+        DeviceLocation        string `json:"deviceLocation,omitempty"`
+        IsEquals              string `json:"isEquals,omitempty"`
+        AliasIP               string `json:"aliasIp,omitempty"`
+        AppRoles              string `json:"appRoles,omitempty"`
+        OSArchitecture        string `json:"osArchitecture,omitempty"`
+        AssetManagedTime      string `json:"assetManagedTime,omitempty"`
+        FirstAssetManagedTime string `json:"firstAssetManagedTime,omitempty"`
+        Category              string `json:"category,omitempty"`
+        Make                  string `json:"make,omitempty"`
+        Model                 string `json:"model,omitempty"`
+        ProviderType          string `json:"providerType,omitempty"`
+        ProviderUID           string `json:"providerUID,omitempty"`
+}
+
+// ResourceSearchResponse represents the response from a resource search
+type ResourceSearchResponse struct {
+        Results         []Resource `json:"results"`
+        TotalResults    int        `json:"totalResults"`
+        OrderBy         string     `json:"orderBy"`
+        PageNo          int        `json:"pageNo"`
+        PageSize        int        `json:"pageSize"`
+        TotalPages      int        `json:"totalPages"`
+        NextPage        bool       `json:"nextPage"`
+        DescendingOrder bool       `json:"descendingOrder"`
+}
+
+// DetailedResource represents a detailed view of an OpsRamp resource
+type DetailedResource struct {
+        Resource
+        Components            []string               `json:"components,omitempty"`
+        BIOS                  map[string]interface{} `json:"bios,omitempty"`
+        CPUs                  []CPU                  `json:"cpus,omitempty"`
+        GeneralInfo           map[string]interface{} `json:"generalInfo,omitempty"`
+        InstalledApp          map[string]interface{} `json:"installedApp,omitempty"`
+        MetricTypes           []MetricType           `json:"metricTypes,omitempty"`
+        NetworkCardDetails    []NetworkCard          `json:"networkCardDetails,omitempty"`
+        DiscoveryProfile      map[string]interface{} `json:"discoveryProfile,omitempty"`
+        AppRoles              []string               `json:"appRoles,omitempty"`
+        LogicalDiskDrives     []LogicalDiskDrive     `json:"logicalDiskDrives,omitempty"`
+        AvailabilityStatus    string                 `json:"availabilityStatus,omitempty"`
+        UpDownSince           string                 `json:"upDownSince,omitempty"`
+        LastMetricValue       int                    `json:"lastMetricValue,omitempty"`
+        LastMetricUpdatedTime string                 `json:"lastMetricUpdatedTime,omitempty"`
+        MetricUnit            string                 `json:"metricUnit,omitempty"`
+        DefaultMetric         string                 `json:"defaultMetric,omitempty"`
+        Applications          []Application          `json:"applications,omitempty"`
+        DiscoveredServices    []DiscoveredService    `json:"discoveredServices,omitempty"`
+        Warranty              *Warranty              `json:"warranty,omitempty"`
+}
+
+// CPU represents a CPU in a resource
+type CPU struct {
+        Name         string `json:"name"`
+        Manufacturer string `json:"manufacturer"`
+        Model        string `json:"model"`
+        Speed        string `json:"speed"`
+        Cores        int    `json:"cores"`
+        LogicalCores int    `json:"logicalCores"`
+        Architecture string `json:"architecture"`
+}
+
+// NetworkCard represents a network card in a resource
+type NetworkCard struct {
+        Name        string `json:"name"`
+        Description string `json:"description"`
+        MACAddress  string `json:"macAddress"`
+        IPAddress   string `json:"ipAddress"`
+        SubnetMask  string `json:"subnetMask"`
+        Gateway     string `json:"gateway"`
+        DHCPEnabled bool   `json:"dhcpEnabled"`
+}
+
+// MetricType represents a metric type for a resource
+type MetricType struct {
+        Name        string `json:"name"`
+        Description string `json:"description"`
+        Unit        string `json:"unit"`
+}
+
+// Application represents an application installed on a resource
+type Application struct {
+        Name        string `json:"name"`
+        Version     string `json:"version"`
+        Vendor      string `json:"vendor"`
+        InstallDate string `json:"installDate"`
+        Path        string `json:"path"`
+        Size        int64  `json:"size"`
+}
+
+// DiscoveredService represents a service discovered on a resource
+type DiscoveredService struct {
+        Name        string `json:"name"`
+        DisplayName string `json:"displayName"`
+        Description string `json:"description"`
+        Status      string `json:"status"`
+        StartType   string `json:"startType"`
+        Path        string `json:"path"`
+        Port        int    `json:"port"`
+        Protocol    string `json:"protocol"`
+}
+
+// Warranty represents warranty information for a resource
+type Warranty struct {
+        StartDate   string `json:"startDate"`
+        EndDate     string `json:"endDate"`
+        Status      string `json:"status"`
+        Provider    string `json:"provider"`
+        Description string `json:"description"`
+        Type        string `json:"type"`
+}
+
+// ResourceCreateRequest represents the request to create a resource
+type ResourceCreateRequest struct {
+        AliasName                string             `json:"aliasName,omitempty"`
+        AlternateIP              string             `json:"alternateIP,omitempty"`
+        ExtResourceID            string             `json:"extResourceId,omitempty"`
+        ManagementProfile        string             `json:"managementProfile,omitempty"`
+        ResourceNetworkInterface []NetworkInterface `json:"resourceNetworkInterface,omitempty"`
+        LogicalDiskDrives        []LogicalDiskDrive `json:"logicalDiskDrives,omitempty"`
+        OOBInterfaceCards        []OOBInterfaceCard `json:"oobInterfaceCards,omitempty"`
+        ResourceType             string             `json:"resourceType"`
+        HostName                 string             `json:"hostName,omitempty"`
+        IPAddress                string             `json:"ipAddress,omitempty"`
+        DNSName                  string             `json:"dnsName,omitempty"`
+        SerialNumber             string             `json:"serialNumber,omitempty"`
+        Make                     string             `json:"make,omitempty"`
+        Model                    string             `json:"model,omitempty"`
+        Description              string             `json:"description,omitempty"`
+        OS                       string             `json:"os,omitempty"`
+        Category                 string             `json:"category,omitempty"`
+        Location                 string             `json:"location,omitempty"`
+        Tags                     []Tag              `json:"tags,omitempty"`
+        Properties               map[string]any     `json:"properties,omitempty"`
+}
+
+// NetworkInterface represents a network interface for a resource
+type NetworkInterface struct {
+        Name        string `json:"name"`
+        Description string `json:"description"`
+        MACAddress  string `json:"macAddress"`
+        IPAddress   string `json:"ipAddress"`
+        SubnetMask  string `json:"subnetMask"`
+        Gateway     string `json:"gateway"`
+        DHCPEnabled bool   `json:"dhcpEnabled"`
+}
+
+// LogicalDiskDrive represents a logical disk drive for a resource
+type LogicalDiskDrive struct {
+        Name       string `json:"name"`
+        FileSystem string `json:"fileSystem"`
+        Size       int64  `json:"size"`
+        FreeSpace  int64  `json:"freeSpace"`
+}
+
+// OOBInterfaceCard represents an out-of-band interface card for a resource
+type OOBInterfaceCard struct {
+        Type      string `json:"type"`
+        IPAddress string `json:"ipAddress"`
+        Username  string `json:"username"`
+        Password  string `json:"password"`
+}
+
+// ResourceUpdateRequest represents the request to update a resource
+type ResourceUpdateRequest struct {
+        AliasName                string             `json:"aliasName,omitempty"`
+        AlternateIP              string             `json:"alternateIP,omitempty"`
+        ExtResourceID            string             `json:"extResourceId,omitempty"`
+        ManagementProfile        string             `json:"managementProfile,omitempty"`
+        ResourceNetworkInterface []NetworkInterface `json:"resourceNetworkInterface,omitempty"`
+        LogicalDiskDrives        []LogicalDiskDrive `json:"logicalDiskDrives,omitempty"`
+        OOBInterfaceCards        []OOBInterfaceCard `json:"oobInterfaceCards,omitempty"`
+        ResourceType             string             `json:"resourceType"`
+        HostName                 string             `json:"hostName,omitempty"`
+        IPAddress                string             `json:"ipAddress,omitempty"`
+        DNSName                  string             `json:"dnsName,omitempty"`
+        SerialNumber             string             `json:"serialNumber,omitempty"`
+        Make                     string             `json:"make,omitempty"`
+        Model                    string             `json:"model,omitempty"`
+        Description              string             `json:"description,omitempty"`
+        OS                       string             `json:"os,omitempty"`
+        Category                 string             `json:"category,omitempty"`
+        Location                 string             `json:"location,omitempty"`
+        Tags                     []Tag              `json:"tags,omitempty"`
+        Properties               map[string]any     `json:"properties,omitempty"`
+        State                    string             `json:"state,omitempty"`
+}
+
+// ResourceBulkUpdateRequest represents a request to update multiple resources
+type ResourceBulkUpdateRequest struct {
+        ResourceIDs []string               `json:"resourceIds"`
+        Updates     map[string]interface{} `json:"updates"`
+}
+
+// ResourceBulkDeleteRequest represents a request to delete multiple resources
+type ResourceBulkDeleteRequest struct {
+        ResourceIDs []string `json:"resourceIds"`
+}
+
+// ResourceTypeInfo represents information about a resource type
+type ResourceTypeInfo struct {
+        ID          string `json:"id"`
+        Name        string `json:"name"`
+        Description string `json:"description"`
+        Category    string `json:"category"`
+}
+
+// ResourceStateChangeRequest represents a request to change a resource's state
+type ResourceStateChangeRequest struct {
+        State string `json:"state"`
+}
+
+// ResourceMetricsRequest represents a request to get metrics for a resource
+type ResourceMetricsRequest struct {
+        MetricNames []string `json:"metricNames"`
+        StartTime   string   `json:"startTime"`
+        EndTime     string   `json:"endTime"`
+        Interval    string   `json:"interval,omitempty"`
+}
+
+// ResourceMetricsResponse represents a response containing resource metrics
+type ResourceMetricsResponse struct {
+        ResourceID string                    `json:"resourceId"`
+        Metrics    []ResourceMetricDataPoint `json:"metrics"`
+}
+
+// ResourceMetricDataPoint represents a metric data point for a resource
+type ResourceMetricDataPoint struct {
+        Name      string  `json:"name"`
+        Timestamp string  `json:"timestamp"`
+        Value     float64 `json:"value"`
+        Unit      string  `json:"unit"`
+}
+
+// ============================================================================
+// GROUP MANAGEMENT TYPES (T2.2.1-T2.2.4)
+// ============================================================================
+
+// DeviceGroup represents an OpsRamp device group
+type DeviceGroup struct {
+        ID            string         `json:"id"`
+        Name          string         `json:"name"`
+        Description   string         `json:"description,omitempty"`
+        Type          string         `json:"type"`
+        CreatedDate   string         `json:"createdDate"`
+        UpdatedDate   string         `json:"updatedDate"`
+        CreatedBy     string         `json:"createdBy"`
+        UpdatedBy     string         `json:"updatedBy"`
+        ParentID      string         `json:"parentId,omitempty"`
+        Children      []DeviceGroup  `json:"children,omitempty"`
+        ResourceCount int            `json:"resourceCount"`
+        Properties    map[string]any `json:"properties,omitempty"`
+        Tags          []Tag          `json:"tags,omitempty"`
+}
+
+// Site represents an OpsRamp site/location
+type Site struct {
+        ID               string         `json:"id"`
+        Name             string         `json:"name"`
+        Description      string         `json:"description,omitempty"`
+        Address          string         `json:"address,omitempty"`
+        City             string         `json:"city,omitempty"`
+        State            string         `json:"state,omitempty"`
+        Country          string         `json:"country,omitempty"`
+        ZipCode          string         `json:"zipCode,omitempty"`
+        TimeZone         string         `json:"timeZone,omitempty"`
+        CreatedDate      string         `json:"createdDate"`
+        UpdatedDate      string         `json:"updatedDate"`
+        CreatedBy        string         `json:"createdBy"`
+        UpdatedBy        string         `json:"updatedBy"`
+        ResourceCount    int            `json:"resourceCount"`
+        DeviceGroupCount int            `json:"deviceGroupCount"`
+        Properties       map[string]any `json:"properties,omitempty"`
+        Tags             []Tag          `json:"tags,omitempty"`
+}
+
+// ServiceGroup represents an OpsRamp service group
+type ServiceGroup struct {
+        ID            string         `json:"id"`
+        Name          string         `json:"name"`
+        Description   string         `json:"description,omitempty"`
+        Type          string         `json:"type"`
+        CreatedDate   string         `json:"createdDate"`
+        UpdatedDate   string         `json:"updatedDate"`
+        CreatedBy     string         `json:"createdBy"`
+        UpdatedBy     string         `json:"updatedBy"`
+        ResourceCount int            `json:"resourceCount"`
+        Members       []string       `json:"members,omitempty"`
+        Properties    map[string]any `json:"properties,omitempty"`
+        Tags          []Tag          `json:"tags,omitempty"`
+}
+
+// ============================================================================
+// SUPPORTING TYPES (T2.3.1-T2.3.4)
+// ============================================================================
+
+// ResourceError represents resource management errors
+type ResourceError struct {
+        Code    string                 `json:"code"`
+        Message string                 `json:"message"`
+        Type    ResourceErrorType      `json:"type"`
+        Details map[string]interface{} `json:"details,omitempty"`
+}
+
+// ResourceErrorType represents types of resource errors
+type ResourceErrorType string
+
+const (
+        ResourceErrorTypeValidation  ResourceErrorType = "validation"
+        ResourceErrorTypeNotFound    ResourceErrorType = "not_found"
+        ResourceErrorTypePermission  ResourceErrorType = "permission"
+        ResourceErrorTypeRateLimit   ResourceErrorType = "rate_limit"
+        ResourceErrorTypeServerError ResourceErrorType = "server_error"
+        ResourceErrorTypeTimeout     ResourceErrorType = "timeout"
+        ResourceErrorTypeConflict    ResourceErrorType = "conflict"
+)
+
+// ResourceAction represents resource management operations
+type ResourceAction string
+
+const (
+        ResourceActionList              ResourceAction = "list"
+        ResourceActionGet               ResourceAction = "get"
+        ResourceActionGetMinimal        ResourceAction = "getMinimal"
+        ResourceActionCreate            ResourceAction = "create"
+        ResourceActionUpdate            ResourceAction = "update"
+        ResourceActionDelete            ResourceAction = "delete"
+        ResourceActionListDeviceGroups  ResourceAction = "listDeviceGroups"
+        ResourceActionListSites         ResourceAction = "listSites"
+        ResourceActionListServiceGroups ResourceAction = "listServiceGroups"
+        ResourceActionGetAvailability   ResourceAction = "getAvailability"
+        ResourceActionGetApplications   ResourceAction = "getApplications"
+        ResourceActionPerformAction     ResourceAction = "performAction"
+)
+
+// ResourceStatus represents resource operational states
+type ResourceStatus string
+
+const (
+        ResourceStatusUp             ResourceStatus = "UP"
+        ResourceStatusDown           ResourceStatus = "DOWN"
+        ResourceStatusUnknown        ResourceStatus = "UNKNOWN"
+        ResourceStatusMaintenance    ResourceStatus = "MAINTENANCE"
+        ResourceStatusDecommissioned ResourceStatus = "DECOMMISSIONED"
+        ResourceStatusProvisioning   ResourceStatus = "PROVISIONING"
+        ResourceStatusError          ResourceStatus = "ERROR"
+)
+
+// PaginationParams represents pagination parameters
+type PaginationParams struct {
+        PageNo            int    `json:"pageNo,omitempty"`
+        PageSize          int    `json:"pageSize,omitempty"`
+        IsDescendingOrder bool   `json:"isDescendingOrder,omitempty"`
+        SortName          string `json:"sortName,omitempty"`
+}
+
+// SortParams represents sorting parameters
+type SortParams struct {
+        Field string `json:"field"`
+        Order string `json:"order"` // "asc" or "desc"
+}
+
+// ============================================================================
+// PERFORMANCE TYPES (T2.1.4)
+// ============================================================================
+
+// ResourceMinimal represents a minimal resource for performance queries
+type ResourceMinimal struct {
+        ID           string    `json:"id"`
+        HostName     string    `json:"hostName"`
+        IPAddress    string    `json:"ipAddress"`
+        Name         string    `json:"name"`
+        ResourceName string    `json:"resourceName"`
+        Type         string    `json:"type"`
+        ResourceType string    `json:"resourceType"`
+        State        string    `json:"state"`
+        Status       string    `json:"status"`
+        Location     *Location `json:"location,omitempty"`
+        Tags         []Tag     `json:"tags,omitempty"`
+        UpdatedDate  string    `json:"updatedDate"`
+}
+
+// ============================================================================
+// VALIDATION AND SERIALIZATION METHODS (T2.4.1-T2.4.4)
+// ============================================================================
+
+// Error implements the error interface for ResourceError
+func (e ResourceError) Error() string <span class="cov8" title="1">{
+        return fmt.Sprintf("[%s] %s: %s", e.Type, e.Code, e.Message)
+}</span>
+
+// String returns a string representation for debugging
+func (e ResourceError) String() string <span class="cov0" title="0">{
+        return fmt.Sprintf("ResourceError{Type: %s, Code: %s, Message: %s}", e.Type, e.Code, e.Message)
+}</span>
+
+// NewResourceError creates a new ResourceError
+func NewResourceError(errorType ResourceErrorType, code, message string) *ResourceError <span class="cov8" title="1">{
+        return &amp;ResourceError{
+                Type:    errorType,
+                Code:    code,
+                Message: message,
+        }
+}</span>
+
+// Validate validates ResourceSearchParams
+func (p *ResourceSearchParams) Validate() error <span class="cov0" title="0">{
+        if p.PageSize &lt; 0 || p.PageSize &gt; 10000 </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_PAGE_SIZE", "page size must be between 0 and 10000")
+        }</span>
+        <span class="cov0" title="0">if p.PageNo &lt; 0 </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_PAGE_NO", "page number must be non-negative")
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// ApplyDefaults applies default values to ResourceSearchParams
+func (p *ResourceSearchParams) ApplyDefaults() <span class="cov0" title="0">{
+        if p.PageSize == 0 </span><span class="cov0" title="0">{
+                p.PageSize = 50
+        }</span>
+        <span class="cov0" title="0">if p.PageNo == 0 </span><span class="cov0" title="0">{
+                p.PageNo = 1
+        }</span>
+}
+
+// IsValid checks if ResourceAction is valid
+func (a ResourceAction) IsValid() bool <span class="cov0" title="0">{
+        switch a </span>{
+        case ResourceActionList, ResourceActionGet, ResourceActionGetMinimal,
+                ResourceActionCreate, ResourceActionUpdate, ResourceActionDelete,
+                ResourceActionListDeviceGroups, ResourceActionListSites, ResourceActionListServiceGroups,
+                ResourceActionGetAvailability, ResourceActionGetApplications, ResourceActionPerformAction:<span class="cov0" title="0">
+                return true</span>
+        default:<span class="cov0" title="0">
+                return false</span>
+        }
+}
+
+// String returns string representation of ResourceAction
+func (a ResourceAction) String() string <span class="cov0" title="0">{
+        return string(a)
+}</span>
+
+// IsValid checks if ResourceStatus is valid
+func (s ResourceStatus) IsValid() bool <span class="cov0" title="0">{
+        switch s </span>{
+        case ResourceStatusUp, ResourceStatusDown, ResourceStatusUnknown,
+                ResourceStatusMaintenance, ResourceStatusDecommissioned,
+                ResourceStatusProvisioning, ResourceStatusError:<span class="cov0" title="0">
+                return true</span>
+        default:<span class="cov0" title="0">
+                return false</span>
+        }
+}
+
+// String returns string representation of ResourceStatus
+func (s ResourceStatus) String() string <span class="cov0" title="0">{
+        return string(s)
+}</span>
+
+// HasRequiredFields checks if Resource has required fields
+func (r *Resource) HasRequiredFields() bool <span class="cov0" title="0">{
+        return r.ID != "" &amp;&amp; r.HostName != "" &amp;&amp; r.Type != ""
+}</span>
+
+// IsEmpty checks if ResourceMinimal is empty
+func (r *ResourceMinimal) IsEmpty() bool <span class="cov0" title="0">{
+        return r.ID == "" &amp;&amp; r.HostName == "" &amp;&amp; r.Type == ""
+}</span>
+
+// GetSummary returns a summary string for ResourceMinimal
+func (r *ResourceMinimal) GetSummary() string <span class="cov0" title="0">{
+        return fmt.Sprintf("%s (%s) - %s [%s]", r.Name, r.HostName, r.Type, r.Status)
+}</span>
+
+// GetHierarchyPath returns the full hierarchy path for DeviceGroup
+func (d *DeviceGroup) GetHierarchyPath() string <span class="cov0" title="0">{
+        if d.ParentID == "" </span><span class="cov0" title="0">{
+                return d.Name
+        }</span>
+        // This would need to be implemented with parent lookup in actual usage
+        <span class="cov0" title="0">return d.Name</span>
+}
+
+// GetFullAddress returns formatted address for Site
+func (s *Site) GetFullAddress() string <span class="cov0" title="0">{
+        parts := []string{}
+        if s.Address != "" </span><span class="cov0" title="0">{
+                parts = append(parts, s.Address)
+        }</span>
+        <span class="cov0" title="0">if s.City != "" </span><span class="cov0" title="0">{
+                parts = append(parts, s.City)
+        }</span>
+        <span class="cov0" title="0">if s.State != "" </span><span class="cov0" title="0">{
+                parts = append(parts, s.State)
+        }</span>
+        <span class="cov0" title="0">if s.Country != "" </span><span class="cov0" title="0">{
+                parts = append(parts, s.Country)
+        }</span>
+        <span class="cov0" title="0">if s.ZipCode != "" </span><span class="cov0" title="0">{
+                parts = append(parts, s.ZipCode)
+        }</span>
+        <span class="cov0" title="0">return strings.Join(parts, ", ")</span>
+}
+
+// Validate validates DeviceGroup
+func (d *DeviceGroup) Validate() error <span class="cov0" title="0">{
+        if d.Name == "" </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "device group name is required")
+        }</span>
+        <span class="cov0" title="0">if d.Type == "" </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_TYPE", "device group type is required")
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Validate validates Site
+func (s *Site) Validate() error <span class="cov0" title="0">{
+        if s.Name == "" </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "site name is required")
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Validate validates ServiceGroup
+func (sg *ServiceGroup) Validate() error <span class="cov0" title="0">{
+        if sg.Name == "" </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "service group name is required")
+        }</span>
+        <span class="cov0" title="0">if sg.Type == "" </span><span class="cov0" title="0">{
+                return NewResourceError(ResourceErrorTypeValidation, "INVALID_TYPE", "service group type is required")
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
