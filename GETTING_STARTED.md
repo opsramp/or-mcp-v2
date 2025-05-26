@@ -40,21 +40,58 @@ By following this guide, you'll have:
 # Clone the repository
 git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
+```
 
+### **Step 2: Verify System Requirements**
+
+```bash
 # Verify Go installation
 go version  # Should show Go 1.19+
 
 # Verify Python installation
 python3 --version  # Should show Python 3.8+
+```
 
+### **Step 3: Set Up Python Environment (Automated Method)**
+
+The easiest way to set up the Python environment is to use our automated setup target:
+
+```bash
+# Run the automated Python setup
+make python-setup
+
+# Activate the virtual environment (after setup completes)
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+**This will automatically:**
+- Create a Python virtual environment (.venv)
+- Install and upgrade pip
+- Install the agent and all its dependencies
+- Install the Python client libraries
+- Configure the development environment
+
+### **Step 3 (Alternative): Set Up Python Environment (Manual Method)**
+
+If you prefer to set up the environment manually:
+
+```bash
 # Create Python virtual environment
 python3 -m venv .venv
 
 # Activate virtual environment
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install agent and dependencies
+pip install --upgrade pip
+pip install -e client/agent
+pip install -e "client/agent[all]"
+
+# Install Python client libraries
+pip install -e client/python
 ```
 
-### **Step 2: Configure OpsRamp Credentials**
+### **Step 4: Configure OpsRamp Credentials**
 
 ```bash
 # Copy the configuration template
@@ -83,7 +120,7 @@ logging:
 
 **📋 For detailed configuration instructions, see [CONFIGURATION_GUIDE.md](CONFIGURATION_GUIDE.md)**
 
-### **Step 3: Configure AI Agent**
+### **Step 5: Configure AI Agent**
 
 ```bash
 # Navigate to agent directory
@@ -115,23 +152,14 @@ GOOGLE_MODEL=gemini-pro
 MCP_SERVER_URL=http://localhost:8080
 ```
 
-### **Step 4: Install Dependencies**
+### **Step 6: Build and Start the MCP Server**
 
 ```bash
-# Install Python dependencies (from client/agent directory)
-make setup
-
-# Verify installation
-pip list | grep -E "(openai|anthropic|google|requests)"
-```
-
-### **Step 5: Build and Start the MCP Server**
-
-```bash
-# Return to project root
+# Return to project root (if you're in client/agent)
 cd ../../
 
 # Build and start the server
+# Note: 'make all' already includes python-setup, so Python environment is set up automatically
 make all
 
 # Verify server is running
@@ -145,10 +173,13 @@ make health-check
 ✅ Tools available: integrations, resources
 ```
 
-### **Step 6: Verify Agent Connectivity**
+### **Step 7: Verify Agent Connectivity**
 
 ```bash
-# Navigate back to agent directory
+# Make sure your virtual environment is activated
+source .venv/bin/activate  # If not already activated
+
+# Navigate to agent directory
 cd client/agent
 
 # Check server connectivity
@@ -170,6 +201,9 @@ make test-basic
 ### **Quick Validation Tests**
 
 ```bash
+# Make sure your virtual environment is activated
+source .venv/bin/activate  # If not already activated
+
 # Test integration management
 make test-integrations-basic-organized
 
@@ -204,6 +238,24 @@ make test-provider-comparison
 ```
 
 ## 🔧 Troubleshooting Common Issues
+
+### **Python Environment Issues**
+
+**Issue**: Errors with Python packages or dependencies
+
+**Solutions**:
+```bash
+# Recreate Python environment from scratch
+rm -rf .venv
+make python-setup
+source .venv/bin/activate
+
+# Verify packages are installed correctly
+pip list | grep -E "(openai|anthropic|google|requests)"
+
+# Manual package installation if needed
+pip install openai anthropic google-generativeai requests
+```
 
 ### **Server Won't Start**
 

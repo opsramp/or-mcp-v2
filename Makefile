@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -8,8 +8,10 @@ GO=go
 PORT=8080
 PYTHON_CLIENT_DIR=client/python
 MCP_GO_DIR=internal/mcp-go
+PYTHON=python3
+PIP=$(PYTHON) -m pip
 
-all: clean dirs config build
+all: clean dirs config build python-setup
 	@echo "========================================================"
 	@echo "✅ Build complete! Run 'make run' to start the server."
 	@echo "========================================================"
@@ -482,4 +484,38 @@ help:
 	@echo "  client-clean            - Clean Python client artifacts"
 	@echo "  test-with-client        - Build and run server, then run client tests"
 	@echo ""
-	@echo "Or cd to client/python and run 'make help' for more client options" 
+	@echo "Or cd to client/python and run 'make help' for more client options"
+
+# Python environment setup
+python-setup:
+	@echo "========================================================"
+	@echo "🐍 Setting up Python environment for agent..."
+	@echo "========================================================"
+	@if ! command -v $(PYTHON) &> /dev/null; then \
+		echo "❌ Python3 not found. Please install Python 3.8+ and try again."; \
+		exit 1; \
+	fi
+	@$(PYTHON) -c "import sys; exit(0) if sys.version_info >= (3,8) else (print('❌ Python 3.8+ required, found ' + '.'.join(map(str, sys.version_info[:3]))) or exit(1))"
+	@echo "✅ Python $(shell $(PYTHON) --version | cut -d' ' -f2) detected"
+	
+	@echo "Creating Python virtual environment..."
+	@$(PYTHON) -m venv .venv
+	@echo "✅ Virtual environment created"
+	
+	@echo "Activating virtual environment and installing dependencies..."
+	@. .venv/bin/activate && \
+	$(PIP) install --upgrade pip && \
+	$(PIP) install -e client/agent && \
+	$(PIP) install -e "client/agent[all]" && \
+	echo "✅ Agent dependencies installed successfully"
+	
+	@echo "Installing client libraries..."
+	@. .venv/bin/activate && \
+	$(PIP) install -e client/python && \
+	echo "✅ Client libraries installed"
+	
+	@echo "========================================================"
+	@echo "✅ Python environment setup complete!"
+	@echo "⚠️  Remember to activate the virtual environment with:"
+	@echo "   source .venv/bin/activate"
+	@echo "========================================================" 

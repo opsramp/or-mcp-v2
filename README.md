@@ -26,14 +26,18 @@ A **SECURITY-HARDENED** Go-based MCP server for HPE OpsRamp with a production-re
 git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
 
-# 2. Configure (see CONFIGURATION_GUIDE.md for details)
-cp config.yaml.template config.yaml
-cd client/agent && cp .env.template .env
+# 2. Set up Python environment (creates virtual env and installs dependencies)
+make python-setup
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# 3. Build and run
+# 3. Configure (see CONFIGURATION_GUIDE.md for details)
+cp config.yaml.template config.yaml
+cd client/agent && cp .env.template .env && cd ../..
+
+# 4. Build and run
 make all && make health-check
 
-# 4. Test the platform
+# 5. Test the platform
 cd client/agent
 make test-integrations-basic-organized
 make test-resources-basic-organized
