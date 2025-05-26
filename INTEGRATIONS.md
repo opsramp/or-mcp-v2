@@ -213,14 +213,18 @@ python shared/engines/enhanced_real_mcp_integration_test.py \
 
 ### **Interactive Integration Testing**
 ```bash
-# Interactive mode for integration testing
+# True interactive chat mode (recommended)
+make chat-interactive
+
+# Test with preset prompts
 make run-interactive
 
-# Then ask questions like:
+# In interactive chat, ask questions like:
 # "What integrations do we have?"
 # "Create a new monitoring integration"
 # "Show me details for integration 12345"
 # "Disable all inactive integrations"
+# "List all AWS integrations in our environment"
 ```
 
 ## 📊 Integration Data Structure
@@ -327,7 +331,7 @@ All integration actions are available through the MCP server at:
 1. **Setup**: Follow [GETTING_STARTED.md](GETTING_STARTED.md) for initial configuration
 2. **Configure**: Set up OpsRamp credentials in `config.yaml`
 3. **Test**: Run basic integration tests to verify connectivity
-4. **Explore**: Use interactive mode to explore available integrations
+4. **Explore**: Use chat-interactive mode for direct interaction with integrations
 5. **Automate**: Build custom workflows using the integration actions
 
 ## 📚 Related Documentation
@@ -339,4 +343,4 @@ All integration actions are available through the MCP server at:
 
 ---
 
-**Ready to manage integrations?** Start with the [Quick Start guide](README.md#-quick-start) and explore the interactive testing mode!
+**Ready to manage integrations?** Start with the [Quick Start guide](README.md#-quick-start) and explore the chat-interactive mode!

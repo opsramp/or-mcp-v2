@@ -305,14 +305,18 @@ python shared/engines/enhanced_real_mcp_integration_test.py \
 
 ### **Interactive Resource Testing**
 ```bash
-# Interactive mode for resource testing
+# True interactive chat mode (recommended)
+make chat-interactive
+
+# Test with preset prompts
 make run-interactive
 
-# Then ask questions like:
+# In interactive chat, ask questions like:
 # "What resources do we have?"
 # "Show me all critical servers"
 # "Update tags for all production databases"
 # "Get metrics for high-CPU resources"
+# "Generate a report of all resources"
 ```
 
 ## 📊 Resource Data Structure
@@ -484,7 +488,7 @@ All resource actions are available through the MCP server at:
 1. **Setup**: Follow [GETTING_STARTED.md](GETTING_STARTED.md) for initial configuration
 2. **Configure**: Set up OpsRamp credentials in `config.yaml`
 3. **Test**: Run basic resource tests to verify connectivity
-4. **Explore**: Use interactive mode to explore available resources
+4. **Explore**: Use chat-interactive mode for direct interaction with resources
 5. **Automate**: Build custom workflows using the resource actions
 
 ## 📚 Related Documentation

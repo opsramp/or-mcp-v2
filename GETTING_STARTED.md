@@ -210,8 +210,9 @@ make test-integrations-basic-organized
 # Test resource management
 make test-resources-basic-organized
 
-# Test interactive mode
-make run-interactive
+# Interactive modes
+make chat-interactive     # True interactive chat (best user experience)
+make run-interactive      # Test with preset prompts
 ```
 
 ### **Comprehensive Testing**
@@ -380,7 +381,37 @@ make test-resources-basic-organized
 make test-custom MAX_TESTS=3
 ```
 
+### **Interactive Chat Issues**
+
+**Issue**: Problems with chat-interactive mode
+
+**Solutions**:
+```bash
+# Ensure virtual environment is activated
+source .venv/bin/activate
+
+# Check server is running
+curl http://localhost:8080/health
+
+# Ensure all dependencies are installed
+cd client/agent && pip install -e ".[all]"
+
+# Run with debug output
+cd client/agent && DEBUG=true make chat-interactive
+```
+
 ## 🎯 Next Steps After Setup
+
+### **Start Interacting with the Agent**
+```bash
+# Start an interactive chat session
+make chat-interactive
+
+# Ask questions like:
+# "What integrations do we have?"
+# "Show me all resources with critical status"
+# "How do I create a new integration?"
+```
 
 ### **Explore Integration Management**
 ```bash
@@ -458,6 +489,7 @@ Congratulations! You now have:
 3. **Zero-Vulnerability Security** with enterprise-grade hardening
 4. **Comprehensive Testing Framework** with organized test suites
 5. **Real API Integration** with actual OpsRamp data (no mocks)
+6. **True Interactive Chat** mode for direct, intuitive agent interaction
 
 ## 📚 Continue Learning
 
