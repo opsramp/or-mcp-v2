@@ -1,0 +1,13 @@
+List all available integrations
+Show me integration types available
+How do I create a new integration?
+How can I update an existing integration?
+How do I view integration details?
+List all active integrations
+Can you delete an integration?
+How do I enable an integration?
+How can I disable an integration?
+Show me all AWS integrations
+How do I filter integrations by type?
+What information is available for each integration?
+Tell me about discovery profiles for integrations 

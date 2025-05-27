@@ -1,0 +1,83 @@
+{
+  "test_summary": {
+    "session_id": "1748111437",
+    "total_tests": 1,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 4.097549200057983,
+    "avg_test_duration": 4.097549200057983,
+    "total_tool_calls": 0,
+    "server_url": "http://localhost:8080",
+    "timestamp": "2025-05-24T11:30:41.246023"
+  },
+  "category_analysis": {
+    "UNKNOWN": {
+      "total": 1,
+      "success": 1,
+      "avg_duration": 2.5193068981170654,
+      "total_duration": 2.5193068981170654,
+      "success_rate": 100.0
+    }
+  },
+  "tool_usage_analysis": {},
+  "complexity_distribution": {
+    "LOW": {
+      "count": 1,
+      "avg_score": 0.0,
+      "avg_duration": 2.5193068981170654,
+      "success_rate": 100.0,
+      "total_score": 0,
+      "total_duration": 2.5193068981170654,
+      "successes": 1
+    }
+  },
+  "top_performers": {
+    "highest_complexity": [
+      {
+        "prompt": "Can you list all resources using the resources tool?",
+        "score": 0
+      }
+    ],
+    "most_tool_calls": [
+      {
+        "prompt": "Can you list all resources using the resources tool?",
+        "calls": 0
+      }
+    ],
+    "longest_responses": [
+      {
+        "prompt": "Can you list all resources using the resources tool?",
+        "length": 182
+      }
+    ]
+  },
+  "failure_analysis": {
+    "count": 0,
+    "patterns": [],
+    "categories": {}
+  },
+  "detailed_results": [
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Can you list all resources using the resources tool?",
+        "expected_complexity": "LOW",
+        "line_number": 1
+      },
+      "success": true,
+      "response": "Sure, I can help with that. Here's how you would do it:\n\n```tool\n{\n  \"name\": \"resources\",\n  \"arguments\": {\n    \"action\": \"list\"\n  }\n}\n```\n\nThis will list all resources in the system.",
+      "duration_seconds": 2.5193068981170654,
+      "tool_calls_made": [],
+      "error_message": null,
+      "response_length": 182,
+      "complexity_score": 0,
+      "timestamp": "2025-05-24T11:30:40.177629",
+      "session_traces": []
+    }
+  ],
+  "log_files": {
+    "main_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/output/enhanced_integration_test_1748111437.log",
+    "payload_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/output/request_response_payloads_1748111437.jsonl"
+  }
+}

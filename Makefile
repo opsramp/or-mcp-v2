@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean
+.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup chat-interactive
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -8,8 +8,10 @@ GO=go
 PORT=8080
 PYTHON_CLIENT_DIR=client/python
 MCP_GO_DIR=internal/mcp-go
+PYTHON=python3
+PIP=$(PYTHON) -m pip
 
-all: clean dirs config build
+all: clean dirs config build python-setup
 	@echo "========================================================"
 	@echo "✅ Build complete! Run 'make run' to start the server."
 	@echo "========================================================"
@@ -103,6 +105,65 @@ test: dirs mcp-go-test
 	@echo "🧪 Running server unit tests..."
 	@echo "========================================================"
 	$(GO) test -v ./tests/...
+
+# Test resource management components
+test-resources-basic: dirs
+	@echo "========================================================"
+	@echo "🧪 Running basic resource management tests..."
+	@echo "========================================================"
+	$(GO) test -v ./pkg/types/... -run ".*Resource.*"
+	$(GO) test -v ./pkg/tools/... -run ".*Resource.*"
+
+# Test resource management with coverage
+test-resources-coverage: dirs
+	@echo "========================================================"
+	@echo "🧪 Running resource management tests with coverage..."
+	@echo "========================================================"
+	$(GO) test -v -coverprofile=coverage.out ./pkg/types/... ./pkg/tools/... -run ".*Resource.*"
+	$(GO) tool cover -html=coverage.out -o coverage.html
+	@echo "✅ Coverage report generated: coverage.html"
+
+# Test resource management API integration
+test-resources-integration: build dirs config
+	@echo "========================================================"
+	@echo "🧪 Running resource management integration tests..."
+	@echo "========================================================"
+	@echo "Starting server for resource testing..."
+	@PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME) > $(OUTPUT_DIR)/server.log 2>&1 & \
+	echo $$! > .server.pid; \
+	echo "Server started with PID $$(cat .server.pid)"; \
+	echo "Waiting for server to initialize..."; \
+	sleep 3; \
+	\
+	echo "Testing resource management endpoints..."; \
+	curl -s "http://localhost:$(PORT)/health" | grep -q '"status":"ok"' && \
+	echo "✅ Server health check passed" || echo "❌ Server health check failed"; \
+	\
+	echo "Stopping server..."; \
+	if [ -f .server.pid ]; then \
+		kill -15 $$(cat .server.pid) 2>/dev/null || true; \
+		rm .server.pid; \
+	fi; \
+	echo "✅ Resource management integration test complete"
+
+# Test resource management against real OpsRamp API
+test-resources-real-api: dirs config
+	@echo "========================================================"
+	@echo "🌐 Running resource management real API tests..."
+	@echo "========================================================"
+	@if [ ! -f config.yaml ]; then \
+		echo "❌ config.yaml not found"; \
+		echo "Please create config.yaml with your OpsRamp credentials"; \
+		echo "You can copy from config.yaml.template and fill in your values"; \
+		exit 1; \
+	fi
+	@./scripts/test_resources_real_api.sh
+
+# Run comprehensive resource management tests
+test-resources-all: test-resources-basic test-resources-coverage test-resources-integration test-resources-real-api
+	@echo "========================================================"
+	@echo "✅ All resource management tests completed!"
+	@echo "========================================================"
 
 # Run a specific test file
 test-file: dirs
@@ -396,7 +457,13 @@ help:
 	@echo "  kill-server     - Find and shut down any running MCP server"
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
+	@echo "  chat-interactive- Start an interactive chat with the AI agent"
 	@echo "  test            - Run server unit tests"
+	@echo "  test-resources-basic      - Run basic resource management tests"
+	@echo "  test-resources-coverage   - Run resource tests with coverage report"
+	@echo "  test-resources-integration- Run resource management integration tests"
+	@echo "  test-resources-real-api   - Run resource tests against real OpsRamp API"
+	@echo "  test-resources-all        - Run all resource management tests"
 	@echo ""
 	@echo "Security targets:"
 	@echo "  security-full   - Run comprehensive security scan"
@@ -418,4 +485,53 @@ help:
 	@echo "  client-clean            - Clean Python client artifacts"
 	@echo "  test-with-client        - Build and run server, then run client tests"
 	@echo ""
-	@echo "Or cd to client/python and run 'make help' for more client options" 
+	@echo "Or cd to client/python and run 'make help' for more client options"
+
+# Python environment setup
+python-setup:
+	@echo "========================================================"
+	@echo "🐍 Setting up Python environment for agent..."
+	@echo "========================================================"
+	@if ! command -v $(PYTHON) &> /dev/null; then \
+		echo "❌ Python3 not found. Please install Python 3.8+ and try again."; \
+		exit 1; \
+	fi
+	@$(PYTHON) -c "import sys; exit(0) if sys.version_info >= (3,8) else (print('❌ Python 3.8+ required, found ' + '.'.join(map(str, sys.version_info[:3]))) or exit(1))"
+	@echo "✅ Python $(shell $(PYTHON) --version | cut -d' ' -f2) detected"
+	
+	@echo "Creating Python virtual environment..."
+	@$(PYTHON) -m venv .venv
+	@echo "✅ Virtual environment created"
+	
+	@echo "Activating virtual environment and installing dependencies..."
+	@. .venv/bin/activate && \
+	$(PIP) install --upgrade pip && \
+	$(PIP) install -e client/agent && \
+	$(PIP) install -e "client/agent[all]" && \
+	echo "✅ Agent dependencies installed successfully"
+	
+	@echo "Installing client libraries..."
+	@. .venv/bin/activate && \
+	$(PIP) install -e client/python && \
+	echo "✅ Client libraries installed"
+	
+	@echo "========================================================"
+	@echo "✅ Python environment setup complete!"
+	@echo "⚠️  Remember to activate the virtual environment with:"
+	@echo "   source .venv/bin/activate"
+	@echo "========================================================" 
+
+# Start interactive chat with the AI agent
+chat-interactive: python-setup
+	@echo "========================================================"
+	@echo "🤖 Starting interactive chat with AI agent..."
+	@echo "========================================================"
+	@echo "This will start a real-time chat session where you can ask questions"
+	@echo "about your OpsRamp environment, integrations, and resources."
+	@echo ""
+	@echo "Example questions to try:"
+	@echo "  - \"List all integrations in our environment\""
+	@echo "  - \"Show me all resources with critical status\""
+	@echo "  - \"Generate a report of our infrastructure\""
+	@echo ""
+	@. .venv/bin/activate && cd client/agent && make chat-interactive

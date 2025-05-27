@@ -16,6 +16,7 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/vobbilis/codegen/or-mcp-v2/common"
+	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
 	"github.com/vobbilis/codegen/or-mcp-v2/pkg/tools"
 )
 
@@ -306,6 +307,65 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			}
+		} else if toolName == "resources" {
+			// Load configuration
+			config, err := common.LoadConfig("")
+			if err != nil {
+				customLogger.Error("Failed to load config: %v", err)
+				jsonError(w, "Failed to load configuration", http.StatusInternalServerError, rpcRequest.Id)
+				return
+			}
+
+			// Create the resources API
+			opsRampClient := client.NewOpsRampClient(config)
+			resourcesAPI := tools.NewOpsRampResourcesAPI(opsRampClient)
+
+			// Create request for the tool handler
+			mcpRequest := mcp.CallToolRequest{
+				Params: struct {
+					Name      string    `json:"name"`
+					Arguments any       `json:"arguments,omitempty"`
+					Meta      *mcp.Meta `json:"_meta,omitempty"`
+				}{
+					Name:      "resources",
+					Arguments: arguments,
+				},
+			}
+
+			// Log the specific action being called
+			customLogger.Debug("Executing resources action: %s", action)
+
+			// Execute the resources tool handler directly
+			handlerResult, handlerErr := tools.ResourcesToolHandler(r.Context(), mcpRequest, resourcesAPI)
+			if handlerErr != nil {
+				customLogger.Error("Error in resources tool handler: %v", handlerErr)
+				methodErr = handlerErr
+			} else {
+				customLogger.Debug("Resources tool handler executed successfully")
+				// Extract text content from the result
+				if handlerResult != nil && len(handlerResult.Content) > 0 {
+					customLogger.Debug("Handling result content with %d items", len(handlerResult.Content))
+					for _, content := range handlerResult.Content {
+						if textContent, ok := content.(mcp.TextContent); ok {
+							customLogger.Debug("Processing text content: %s", textContent.Text)
+							// Try to parse JSON result
+							if err := json.Unmarshal([]byte(textContent.Text), &result); err != nil {
+								// If not valid JSON, just use the text
+								customLogger.Debug("Not valid JSON, using text directly: %s", err)
+								result = textContent.Text
+							}
+							break
+						}
+					}
+				} else {
+					customLogger.Warn("Empty or nil result from resources tool handler")
+					// Return empty array for list operations to prevent null response
+					if action == "list" || action == "getMinimal" {
+						customLogger.Info("Returning empty array for %s action", action)
+						result = []interface{}{}
+					}
+				}
+			}
 		} else {
 			jsonError(w, fmt.Sprintf("Tool not implemented: %s", toolName), http.StatusNotImplemented, rpcRequest.Id)
 			return
@@ -439,8 +499,14 @@ func main() {
 	mcpServer.AddTool(integrationsTool, integrationsHandler)
 	registeredTools = append(registeredTools, integrationsTool.Name)
 
+	// Register resources tool
+	resourcesTool, resourcesHandler := tools.NewResourcesMcpTool()
+	mcpServer.AddTool(resourcesTool, resourcesHandler)
+	registeredTools = append(registeredTools, resourcesTool.Name)
+
 	// Log registered tools
 	customLogger.Info("Registered tool: %s", integrationsTool.Name)
+	customLogger.Info("Registered tool: %s", resourcesTool.Name)
 
 	// Perform startup health check
 	if err := startupHealthCheck(); err != nil {

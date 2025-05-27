@@ -1,0 +1,121 @@
+# OPTIMIZED OPSRAMP RESOURCE MANAGEMENT PROMPTS
+# This file contains token-efficient test prompts for validating core resource management functionality
+# These prompts are designed to avoid OpenAI token limits while testing all functionality
+
+## MINIMAL DISCOVERY & INVENTORY (Token-Efficient)
+Show me a quick overview of our resources using minimal details
+Get minimal resource information for dashboard
+Display resource summary view with basic info only
+Quick status check of infrastructure using minimal data
+Show resource overview with limited details
+Get minimal details for first 10 resources
+List first 5 resources with basic info
+Show me top 10 resources by name
+
+## PAGINATED RESOURCE QUERIES (Controlled Size)
+Show me the first 5 virtual machines
+List first 3 physical servers only
+What are the first 5 network devices we have?
+Show me first 3 storage devices
+List first 5 memory modules
+Display first 3 temperature sensors
+Show first 5 processing units monitored
+Get first 3 chipset resources
+
+## SPECIFIC RESOURCE DETAILS (Single Resource Queries)
+Tell me about temperature sensor with ID containing "01-Front"
+Get details for CPU temperature sensor "02-CPU 1"
+Show me information about "03-CPU 2" sensor
+Give me details on memory module "P1 DIMM 1-4"
+Tell me about "P1 DIMM 5-8" memory
+Show information for "P2 DIMM 1-4" module
+Get details on the NVMe SSD storage device
+Tell me about network equipment at IP 10.54.58.51
+
+## RESOURCE TYPE FILTERING (Specific Categories)
+Show me only virtual machine resources
+List only physical server resources
+Display only network equipment
+Get only storage device resources
+Show only memory module resources
+List only temperature sensor resources
+Display only processing unit resources
+Get only chipset resources
+
+## STATUS-BASED QUERIES (Filtered Results)
+Show me first 5 active resources
+What are the first 3 resources that are down?
+List first 5 resources in maintenance mode
+Show me first 3 available resources
+Display first 5 resources by status
+Get health status of first 10 resources
+
+## MINIMAL PERFORMANCE QUERIES
+Quick resource health check for first 5 resources
+Show minimal info for 3 critical resources
+Get basic status of first 10 resources
+Display summary of first 5 resources
+Quick overview of 3 most important resources
+Show essential info for first 5 devices
+
+## TARGETED HARDWARE QUERIES
+Show me first 3 temperature monitoring sensors
+List first 5 memory DIMM modules
+What are the first 3 storage devices monitored?
+Display first 3 CPU temperature sensors
+Get first 5 network equipment details
+Show first 3 chipset resources
+
+## SPECIFIC SEARCH QUERIES
+Find resources with name containing "CPU"
+Search for resources with "DIMM" in the name
+Look for resources containing "temperature"
+Find network resources with IP addresses
+Search for storage resources with "SSD"
+Look for memory resources with "P1"
+
+## OPERATIONAL QUERIES (Limited Scope)
+Which first 5 resources need attention?
+Show me first 3 resources with alerts
+What are the first 5 resources requiring maintenance?
+Display first 3 resources with performance issues
+Get first 5 resources needing updates
+
+## INFRASTRUCTURE ANALYSIS (Controlled Size)
+Analyze first 10 resources by type
+Show resource distribution for first 5 devices
+What are the first 3 underutilized resources?
+Display first 5 resources by performance
+Get first 3 infrastructure bottlenecks
+
+## TROUBLESHOOTING SCENARIOS (Specific Targets)
+Check temperature sensor "01-Front Ambient" status
+Investigate memory module "P1 DIMM 1-4" errors
+Analyze storage device performance issues
+Troubleshoot network equipment connectivity
+Check CPU temperature sensor readings
+Diagnose specific resource monitoring issues
+
+## BASIC REPORTING (Limited Scope)
+Generate summary for first 10 resources
+Show status report for first 5 devices
+Create overview of first 3 critical resources
+Display health report for first 5 resources
+Get utilization report for first 3 devices
+
+## RESOURCE COUNT QUERIES (Metadata Only)
+How many resources do we have in total?
+What types of resources are available?
+Show me resource type distribution
+Get resource category breakdown
+Display resource classification summary
+Count resources by status
+Show resource type statistics
+
+## MINIMAL LISTING QUERIES
+List resource names only (no details)
+Show resource IDs and names only
+Display resource types and counts
+Get resource status summary only
+Show basic resource inventory
+List resource categories available 

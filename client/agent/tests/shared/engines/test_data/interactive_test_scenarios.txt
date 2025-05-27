@@ -1,0 +1,15 @@
+List all integrations
+Show me AWS integrations
+How do I create a new integration?
+List all available resource types
+Show me all resources
+Find resources with high CPU usage
+How many AWS instances do we have?
+Show me all monitoring resources
+List all resource groups
+How do I create a new resource?
+Show me resource details
+What capabilities does OpsRamp provide?
+Can you show me both integrations and resources?
+Analyze my infrastructure
+Generate a report of all resources 

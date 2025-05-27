@@ -1,5 +1,10 @@
 package types
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Resource represents an OpsRamp resource
 type Resource struct {
 	ID                        string                 `json:"id"`
@@ -325,4 +330,306 @@ type ResourceMetricDataPoint struct {
 	Timestamp string  `json:"timestamp"`
 	Value     float64 `json:"value"`
 	Unit      string  `json:"unit"`
+}
+
+// ============================================================================
+// GROUP MANAGEMENT TYPES (T2.2.1-T2.2.4)
+// ============================================================================
+
+// DeviceGroup represents an OpsRamp device group
+type DeviceGroup struct {
+	ID            string         `json:"id"`
+	Name          string         `json:"name"`
+	Description   string         `json:"description,omitempty"`
+	Type          string         `json:"type"`
+	CreatedDate   string         `json:"createdDate"`
+	UpdatedDate   string         `json:"updatedDate"`
+	CreatedBy     string         `json:"createdBy"`
+	UpdatedBy     string         `json:"updatedBy"`
+	ParentID      string         `json:"parentId,omitempty"`
+	Children      []DeviceGroup  `json:"children,omitempty"`
+	ResourceCount int            `json:"resourceCount"`
+	Properties    map[string]any `json:"properties,omitempty"`
+	Tags          []Tag          `json:"tags,omitempty"`
+}
+
+// Site represents an OpsRamp site/location
+type Site struct {
+	ID               string         `json:"id"`
+	Name             string         `json:"name"`
+	Description      string         `json:"description,omitempty"`
+	Address          string         `json:"address,omitempty"`
+	City             string         `json:"city,omitempty"`
+	State            string         `json:"state,omitempty"`
+	Country          string         `json:"country,omitempty"`
+	ZipCode          string         `json:"zipCode,omitempty"`
+	TimeZone         string         `json:"timeZone,omitempty"`
+	CreatedDate      string         `json:"createdDate"`
+	UpdatedDate      string         `json:"updatedDate"`
+	CreatedBy        string         `json:"createdBy"`
+	UpdatedBy        string         `json:"updatedBy"`
+	ResourceCount    int            `json:"resourceCount"`
+	DeviceGroupCount int            `json:"deviceGroupCount"`
+	Properties       map[string]any `json:"properties,omitempty"`
+	Tags             []Tag          `json:"tags,omitempty"`
+}
+
+// ServiceGroup represents an OpsRamp service group
+type ServiceGroup struct {
+	ID            string         `json:"id"`
+	Name          string         `json:"name"`
+	Description   string         `json:"description,omitempty"`
+	Type          string         `json:"type"`
+	CreatedDate   string         `json:"createdDate"`
+	UpdatedDate   string         `json:"updatedDate"`
+	CreatedBy     string         `json:"createdBy"`
+	UpdatedBy     string         `json:"updatedBy"`
+	ResourceCount int            `json:"resourceCount"`
+	Members       []string       `json:"members,omitempty"`
+	Properties    map[string]any `json:"properties,omitempty"`
+	Tags          []Tag          `json:"tags,omitempty"`
+}
+
+// ============================================================================
+// SUPPORTING TYPES (T2.3.1-T2.3.4)
+// ============================================================================
+
+// ResourceError represents resource management errors
+type ResourceError struct {
+	Code    string                 `json:"code"`
+	Message string                 `json:"message"`
+	Type    ResourceErrorType      `json:"type"`
+	Details map[string]interface{} `json:"details,omitempty"`
+}
+
+// ResourceErrorType represents types of resource errors
+type ResourceErrorType string
+
+const (
+	ResourceErrorTypeValidation  ResourceErrorType = "validation"
+	ResourceErrorTypeNotFound    ResourceErrorType = "not_found"
+	ResourceErrorTypePermission  ResourceErrorType = "permission"
+	ResourceErrorTypeRateLimit   ResourceErrorType = "rate_limit"
+	ResourceErrorTypeServerError ResourceErrorType = "server_error"
+	ResourceErrorTypeTimeout     ResourceErrorType = "timeout"
+	ResourceErrorTypeConflict    ResourceErrorType = "conflict"
+)
+
+// ResourceAction represents resource management operations
+type ResourceAction string
+
+const (
+	ResourceActionList              ResourceAction = "list"
+	ResourceActionGet               ResourceAction = "get"
+	ResourceActionGetMinimal        ResourceAction = "getMinimal"
+	ResourceActionCreate            ResourceAction = "create"
+	ResourceActionUpdate            ResourceAction = "update"
+	ResourceActionDelete            ResourceAction = "delete"
+	ResourceActionListDeviceGroups  ResourceAction = "listDeviceGroups"
+	ResourceActionListSites         ResourceAction = "listSites"
+	ResourceActionListServiceGroups ResourceAction = "listServiceGroups"
+	ResourceActionGetAvailability   ResourceAction = "getAvailability"
+	ResourceActionGetApplications   ResourceAction = "getApplications"
+	ResourceActionPerformAction     ResourceAction = "performAction"
+)
+
+// ResourceStatus represents resource operational states
+type ResourceStatus string
+
+const (
+	ResourceStatusUp             ResourceStatus = "UP"
+	ResourceStatusDown           ResourceStatus = "DOWN"
+	ResourceStatusUnknown        ResourceStatus = "UNKNOWN"
+	ResourceStatusMaintenance    ResourceStatus = "MAINTENANCE"
+	ResourceStatusDecommissioned ResourceStatus = "DECOMMISSIONED"
+	ResourceStatusProvisioning   ResourceStatus = "PROVISIONING"
+	ResourceStatusError          ResourceStatus = "ERROR"
+)
+
+// PaginationParams represents pagination parameters
+type PaginationParams struct {
+	PageNo            int    `json:"pageNo,omitempty"`
+	PageSize          int    `json:"pageSize,omitempty"`
+	IsDescendingOrder bool   `json:"isDescendingOrder,omitempty"`
+	SortName          string `json:"sortName,omitempty"`
+}
+
+// SortParams represents sorting parameters
+type SortParams struct {
+	Field string `json:"field"`
+	Order string `json:"order"` // "asc" or "desc"
+}
+
+// ============================================================================
+// PERFORMANCE TYPES (T2.1.4)
+// ============================================================================
+
+// ResourceMinimal represents a minimal resource for performance queries
+type ResourceMinimal struct {
+	ID           string    `json:"id"`
+	HostName     string    `json:"hostName"`
+	IPAddress    string    `json:"ipAddress"`
+	Name         string    `json:"name"`
+	ResourceName string    `json:"resourceName"`
+	Type         string    `json:"type"`
+	ResourceType string    `json:"resourceType"`
+	State        string    `json:"state"`
+	Status       string    `json:"status"`
+	Location     *Location `json:"location,omitempty"`
+	Tags         []Tag     `json:"tags,omitempty"`
+	UpdatedDate  string    `json:"updatedDate"`
+}
+
+// ============================================================================
+// VALIDATION AND SERIALIZATION METHODS (T2.4.1-T2.4.4)
+// ============================================================================
+
+// Error implements the error interface for ResourceError
+func (e ResourceError) Error() string {
+	return fmt.Sprintf("[%s] %s: %s", e.Type, e.Code, e.Message)
+}
+
+// String returns a string representation for debugging
+func (e ResourceError) String() string {
+	return fmt.Sprintf("ResourceError{Type: %s, Code: %s, Message: %s}", e.Type, e.Code, e.Message)
+}
+
+// NewResourceError creates a new ResourceError
+func NewResourceError(errorType ResourceErrorType, code, message string) *ResourceError {
+	return &ResourceError{
+		Type:    errorType,
+		Code:    code,
+		Message: message,
+	}
+}
+
+// Validate validates ResourceSearchParams
+func (p *ResourceSearchParams) Validate() error {
+	if p.PageSize < 0 || p.PageSize > 10000 {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_PAGE_SIZE", "page size must be between 0 and 10000")
+	}
+	if p.PageNo < 0 {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_PAGE_NO", "page number must be non-negative")
+	}
+	return nil
+}
+
+// ApplyDefaults applies default values to ResourceSearchParams
+func (p *ResourceSearchParams) ApplyDefaults() {
+	if p.PageSize == 0 {
+		p.PageSize = 50
+	}
+	if p.PageNo == 0 {
+		p.PageNo = 1
+	}
+}
+
+// IsValid checks if ResourceAction is valid
+func (a ResourceAction) IsValid() bool {
+	switch a {
+	case ResourceActionList, ResourceActionGet, ResourceActionGetMinimal,
+		ResourceActionCreate, ResourceActionUpdate, ResourceActionDelete,
+		ResourceActionListDeviceGroups, ResourceActionListSites, ResourceActionListServiceGroups,
+		ResourceActionGetAvailability, ResourceActionGetApplications, ResourceActionPerformAction:
+		return true
+	default:
+		return false
+	}
+}
+
+// String returns string representation of ResourceAction
+func (a ResourceAction) String() string {
+	return string(a)
+}
+
+// IsValid checks if ResourceStatus is valid
+func (s ResourceStatus) IsValid() bool {
+	switch s {
+	case ResourceStatusUp, ResourceStatusDown, ResourceStatusUnknown,
+		ResourceStatusMaintenance, ResourceStatusDecommissioned,
+		ResourceStatusProvisioning, ResourceStatusError:
+		return true
+	default:
+		return false
+	}
+}
+
+// String returns string representation of ResourceStatus
+func (s ResourceStatus) String() string {
+	return string(s)
+}
+
+// HasRequiredFields checks if Resource has required fields
+func (r *Resource) HasRequiredFields() bool {
+	return r.ID != "" && r.HostName != "" && r.Type != ""
+}
+
+// IsEmpty checks if ResourceMinimal is empty
+func (r *ResourceMinimal) IsEmpty() bool {
+	return r.ID == "" && r.HostName == "" && r.Type == ""
+}
+
+// GetSummary returns a summary string for ResourceMinimal
+func (r *ResourceMinimal) GetSummary() string {
+	return fmt.Sprintf("%s (%s) - %s [%s]", r.Name, r.HostName, r.Type, r.Status)
+}
+
+// GetHierarchyPath returns the full hierarchy path for DeviceGroup
+func (d *DeviceGroup) GetHierarchyPath() string {
+	if d.ParentID == "" {
+		return d.Name
+	}
+	// This would need to be implemented with parent lookup in actual usage
+	return d.Name
+}
+
+// GetFullAddress returns formatted address for Site
+func (s *Site) GetFullAddress() string {
+	parts := []string{}
+	if s.Address != "" {
+		parts = append(parts, s.Address)
+	}
+	if s.City != "" {
+		parts = append(parts, s.City)
+	}
+	if s.State != "" {
+		parts = append(parts, s.State)
+	}
+	if s.Country != "" {
+		parts = append(parts, s.Country)
+	}
+	if s.ZipCode != "" {
+		parts = append(parts, s.ZipCode)
+	}
+	return strings.Join(parts, ", ")
+}
+
+// Validate validates DeviceGroup
+func (d *DeviceGroup) Validate() error {
+	if d.Name == "" {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "device group name is required")
+	}
+	if d.Type == "" {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_TYPE", "device group type is required")
+	}
+	return nil
+}
+
+// Validate validates Site
+func (s *Site) Validate() error {
+	if s.Name == "" {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "site name is required")
+	}
+	return nil
+}
+
+// Validate validates ServiceGroup
+func (sg *ServiceGroup) Validate() error {
+	if sg.Name == "" {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_NAME", "service group name is required")
+	}
+	if sg.Type == "" {
+		return NewResourceError(ResourceErrorTypeValidation, "INVALID_TYPE", "service group type is required")
+	}
+	return nil
 }

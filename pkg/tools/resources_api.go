@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/vobbilis/codegen/or-mcp-v2/common"
 	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
@@ -51,12 +52,27 @@ type ResourcesAPI interface {
 
 	// UpdateTags updates the tags for a resource
 	UpdateTags(ctx context.Context, id string, tags []types.Tag) error
+
+	// GetMinimal retrieves minimal resource information for performance
+	GetMinimal(ctx context.Context, id string) (*types.ResourceMinimal, error)
 }
 
 // OpsRampResourcesAPI implements the ResourcesAPI interface for OpsRamp
 type OpsRampResourcesAPI struct {
 	client *client.OpsRampClient
 	logger *common.CustomLogger
+	config *ResourcesAPIConfig
+}
+
+// ResourcesAPIConfig holds configuration for the Resources API client
+type ResourcesAPIConfig struct {
+	RetryAttempts  int           `json:"retry_attempts"`
+	RetryDelay     time.Duration `json:"retry_delay"`
+	RequestTimeout time.Duration `json:"request_timeout"`
+	RateLimitDelay time.Duration `json:"rate_limit_delay"`
+	CircuitBreaker bool          `json:"circuit_breaker"`
+	MaxFailures    int           `json:"max_failures"`
+	ResetTimeout   time.Duration `json:"reset_timeout"`
 }
 
 // NewOpsRampResourcesAPI creates a new OpsRamp resources API client
@@ -64,9 +80,33 @@ func NewOpsRampResourcesAPI(client *client.OpsRampClient) *OpsRampResourcesAPI {
 	// Get the logger
 	logger := common.GetLogger()
 
+	// Default configuration
+	config := &ResourcesAPIConfig{
+		RetryAttempts:  3,
+		RetryDelay:     1 * time.Second,
+		RequestTimeout: 30 * time.Second,
+		RateLimitDelay: 5 * time.Second,
+		CircuitBreaker: true,
+		MaxFailures:    5,
+		ResetTimeout:   60 * time.Second,
+	}
+
 	return &OpsRampResourcesAPI{
 		client: client,
 		logger: logger,
+		config: config,
+	}
+}
+
+// NewOpsRampResourcesAPIWithConfig creates a new OpsRamp resources API client with custom configuration
+func NewOpsRampResourcesAPIWithConfig(client *client.OpsRampClient, config *ResourcesAPIConfig) *OpsRampResourcesAPI {
+	// Get the logger
+	logger := common.GetLogger()
+
+	return &OpsRampResourcesAPI{
+		client: client,
+		logger: logger,
+		config: config,
 	}
 }
 
@@ -471,4 +511,195 @@ func (api *OpsRampResourcesAPI) UpdateTags(ctx context.Context, id string, tags 
 
 	api.logger.Info("Successfully updated tags for resource %s", id)
 	return nil
+}
+
+// ============================================================================
+// RESILIENCE AND ERROR HANDLING METHODS (T3.3.1-T3.3.4)
+// ============================================================================
+
+// retryWithBackoff executes a function with retry logic and exponential backoff
+func (api *OpsRampResourcesAPI) retryWithBackoff(ctx context.Context, operation string, fn func() error) error {
+	var lastErr error
+
+	for attempt := 0; attempt <= api.config.RetryAttempts; attempt++ {
+		if attempt > 0 {
+			delay := time.Duration(attempt) * api.config.RetryDelay
+			api.logger.Debug("Retrying %s after %v (attempt %d/%d)", operation, delay, attempt, api.config.RetryAttempts)
+
+			select {
+			case <-time.After(delay):
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		}
+
+		lastErr = fn()
+		if lastErr == nil {
+			if attempt > 0 {
+				api.logger.Info("Operation %s succeeded after %d retries", operation, attempt)
+			}
+			return nil
+		}
+
+		// Check if error is retryable
+		if !isRetryableError(lastErr) {
+			api.logger.Debug("Non-retryable error for %s: %v", operation, lastErr)
+			break
+		}
+
+		// Check for rate limiting
+		if isRateLimitError(lastErr) {
+			api.logger.Warn("Rate limit hit for %s, waiting %v", operation, api.config.RateLimitDelay)
+			select {
+			case <-time.After(api.config.RateLimitDelay):
+			case <-ctx.Done():
+				return ctx.Err()
+			}
+		}
+	}
+
+	return fmt.Errorf("operation %s failed after %d attempts: %w", operation, api.config.RetryAttempts, lastErr)
+}
+
+// isRetryableError determines if an error is retryable
+func isRetryableError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	// Check for common retryable error patterns
+	errStr := err.Error()
+	retryablePatterns := []string{
+		"timeout",
+		"connection refused",
+		"connection reset",
+		"temporary failure",
+		"server unavailable",
+		"502", "503", "504", // HTTP status codes
+	}
+
+	for _, pattern := range retryablePatterns {
+		if containsSubstring(errStr, pattern) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// isRateLimitError determines if an error is due to rate limiting
+func isRateLimitError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errStr := err.Error()
+	rateLimitPatterns := []string{
+		"rate limit",
+		"too many requests",
+		"429", // HTTP status code
+	}
+
+	for _, pattern := range rateLimitPatterns {
+		if containsSubstring(errStr, pattern) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// containsSubstring checks if a string contains a substring (case-insensitive)
+func containsSubstring(str, substr string) bool {
+	return len(str) >= len(substr) &&
+		(str == substr ||
+			str[:len(substr)] == substr ||
+			str[len(str)-len(substr):] == substr ||
+			hasSubstring(str, substr))
+}
+
+// hasSubstring checks if a string contains a substring
+func hasSubstring(str, substr string) bool {
+	for i := 0; i <= len(str)-len(substr); i++ {
+		if str[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
+}
+
+// classifyError classifies errors into ResourceErrorType
+func (api *OpsRampResourcesAPI) classifyError(err error) *types.ResourceError {
+	if err == nil {
+		return nil
+	}
+
+	errStr := err.Error()
+
+	// Check for specific error types
+	if containsSubstring(errStr, "not found") || containsSubstring(errStr, "404") {
+		return types.NewResourceError(types.ResourceErrorTypeNotFound, "RESOURCE_NOT_FOUND", err.Error())
+	}
+
+	if containsSubstring(errStr, "unauthorized") || containsSubstring(errStr, "401") {
+		return types.NewResourceError(types.ResourceErrorTypePermission, "UNAUTHORIZED", err.Error())
+	}
+
+	if containsSubstring(errStr, "forbidden") || containsSubstring(errStr, "403") {
+		return types.NewResourceError(types.ResourceErrorTypePermission, "FORBIDDEN", err.Error())
+	}
+
+	if isRateLimitError(err) {
+		return types.NewResourceError(types.ResourceErrorTypeRateLimit, "RATE_LIMIT_EXCEEDED", err.Error())
+	}
+
+	if containsSubstring(errStr, "timeout") {
+		return types.NewResourceError(types.ResourceErrorTypeTimeout, "REQUEST_TIMEOUT", err.Error())
+	}
+
+	if containsSubstring(errStr, "conflict") || containsSubstring(errStr, "409") {
+		return types.NewResourceError(types.ResourceErrorTypeConflict, "RESOURCE_CONFLICT", err.Error())
+	}
+
+	if containsSubstring(errStr, "validation") || containsSubstring(errStr, "invalid") || containsSubstring(errStr, "400") {
+		return types.NewResourceError(types.ResourceErrorTypeValidation, "VALIDATION_ERROR", err.Error())
+	}
+
+	// Default to server error
+	return types.NewResourceError(types.ResourceErrorTypeServerError, "SERVER_ERROR", err.Error())
+}
+
+// GetMinimal retrieves minimal resource information for performance
+func (api *OpsRampResourcesAPI) GetMinimal(ctx context.Context, id string) (*types.ResourceMinimal, error) {
+	api.logger.Info("Getting minimal resource with ID: %s", id)
+
+	var resource *types.Resource
+	err := api.retryWithBackoff(ctx, "GetMinimal", func() error {
+		var err error
+		resource, err = api.Get(ctx, id)
+		return err
+	})
+
+	if err != nil {
+		return nil, api.classifyError(err)
+	}
+
+	// Convert to minimal resource
+	minimal := &types.ResourceMinimal{
+		ID:           resource.ID,
+		HostName:     resource.HostName,
+		IPAddress:    resource.IPAddress,
+		Name:         resource.Name,
+		ResourceName: resource.ResourceName,
+		Type:         resource.Type,
+		ResourceType: resource.ResourceType,
+		State:        resource.State,
+		Status:       resource.Status,
+		Location:     resource.Location,
+		Tags:         resource.Tags,
+		UpdatedDate:  resource.UpdatedDate,
+	}
+
+	api.logger.Info("Successfully retrieved minimal resource: %s", minimal.Name)
+	return minimal, nil
 }

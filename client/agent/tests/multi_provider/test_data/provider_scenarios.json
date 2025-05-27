@@ -1,0 +1,125 @@
+{
+  "provider_scenarios": {
+    "openai": {
+      "models": ["gpt-3.5-turbo", "gpt-4"],
+      "test_scenarios": [
+        {
+          "name": "openai_integration_basic",
+          "description": "Basic integration tests with OpenAI models",
+          "prompts": [
+            "List all integrations",
+            "Show me the first 3 integrations",
+            "What integrations are currently enabled?"
+          ],
+          "expected_behavior": "Should handle integration queries efficiently with good token usage"
+        },
+        {
+          "name": "openai_resources_basic", 
+          "description": "Basic resource tests with OpenAI models",
+          "prompts": [
+            "Show me first 5 resources",
+            "List resource types available",
+            "Get basic resource inventory"
+          ],
+          "expected_behavior": "Should handle resource queries with token optimization"
+        }
+      ]
+    },
+    "anthropic": {
+      "models": ["claude-3-haiku-20240307", "claude-3-sonnet-20240229"],
+      "test_scenarios": [
+        {
+          "name": "anthropic_integration_basic",
+          "description": "Basic integration tests with Anthropic models",
+          "prompts": [
+            "List all integrations",
+            "Show me the first 3 integrations", 
+            "What integrations are currently enabled?"
+          ],
+          "expected_behavior": "Should provide detailed analysis with good reasoning"
+        },
+        {
+          "name": "anthropic_resources_basic",
+          "description": "Basic resource tests with Anthropic models",
+          "prompts": [
+            "Show me first 5 resources",
+            "List resource types available",
+            "Get basic resource inventory"
+          ],
+          "expected_behavior": "Should provide comprehensive resource analysis"
+        }
+      ]
+    },
+    "gemini": {
+      "models": ["gemini-1.5-flash", "gemini-1.5-pro"],
+      "test_scenarios": [
+        {
+          "name": "gemini_integration_basic",
+          "description": "Basic integration tests with Gemini models",
+          "prompts": [
+            "List all integrations",
+            "Show me the first 3 integrations",
+            "What integrations are currently enabled?"
+          ],
+          "expected_behavior": "Should handle queries with good performance and accuracy"
+        },
+        {
+          "name": "gemini_resources_basic",
+          "description": "Basic resource tests with Gemini models", 
+          "prompts": [
+            "Show me first 5 resources",
+            "List resource types available",
+            "Get basic resource inventory"
+          ],
+          "expected_behavior": "Should provide fast and accurate resource information"
+        }
+      ]
+    }
+  },
+  "comparison_scenarios": [
+    {
+      "name": "cross_provider_integration_comparison",
+      "description": "Compare integration handling across all providers",
+      "test_prompt": "List all integrations and their current status",
+      "evaluation_criteria": [
+        "Response accuracy",
+        "Response completeness", 
+        "Token efficiency",
+        "Response time",
+        "Error handling"
+      ]
+    },
+    {
+      "name": "cross_provider_resource_comparison",
+      "description": "Compare resource handling across all providers",
+      "test_prompt": "Show me first 10 resources with their basic information",
+      "evaluation_criteria": [
+        "Data completeness",
+        "Response structure",
+        "Token usage",
+        "Performance",
+        "Error resilience"
+      ]
+    }
+  ],
+  "performance_benchmarks": {
+    "token_efficiency": {
+      "excellent": "> 10 prompts/minute",
+      "good": "5-10 prompts/minute", 
+      "fair": "2-5 prompts/minute",
+      "poor": "< 2 prompts/minute"
+    },
+    "response_accuracy": {
+      "excellent": "> 95% correct responses",
+      "good": "90-95% correct responses",
+      "fair": "80-90% correct responses", 
+      "poor": "< 80% correct responses"
+    },
+    "error_handling": {
+      "excellent": "Graceful error recovery with helpful messages",
+      "good": "Proper error detection with basic recovery",
+      "fair": "Basic error detection",
+      "poor": "Poor error handling or crashes"
+    }
+  }
+} 

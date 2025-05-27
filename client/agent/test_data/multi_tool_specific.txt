@@ -1,0 +1,1 @@
+Use both the integrations:list and resources:list tools to show me our complete environment 

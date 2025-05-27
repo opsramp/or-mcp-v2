@@ -14,6 +14,10 @@ The HPE OpsRamp MCP system provides a **complete AI agent testing platform** wit
 | [TESTING.md](./TESTING.md) | Comprehensive testing guide with 121 test scenarios |
 | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | Common issues and solutions |
 | [MCP_GO_FORK.md](./MCP_GO_FORK.md) | Information about our enhanced fork of mark3labs/mcp-go |
+| [RESOURCE_MANAGEMENT_TOOL_DESIGN.md](./RESOURCE_MANAGEMENT_TOOL_DESIGN.md) | **NEW**: Comprehensive design for next tool implementation |
+| [RESOURCE_MANAGEMENT_PHASE_TRACKER.md](./RESOURCE_MANAGEMENT_PHASE_TRACKER.md) | **NEW**: Master phase tracking and project management |
+| [PHASE1_RESOURCE_MANAGEMENT_TASKS.md](./PHASE1_RESOURCE_MANAGEMENT_TASKS.md) | **NEW**: Detailed Phase 1 task tracking with 75 tasks |
+| [RESOURCE_MANAGEMENT_CLIENT_UPDATES.md](./RESOURCE_MANAGEMENT_CLIENT_UPDATES.md) | **NEW**: ⚠️ **CRITICAL**: Client-side updates for Python client and AI agent |
 
 ## 🔗 Related Documentation
 

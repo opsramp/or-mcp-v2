@@ -181,6 +181,7 @@ class MCPClient:
                 logger.warning("Using mock tools data for testing due to: %s", str(e))
                 mock_tools = [
                     {"name": "integrations", "description": "Access OpsRamp integrations"},
+                    {"name": "resources", "description": "Access OpsRamp resources"},
                     {"name": "alerts", "description": "Access OpsRamp alerts"}
                 ]
                 self._available_tools = mock_tools

@@ -1,0 +1,24 @@
+{
+  "basic_scenarios": [
+    {
+      "name": "integration_discovery",
+      "description": "Basic integration discovery and listing",
+      "prompts": [
+        "List all integrations",
+        "Show integration types",
+        "Get integration status summary"
+      ]
+    }
+  ],
+  "advanced_scenarios": [
+    {
+      "name": "integration_management",
+      "description": "Advanced integration management",
+      "prompts": [
+        "Analyze integration performance",
+        "Show integration dependencies",
+        "Optimize integration configuration"
+      ]
+    }
+  ]
+}

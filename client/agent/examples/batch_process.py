@@ -110,7 +110,7 @@ def write_results_to_file(results: List[Dict[str, Any]], output_file: str = None
                 print(f"{result['response']}")
 
 
-async def process_prompts(prompts, server_url, llm_provider, env_file=None, simple_mode=False, connection_timeout=60):
+async def process_prompts(prompts, server_url, llm_provider, env_file=None, simple_mode=False, connection_timeout=60, model=None):
     """Process all prompts and return results."""
     results = []
     
@@ -119,6 +119,7 @@ async def process_prompts(prompts, server_url, llm_provider, env_file=None, simp
         agent = Agent(
             server_url=server_url,
             llm_provider=llm_provider,
+            model=model,
             env_file=env_file,
             simple_mode=simple_mode,
             connection_timeout=connection_timeout
@@ -170,6 +171,14 @@ async def main(args):
     if simple_mode:
         print("WARNING: Running in simple mode without connecting to MCP server")
     
+    # Override args with environment variables if they exist
+    llm_provider = os.environ.get('LLM_PROVIDER', args.llm_provider)
+    model = os.environ.get('MODEL_NAME', getattr(args, 'model', None))
+    
+    print(f"Using LLM provider: {llm_provider}")
+    if model:
+        print(f"Using model: {model}")
+    
     try:
         # Read prompts from file
         prompts = read_prompts_from_file(args.input)
@@ -186,10 +195,11 @@ async def main(args):
         results = await process_prompts(
             prompts,
             args.server_url,
-            args.llm_provider,
+            llm_provider,
             args.env_file,
             simple_mode,
-            args.connection_timeout
+            args.connection_timeout,
+            model
         )
         
         # Write results to file if output file is specified
@@ -208,8 +218,10 @@ if __name__ == '__main__':
     # Server and authentication options
     parser.add_argument('--server-url', default=DEFAULT_SERVER_URL,
                         help=f'OpsRamp MCP server URL (default: {DEFAULT_SERVER_URL})')
-    parser.add_argument('--llm-provider', default=DEFAULT_LLM_PROVIDER, choices=['openai', 'anthropic'],
+    parser.add_argument('--llm-provider', default=DEFAULT_LLM_PROVIDER, choices=['openai', 'anthropic', 'gemini'],
                         help=f'LLM provider to use (default: {DEFAULT_LLM_PROVIDER})')
+    parser.add_argument('--model', 
+                        help='Model to use (e.g., gpt-4, gpt-3.5-turbo, claude-3-haiku-20240307, gemini-1.5-flash)')
     parser.add_argument('--env-file', default=DEFAULT_ENV_FILE,
                         help='Path to .env file for configuration')
     

@@ -1,0 +1,111 @@
+{
+  "test_summary": {
+    "session_id": "1748113485",
+    "total_tests": 1,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 7.413638114929199,
+    "avg_test_duration": 7.413638114929199,
+    "total_tool_calls": 1,
+    "server_url": "http://localhost:8080",
+    "timestamp": "2025-05-24T12:04:53.284683"
+  },
+  "category_analysis": {
+    "UNKNOWN": {
+      "total": 1,
+      "success": 1,
+      "avg_duration": 5.426817893981934,
+      "total_duration": 5.426817893981934,
+      "success_rate": 100.0
+    }
+  },
+  "tool_usage_analysis": {
+    "resources:list": {
+      "count": 1,
+      "success_count": 0,
+      "total_duration": 0.2768428325653076
+    }
+  },
+  "complexity_distribution": {
+    "LOW": {
+      "count": 1,
+      "avg_score": 3.0,
+      "avg_duration": 5.426817893981934,
+      "success_rate": 100.0,
+      "total_score": 3,
+      "total_duration": 5.426817893981934,
+      "successes": 1
+    }
+  },
+  "top_performers": {
+    "highest_complexity": [
+      {
+        "prompt": "What resources do we have?",
+        "score": 3
+      }
+    ],
+    "most_tool_calls": [
+      {
+        "prompt": "What resources do we have?",
+        "calls": 1
+      }
+    ],
+    "longest_responses": [
+      {
+        "prompt": "What resources do we have?",
+        "length": 224
+      }
+    ]
+  },
+  "failure_analysis": {
+    "count": 0,
+    "patterns": [],
+    "categories": {}
+  },
+  "detailed_results": [
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "What resources do we have?",
+        "expected_complexity": "LOW",
+        "line_number": 1
+      },
+      "success": true,
+      "response": "I'm sorry, but there was an error when attempting to list all resources. The process failed with error code 501. This issue might be caused by a server-side error. Please try again later or contact your system administrator.",
+      "duration_seconds": 5.426817893981934,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "list"
+          },
+          "error": "Error calling tool resources: Request failed: 501",
+          "duration": 0.2768428325653076,
+          "success": false,
+          "timestamp": "2025-05-24T12:04:49.783992"
+        }
+      ],
+      "error_message": null,
+      "response_length": 224,
+      "complexity_score": 3,
+      "timestamp": "2025-05-24T12:04:52.206014",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "list"
+          },
+          "error": "Error calling tool resources: Request failed: 501",
+          "duration": 0.2768428325653076,
+          "success": false,
+          "timestamp": "2025-05-24T12:04:49.783992"
+        }
+      ]
+    }
+  ],
+  "log_files": {
+    "main_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/output/enhanced_integration_test_1748113485.log",
+    "payload_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/output/request_response_payloads_1748113485.jsonl"
+  }
+}

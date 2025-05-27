@@ -188,7 +188,8 @@ async def interactive_chat(
     server_url: str,
     llm_provider: str,
     env_file: Optional[str] = None,
-    simple_mode: bool = False
+    simple_mode: bool = False,
+    model: Optional[str] = None
 ):
     """
     Run an interactive chat session with the OpsRamp AI Agent.
@@ -239,7 +240,7 @@ async def interactive_chat(
     # Initialize the Agent
     try:
         print(f"Connecting to MCP server at {server_url}...")
-        agent = Agent(server_url, llm_provider=llm_provider, env_file=env_file)
+        agent = Agent(server_url, llm_provider=llm_provider, model=model, env_file=env_file)
         
         # Skip the connection step since we already have a session ID
         if session_id:
@@ -328,7 +329,8 @@ async def process_single_prompt(
     output_json: bool = False,
     simple_mode: bool = False,
     connection_timeout: int = 60,
-    request_timeout: int = 15
+    request_timeout: int = 15,
+    model: Optional[str] = None
 ):
     """
     Process a single prompt and return the response.
@@ -420,6 +422,7 @@ async def process_single_prompt(
         agent = Agent(
             server_url=server_url,
             llm_provider=llm_provider,
+            model=model,
             env_file=env_file,
             connection_timeout=connection_timeout,
             simple_mode=simple_mode,
@@ -493,7 +496,7 @@ def setup_argparse():
     )
     parser.add_argument(
         "--llm-provider",
-        choices=["openai", "anthropic"],
+        choices=["openai", "anthropic", "gemini"],
         default=DEFAULT_LLM_PROVIDER,
         help=f"LLM provider to use (default: {DEFAULT_LLM_PROVIDER})"
     )
@@ -516,6 +519,14 @@ def main():
     """Main entry point for the chat client."""
     args = setup_argparse()
     
+    # Override args with environment variables if they exist
+    llm_provider = os.environ.get('LLM_PROVIDER', args.llm_provider)
+    model = os.environ.get('MODEL_NAME', None)
+    
+    print(f"Using LLM provider: {llm_provider}")
+    if model:
+        print(f"Using model: {model}")
+    
     # Use simple mode if MOCK_MODE is set to True
     simple_mode = args.simple_mode or MOCK_MODE
     
@@ -527,19 +538,21 @@ def main():
         asyncio.run(process_single_prompt(
             args.prompt,
             args.server_url,
-            args.llm_provider,
+            llm_provider,
             args.env_file,
             False,
             simple_mode,
             args.connection_timeout,
-            args.request_timeout
+            args.request_timeout,
+            model
         ))
     else:
         asyncio.run(interactive_chat(
             args.server_url,
-            args.llm_provider,
+            llm_provider,
             args.env_file,
-            simple_mode
+            simple_mode,
+            model
         ))
 
 
