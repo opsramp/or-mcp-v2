@@ -22,9 +22,12 @@ A **SECURITY-HARDENED** Go-based MCP server for HPE OpsRamp with a production-re
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone and setup
-git clone https://github.com/opsramp/or-mcp-v2.git
+# 1. Clone and setup (includes required submodules)
+git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
+
+# Note: If you already cloned without --recurse-submodules, run:
+# git submodule init && git submodule update
 
 # 2. Set up Python environment (creates virtual env and installs dependencies)
 make python-setup  # Requires Python 3.8+
