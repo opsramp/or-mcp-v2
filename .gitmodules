@@ -1,0 +1,3 @@
+[submodule "internal/mcp-go"]
+    path = internal/mcp-go
+    url = https://github.com/mark3labs/mcp-go.git 
