@@ -10,20 +10,26 @@ This guide provides **all configuration settings** needed to get the OpsRamp AI 
    - OpsRamp: auth key, secret, tenant ID from your OpsRamp console
    - LLM: OpenAI API key from [platform.openai.com](https://platform.openai.com/api-keys)
 
-2. **Configure server:**
+2. **Clone the repository with submodules:**
+   ```bash
+   git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+   cd or-mcp-v2
+   ```
+
+3. **Configure server:**
    ```bash
    cp config.yaml.template config.yaml
    # Edit config.yaml with your OpsRamp credentials
    ```
 
-3. **Configure client:**
+4. **Configure client:**
    ```bash
    cd client/agent
    cp .env.template .env
    # Edit .env with: OPENAI_API_KEY=sk-proj-your-key
    ```
 
-4. **Start and test:**
+5. **Start and test:**
    ```bash
    # Terminal 1: Start server (from project root)
    make all
@@ -54,6 +60,7 @@ The agent consists of:
 - **Python 3.8+** (for AI agent client)
 - **OpsRamp Account** with API access
 - **At least one LLM API key** (OpenAI, Anthropic, or Google)
+- **Git** with submodule support (for cloning the repository)
 
 ### Required API Access
 - **OpsRamp API credentials** (auth key, secret, tenant ID)
@@ -61,6 +68,19 @@ The agent consists of:
   - OpenAI API key
   - Anthropic API key  
   - Google Gemini API key
+
+### Required Repository Components
+When cloning the repository, you must include the submodules which contain essential components:
+```bash
+# Clone with submodules (recommended)
+git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+
+# Or if already cloned without submodules
+git submodule init
+git submodule update
+```
+
+The `internal/mcp-go` directory is a required submodule that contains the core MCP Go client library.
 
 ## 🔧 Configuration Files
 
@@ -108,11 +128,11 @@ Create `.env` file in the `client/agent/` directory:
 # =============================================================================
 
 # OpenAI Configuration
-OPENAI_API_KEY=sk-proj-your-openai-api-key-here
+OPENAI_API_KEY=sk-proj-your-openai-api-key
 OPENAI_MODEL=gpt-4
 
 # Anthropic Configuration  
-ANTHROPIC_API_KEY=sk-ant-api03-your-anthropic-api-key-here
+ANTHROPIC_API_KEY=sk-ant-api03-your-anthropic-api-key
 ANTHROPIC_MODEL=claude-3-sonnet-20240229
 
 # Google Gemini Configuration
