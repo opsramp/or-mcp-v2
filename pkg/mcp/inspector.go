@@ -280,6 +280,8 @@ func (h *InspectorHandler) handleMCPProtocolMethods(w http.ResponseWriter, r *ht
 		return h.handleInitializeMethod(w, r, rpcRequest)
 	case "tools/list":
 		return h.handleMCPToolsMethod(w, r, rpcRequest)
+	case "tools/call":
+		return h.handleToolCalls(w, r, rpcRequest)
 	}
 	return false
 }
@@ -360,6 +362,7 @@ func (h *InspectorHandler) handleToolCalls(w http.ResponseWriter, r *http.Reques
 	}
 
 	h.logger.Info("Received tool call request - delegating to MCP server")
+	h.logger.Debug("Tool call request params: %+v", rpcRequest.Params)
 
 	// Create a proper MCP protocol message and route it through the MCP server
 	mcpMessage, err := json.Marshal(rpcRequest)
@@ -373,6 +376,8 @@ func (h *InspectorHandler) handleToolCalls(w http.ResponseWriter, r *http.Reques
 
 	// Process through the MCP server directly
 	mcpResponse := h.mcpServer.HandleMessage(r.Context(), json.RawMessage(mcpMessage))
+
+	h.logger.Debug("MCP server response for tool call: %+v", mcpResponse)
 
 	if mcpResponse != nil {
 		h.logger.Info("Sending tool call response")
