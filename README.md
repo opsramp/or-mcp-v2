@@ -103,10 +103,10 @@ curl http://localhost:8080/health
 curl http://localhost:8080/debug
 
 # Test MCP protocol flow (automated end-to-end testing)
-./test_mcp_flow.sh
+./tests/test_mcp_flow.sh
 
 # Test MCP Inspector compatibility (comprehensive validation)
-./test_mcp_inspector.sh
+./tests/test_mcp_inspector.sh
 ```
 
 **✅ MCP Inspector Integration (Fully Tested):**
