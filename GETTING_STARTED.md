@@ -37,14 +37,9 @@ By following this guide, you'll have:
 ### **Step 1: Clone and Initial Setup**
 
 ```bash
-# Clone the repository with submodules (required for internal/mcp-go)
-git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+# Clone the repository
+git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
-
-# If you already cloned without --recurse-submodules, run these commands instead:
-# cd or-mcp-v2
-# git submodule init
-# git submodule update
 ```
 
 ### **Step 2: Verify System Requirements**
@@ -386,21 +381,21 @@ make test-resources-basic-organized
 make test-custom MAX_TESTS=3
 ```
 
-### **Missing Submodule Issues**
+### **Missing MCP-Go Library Issues**
 
 **Issue**: Missing internal/mcp-go directory or "mcp-go package not found" errors
 
 **Solutions**:
 ```bash
-# Initialize and update the git submodules
-git submodule init
-git submodule update
-
-# Verify the submodule was properly downloaded
+# Verify the vendored library was properly downloaded
 ls -la internal/mcp-go
 
-# If you're still having issues, try a force update
-git submodule update --init --recursive --force
+# If the directory is missing, re-clone the repository
+git clone https://github.com/opsramp/or-mcp-v2.git
+cd or-mcp-v2
+
+# Verify all files are present
+ls -la internal/mcp-go/mcp/
 ```
 
 ### **Interactive Chat Issues**

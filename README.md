@@ -51,12 +51,9 @@ make kill-server
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone and setup (includes required submodules)
-git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+# 1. Clone and setup
+git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
-
-# Note: If you already cloned without --recurse-submodules, run:
-# cd internal/mcp-go && git submodule init && git submodule update
 
 # 2. Set up Python environment (creates virtual env and installs dependencies)
 make python-setup  # Requires Python 3.8+
@@ -168,7 +165,7 @@ tail -f output/logs/or-mcp.log
 - [🔧 docs/ARCHITECTURE_REFACTORING.md](./docs/ARCHITECTURE_REFACTORING.md) - Recent architectural improvements and refactoring details
 - [🧪 docs/TESTING.md](./docs/TESTING.md) - Comprehensive testing strategies and procedures
 - [🔧 docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md) - Common issues and troubleshooting guide
-- [📋 docs/MCP_GO_FORK.md](./docs/MCP_GO_FORK.md) - Details about the forked MCP-Go library
+- [📋 docs/MCP_GO_FORK.md](./docs/MCP_GO_FORK.md) - Details about the vendored MCP-Go library
 - [📊 docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md](./docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md) - Resource management tool design specifications
 - [📈 docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md](./docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md) - Resource management development phases
 - [📝 docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md](./docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md) - Phase 1 resource management implementation tasks

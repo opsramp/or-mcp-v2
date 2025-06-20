@@ -1,18 +1,18 @@
-# MCP-GO Fork Modifications
+# MCP-GO Vendored Library
 
-This document describes the fork of the [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) library that is used in this project, including the modifications made, reasons for forking, and how these changes benefit our implementation.
+This document describes the vendored [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) library that is used in this project, including the modifications made, reasons for vendoring, and how these changes benefit our implementation.
 
 ## Overview
 
-The Model Context Protocol (MCP) specification is implemented in Go using the mark3labs/mcp-go library. However, to meet the specific requirements of the HPE OpsRamp MCP server, we have created a fork with several enhancements and modifications.
+The Model Context Protocol (MCP) specification is implemented in Go using the mark3labs/mcp-go library. However, to meet the specific requirements of the HPE OpsRamp MCP server, we have vendored the library with several enhancements and modifications.
 
-The fork is located in `internal/mcp-go` and is referenced in the project's `go.mod` file using the replace directive:
+The vendored library is located in `internal/mcp-go` and is referenced in the project's `go.mod` file using the replace directive:
 
 ```go
 replace github.com/mark3labs/mcp-go => ./internal/mcp-go
 ```
 
-## Reasons for Forking
+## Reasons for Vendoring
 
 1. **Improved SSE Transport Layer**: The original library had limitations in its Server-Sent Events (SSE) implementation that affected connection stability and recovery.
 2. **Extended Client/Server Capabilities**: We needed additional methods to expose transport interfaces and configuration options.
@@ -127,7 +127,7 @@ These hooks enable:
 - Performance measurement
 - Debugging support
 
-## Benefits of the Fork
+## Benefits of Vendoring
 
 1. **Improved Reliability**: Better connection handling and recovery for SSE connections
 2. **Extended Functionality**: Additional methods to configure and monitor the MCP system
@@ -143,13 +143,13 @@ The fork is used throughout the project for:
 3. Client-server communication
 4. Testing infrastructure
 
-The modified library maintains compatibility with the original MCP specification while providing the enhancements needed for the HPE OpsRamp implementation.
+The vendored library maintains compatibility with the original MCP specification while providing the enhancements needed for the HPE OpsRamp implementation.
 
 ## Maintenance Strategy
 
 We plan to:
-1. Keep our fork synchronized with upstream changes when appropriate
+1. Keep our vendored library updated with upstream changes when appropriate
 2. Contribute non-OpsRamp-specific improvements back to the upstream project
 3. Maintain a clear separation between core MCP functionality and OpsRamp-specific extensions
 
-This approach allows us to benefit from community improvements while maintaining the specialized functionality required for HPE OpsRamp. 
+This approach allows us to benefit from community improvements while maintaining complete control over the specialized functionality required for HPE OpsRamp. 

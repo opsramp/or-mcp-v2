@@ -10,9 +10,9 @@ This guide provides **all configuration settings** needed to get the OpsRamp AI 
    - OpsRamp: auth key, secret, tenant ID from your OpsRamp console
    - LLM: OpenAI API key from [platform.openai.com](https://platform.openai.com/api-keys)
 
-2. **Clone the repository with submodules:**
+2. **Clone the repository:**
    ```bash
-   git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+   git clone https://github.com/opsramp/or-mcp-v2.git
    cd or-mcp-v2
    ```
 
@@ -60,7 +60,7 @@ The agent consists of:
 - **Python 3.8+** (for AI agent client)
 - **OpsRamp Account** with API access
 - **At least one LLM API key** (OpenAI, Anthropic, or Google)
-- **Git** with submodule support (for cloning the repository)
+- **Git** (for cloning the repository)
 
 ### Required API Access
 - **OpsRamp API credentials** (auth key, secret, tenant ID)
@@ -70,17 +70,17 @@ The agent consists of:
   - Google Gemini API key
 
 ### Required Repository Components
-When cloning the repository, you must include the submodules which contain essential components:
+The repository contains all necessary components including the vendored MCP-Go library:
 ```bash
-# Clone with submodules (recommended)
-git clone --recurse-submodules https://github.com/opsramp/or-mcp-v2.git
+# Clone the repository (all components included)
+git clone https://github.com/opsramp/or-mcp-v2.git
+cd or-mcp-v2
 
-# Or if already cloned without submodules
-git submodule init
-git submodule update
+# Verify the vendored library is present
+ls -la internal/mcp-go/
 ```
 
-The `internal/mcp-go` directory is a required submodule that contains the core MCP Go client library.
+The `internal/mcp-go` directory contains the vendored MCP Go client library with all necessary components.
 
 ## 🔧 Configuration Files
 
