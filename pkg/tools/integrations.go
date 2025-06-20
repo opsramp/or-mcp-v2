@@ -8,8 +8,8 @@ import (
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/types"
 )
 
 // IntegrationsTool provides MCP methods for managing integrations

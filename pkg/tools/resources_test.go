@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/client"
 )
 
 // setupTestEnvironment sets up the testing environment with proper logging and client

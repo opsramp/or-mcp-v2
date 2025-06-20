@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/tools"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/client"
+	"github.com/opsramp/or-mcp-v2/pkg/tools"
 )
 
 const (

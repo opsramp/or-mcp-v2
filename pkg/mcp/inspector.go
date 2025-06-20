@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/common"
 )
 
 // InspectorHandler handles MCP Inspector compatibility requirements

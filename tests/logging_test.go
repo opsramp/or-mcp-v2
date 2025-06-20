@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/common"
 )
 
 func TestLogging(t *testing.T) {

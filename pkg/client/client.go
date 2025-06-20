@@ -12,7 +12,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/common"
 )
 
 // OpsRampClient is the client for the OpsRamp API

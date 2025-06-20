@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+	"github.com/opsramp/or-mcp-v2/pkg/types"
 	"gopkg.in/yaml.v2"
 )
 

@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/types"
 )
 
 // OpsRampIntegrationsAPI implements the real OpsRamp API client

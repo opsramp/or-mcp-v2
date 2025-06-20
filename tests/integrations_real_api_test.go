@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/tools"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/tools"
 )
 
 // TestIntegrationsRealAPI tests the integrations tool against the real OpsRamp API

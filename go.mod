@@ -1,4 +1,4 @@
-module github.com/vobbilis/codegen/or-mcp-v2
+module github.com/opsramp/or-mcp-v2
 
 go 1.23
 

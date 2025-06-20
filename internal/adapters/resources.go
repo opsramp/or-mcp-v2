@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/client"
-	"github.com/vobbilis/codegen/or-mcp-v2/pkg/types"
+	"github.com/opsramp/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/pkg/client"
+	"github.com/opsramp/or-mcp-v2/pkg/types"
 )
 
 // ResourcesAPI defines the contract for resource operations

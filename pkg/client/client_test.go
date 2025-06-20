@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/vobbilis/codegen/or-mcp-v2/common"
+	"github.com/opsramp/or-mcp-v2/common"
 )
 
 func TestOpsRampClient(t *testing.T) {
