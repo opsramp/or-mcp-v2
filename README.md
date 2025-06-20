@@ -25,7 +25,7 @@ A **PRODUCTION-READY** Go-based MCP server for HPE OpsRamp with comprehensive AI
 
 **✅ Full MCP Inspector Integration** - Our server is fully compatible with the MCP Inspector and other standard MCP clients:
 
-- **🔧 Protocol Version**: `2024-11-05` (latest stable MCP specification)
+- **🔧 Protocol Version**: `2025-03-26` (latest stable MCP specification)
 - **📡 Transport**: Server-Sent Events (SSE) with proper handshake support
 - **🔍 Inspector Ready**: Direct compatibility with MCP Inspector for development and debugging
 - **📊 Comprehensive Logging**: Detailed request/response logging for all MCP interactions
