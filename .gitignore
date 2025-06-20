@@ -46,3 +46,4 @@ scripts/resources/output/
 .DS_Store
 config.yaml
 tests/security/reports/
+server
