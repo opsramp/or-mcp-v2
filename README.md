@@ -34,12 +34,18 @@ A **PRODUCTION-READY** Go-based MCP server for HPE OpsRamp with comprehensive AI
 - **🔄 Protocol Compliance**: Full JSON-RPC 2.0 implementation with proper error handling
 
 ```bash
-# Start server in debug mode for MCP Inspector
+# Start server in debug mode for MCP Inspector (recommended)
 make run-debug
+
+# OR start in background for testing
+make run-debug-bg
 
 # Server will be available at http://localhost:8080
 # MCP Inspector can connect directly to test tools
 # Production mode: make run
+
+# Stop any running server
+make kill-server
 ```
 
 ## 🚀 Quick Start
@@ -67,14 +73,20 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 cp config.yaml.template config.yaml
 cd client/agent && cp .env.template .env && cd ../..
 
-# 4. Build and run
+# 4. Build and run (creates build/or-mcp-server binary)
 make all && make health-check
 
 # 5. Start in debug mode (recommended for MCP Inspector)
 make run-debug  # Enables detailed logging and MCP Inspector compatibility
 
+# OR start in background for testing
+make run-debug-bg
+
 # OR start in production mode
 make run
+
+# Stop server when done
+make kill-server
 
 # 6. Chat directly with the agent (simplest way)
 make chat-interactive
@@ -87,14 +99,22 @@ make test-resources-basic-organized
 
 ## 🔧 MCP Development & Testing
 
+**⚠️ Important:** Always use the Makefile commands. The server binary is built as `build/or-mcp-server` and should only be managed through Makefile targets.
+
 The server provides multiple ways to interact with the MCP protocol with **FULL RUNTIME LOGGING** for all interactions:
 
 ```bash
 # Development server (detailed logging, accepts any session ID)
 make run-debug
 
+# Background server for testing
+make run-debug-bg
+
 # Production server (session validation, standard logging)  
 make run
+
+# Stop any running server
+make kill-server
 
 # Health check (verify server is responding)
 curl http://localhost:8080/health

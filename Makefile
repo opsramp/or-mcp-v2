@@ -74,6 +74,8 @@ clean:
 	@echo "🧹 Cleaning up build artifacts..."
 	@echo "========================================================"
 	@rm -rf $(BUILD_DIR)
+	@rm -f ./server
+	@rm -f ./or-mcp-server
 	@echo "✅ Build artifacts cleaned"
 
 # Clean the vendor directory
@@ -190,6 +192,15 @@ run-debug: build dirs config
 	@echo "========================================================"
 	DEBUG=true PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME)
 
+# Quick debug run (starts server in background for testing)
+run-debug-bg: build dirs config
+	@echo "========================================================"
+	@echo "🐞 Running HPE OpsRamp MCP server in DEBUG mode (background) on port $(PORT)..."
+	@echo "========================================================"
+	@echo "⚠️  NOTE: Server requires valid OpsRamp credentials in config.yaml to function properly."
+	@echo "========================================================"
+	DEBUG=true PORT=$(PORT) $(BUILD_DIR)/$(BINARY_NAME) &
+
 # MCP-GO library management
 mcp-go-build:
 	@echo "========================================================"
@@ -288,9 +299,11 @@ kill-server:
 	@echo "========================================================"
 	@echo "🔍 Finding running MCP server..."
 	@echo "========================================================"
-	@if pgrep -f "or-mcp-server" > /dev/null; then \
-		echo "Found running server, shutting down..."; \
-		pkill -f "or-mcp-server"; \
+	@if pgrep -f "or-mcp-server" > /dev/null 2>&1; then \
+		echo "Found running or-mcp-server, shutting down..."; \
+		pkill -f "or-mcp-server" 2>/dev/null || true; \
+		sleep 1; \
+		pkill -9 -f "or-mcp-server" 2>/dev/null || true; \
 		echo "✅ Server shutdown complete"; \
 	else \
 		echo "✅ No running server found"; \
@@ -457,6 +470,7 @@ help:
 	@echo "  kill-server     - Find and shut down any running MCP server"
 	@echo "  run             - Build and run the server"
 	@echo "  run-debug       - Build and run the server in debug mode"
+	@echo "  run-debug-bg    - Build and run the server in debug mode (background)"
 	@echo "  chat-interactive- Start an interactive chat with the AI agent"
 	@echo "  test            - Run server unit tests"
 	@echo "  test-resources-basic      - Run basic resource management tests"

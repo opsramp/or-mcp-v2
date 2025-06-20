@@ -206,6 +206,7 @@ func IntegrationsToolHandler(ctx context.Context, req mcp.CallToolRequest, api I
 	toolResult := &mcp.CallToolResult{
 		Content: []mcp.Content{
 			mcp.TextContent{
+				Type: "text",
 				Text: string(resultJSON),
 			},
 		},
