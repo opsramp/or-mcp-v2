@@ -138,18 +138,18 @@ tail -f output/logs/or-mcp.log
 
 | Document | Description |
 |----------|-------------|
-| **[🚀 GETTING_STARTED.md](./GETTING_STARTED.md)** | Complete setup guide and replication steps |
-| **[⚙️ CONFIGURATION_GUIDE.md](./CONFIGURATION_GUIDE.md)** | Detailed configuration instructions |
-| **[🔗 INTEGRATIONS.md](./INTEGRATIONS.md)** | Integration management capabilities |
-| **[🖥️ RESOURCES.md](./RESOURCES.md)** | Resource management capabilities |
-| **[🏗️ docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)** | System architecture and design overview |
-| **[🧪 docs/TESTING.md](./docs/TESTING.md)** | Comprehensive testing strategies and procedures |
-| **[🔧 docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)** | Common issues and troubleshooting guide |
-| **[📋 docs/MCP_GO_FORK.md](./docs/MCP_GO_FORK.md)** | Details about the forked MCP-Go library |
-| **[📊 docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md](./docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md)** | Resource management tool design specifications |
-| **[📈 docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md](./docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md)** | Resource management development phases |
-| **[📝 docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md](./docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md)** | Phase 1 resource management implementation tasks |
-| **[🔄 docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md](./docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md)** | Client updates for resource management features |
+| [🚀 GETTING_STARTED.md](./GETTING_STARTED.md) | Complete setup guide and replication steps |
+| [⚙️ CONFIGURATION_GUIDE.md](./CONFIGURATION_GUIDE.md) | Detailed configuration instructions |
+| [🔗 INTEGRATIONS.md](./INTEGRATIONS.md) | Integration management capabilities |
+| [🖥️ RESOURCES.md](./RESOURCES.md) | Resource management capabilities |
+| [🏗️ docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System architecture and design overview |
+| [🧪 docs/TESTING.md](./docs/TESTING.md) | Comprehensive testing strategies and procedures |
+| [🔧 docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md) | Common issues and troubleshooting guide |
+| [📋 docs/MCP_GO_FORK.md](./docs/MCP_GO_FORK.md) | Details about the forked MCP-Go library |
+| [📊 docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md](./docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md) | Resource management tool design specifications |
+| [📈 docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md](./docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md) | Resource management development phases |
+| [📝 docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md](./docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md) | Phase 1 resource management implementation tasks |
+| [🔄 docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md](./docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md) | Client updates for resource management features |
 
 ## 🛡️ Security Excellence
 
