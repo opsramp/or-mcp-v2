@@ -125,7 +125,6 @@ tail -f output/logs/or-mcp.log
 # - Error handling and validation
 # - Session management and handshake completion
 ```
-```
 
 **🔍 Recent Compatibility Achievements:**
 - ✅ **Fixed HTTP routing** - `/message` endpoint now properly logs all MCP interactions
