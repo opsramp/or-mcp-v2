@@ -1,0 +1,558 @@
+{
+  "test_summary": {
+    "session_id": "1748300757",
+    "total_tests": 5,
+    "successful_tests": 5,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 37.2338969707489,
+    "avg_test_duration": 7.446779394149781,
+    "total_tool_calls": 4,
+    "server_url": "http://localhost:8080",
+    "timestamp": "2025-05-26T16:06:34.820702"
+  },
+  "category_analysis": {
+    "UNKNOWN": {
+      "total": 5,
+      "success": 5,
+      "avg_duration": 6.058469009399414,
+      "total_duration": 30.29234504699707,
+      "success_rate": 100.0
+    }
+  },
+  "tool_usage_analysis": {
+    "integrations:list": {
+      "count": 2,
+      "success_count": 2,
+      "total_duration": 1.3297245502471924
+    },
+    "resources:getMinimal": {
+      "count": 2,
+      "success_count": 2,
+      "total_duration": 0.3269991874694824
+    }
+  },
+  "complexity_distribution": {
+    "LOW": {
+      "count": 5,
+      "avg_score": 3.8,
+      "avg_duration": 6.058469009399414,
+      "success_rate": 100.0,
+      "total_score": 19,
+      "total_duration": 30.29234504699707,
+      "successes": 5
+    }
+  },
+  "top_performers": {
+    "highest_complexity": [
+      {
+        "prompt": "Show me AWS integrations",
+        "score": 6
+      },
+      {
+        "prompt": "How do I create a new integration?",
+        "score": 4
+      },
+      {
+        "prompt": "List all integrations",
+        "score": 3
+      },
+      {
+        "prompt": "List all available resource types",
+        "score": 3
+      },
+      {
+        "prompt": "Show me all resources",
+        "score": 3
+      }
+    ],
+    "most_tool_calls": [
+      {
+        "prompt": "List all integrations",
+        "calls": 1
+      },
+      {
+        "prompt": "Show me AWS integrations",
+        "calls": 1
+      },
+      {
+        "prompt": "List all available resource types",
+        "calls": 1
+      },
+      {
+        "prompt": "Show me all resources",
+        "calls": 1
+      },
+      {
+        "prompt": "How do I create a new integration?",
+        "calls": 0
+      }
+    ],
+    "longest_responses": [
+      {
+        "prompt": "How do I create a new integration?",
+        "length": 1594
+      },
+      {
+        "prompt": "Show me AWS integrations",
+        "length": 470
+      },
+      {
+        "prompt": "List all integrations",
+        "length": 452
+      },
+      {
+        "prompt": "List all available resource types",
+        "length": 42
+      },
+      {
+        "prompt": "Show me all resources",
+        "length": 42
+      }
+    ]
+  },
+  "failure_analysis": {
+    "count": 0,
+    "patterns": [],
+    "categories": {}
+  },
+  "detailed_results": [
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "List all integrations",
+        "expected_complexity": "LOW",
+        "line_number": 1
+      },
+      "success": true,
+      "response": "Here are the OpsRamp integrations:\n\n1. hpe-alletra-LabRat (ID: INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc)\n   Status: Installed, Category: SDK APP\n   App: hpe-alletra, Version: 7.0.0\n\n2. redfish-server-LabRat (ID: INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca)\n   Status: Installed, Category: SDK APP\n   App: redfish-server, Version: 7.0.0\n\n3. vcenter-58.51 (ID: INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd)\n   Status: enabled, Category: COMPUTE_INTEGRATION\n\n",
+      "duration_seconds": 0.626014232635498,
+      "tool_calls_made": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.6017816066741943,
+          "success": true,
+          "timestamp": "2025-05-26T16:05:59.532583"
+        }
+      ],
+      "error_message": null,
+      "response_length": 452,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:05:59.544171",
+      "session_traces": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.6017816066741943,
+          "success": true,
+          "timestamp": "2025-05-26T16:05:59.532583"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Show me AWS integrations",
+        "expected_complexity": "LOW",
+        "line_number": 2
+      },
+      "success": true,
+      "response": "Based on the provided executed function, there currently are no AWS integrations listed in this selection. The three listed integrations are for \"hpe-alletra\", \"redfish-server\", and \"vcenter-58.51\".\n\nPlease note that listing all integrations only provides the integrations currently set up and does not include potential integrations that are available but not yet activated. If you are looking for AWS integrations, ensure the integration is set up and enabled for use.",
+      "duration_seconds": 18.304471015930176,
+      "tool_calls_made": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.727942943572998,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:15.296696"
+        }
+      ],
+      "error_message": null,
+      "response_length": 470,
+      "complexity_score": 6,
+      "timestamp": "2025-05-26T16:06:18.991828",
+      "session_traces": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.727942943572998,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:15.296696"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "How do I create a new integration?",
+        "expected_complexity": "LOW",
+        "line_number": 3
+      },
+      "success": true,
+      "response": "To create a new integration in OpsRamp, follow these general steps:\n\n1. Identify what type of integration you want to create. This could be based on specific vendor offerings such as AWS, Azure, Google Cloud, VMware, and many others.\n\n2. Collect necessary configuration information. For example, if you're adding a VMWare vCenter integration, you'll need the vCenter hostname/IP, credentials, and any specific settings you want to apply.\n\n3. Use the \"create\" action in the integrations tool. A typical request to create an integration would look something like this:\n\n```tool\n{\n  \"name\": \"integrations\",\n  \"arguments\": {\n    \"action\": \"create\",\n    \"config\": {\n      \"name\": \"New VMware\",\n      \"type\": \"vcenter\",\n      \"host\": \"10.1.1.100\",\n      \"credentials\": {\n        \"username\": \"your_username\",\n        \"password\": \"your_password\"\n      },\n      \"settings\": {\n        // optional additional settings\n      }\n    }\n  }\n}\n```\n\nPlease replace the placeholders like `your_username` and `your_password` with your actual details.\n\nThe tool will then respond with the result, which includes the ID of the new integration for further management later.\n\nMake sure you always validate the configuration and monitor the status of your new integration to ensure it's working as expected. If there's an error, use the \"getDetailed\" action to deep dive into the integration details for troubleshooting.\n\nPlease note that in a typical working environment, using main user credentials directly might not be best practice. Always follow your organizational security guidelines when managing integrations.",
+      "duration_seconds": 11.009032964706421,
+      "tool_calls_made": [],
+      "error_message": null,
+      "response_length": 1594,
+      "complexity_score": 4,
+      "timestamp": "2025-05-26T16:06:31.134726",
+      "session_traces": []
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "List all available resource types",
+        "expected_complexity": "LOW",
+        "line_number": 4
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.18124794960021973,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 100
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.1685190200805664,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:32.436072"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:32.448693",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 100
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.1685190200805664,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:32.436072"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Show me all resources",
+        "expected_complexity": "LOW",
+        "line_number": 5
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.17157888412475586,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.15848016738891602,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:33.734065"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:33.746813",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.15848016738891602,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:33.734065"
+        }
+      ]
+    }
+  ],
+  "log_files": {
+    "main_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/enhanced_integration_test_1748300757.log",
+    "payload_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/request_response_payloads_1748300757.jsonl"
+  }
+}

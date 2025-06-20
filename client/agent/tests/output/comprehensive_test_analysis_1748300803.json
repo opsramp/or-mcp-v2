@@ -1,0 +1,465 @@
+{
+  "test_summary": {
+    "session_id": "1748300803",
+    "total_tests": 5,
+    "successful_tests": 5,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 7.6960320472717285,
+    "avg_test_duration": 1.5392064094543456,
+    "total_tool_calls": 5,
+    "server_url": "http://localhost:8080",
+    "timestamp": "2025-05-26T16:06:50.785136"
+  },
+  "category_analysis": {
+    "UNKNOWN": {
+      "total": 5,
+      "success": 5,
+      "avg_duration": 0.28683109283447267,
+      "total_duration": 1.4341554641723633,
+      "success_rate": 100.0
+    }
+  },
+  "tool_usage_analysis": {
+    "resources:getMinimal": {
+      "count": 4,
+      "success_count": 4,
+      "total_duration": 0.4669954776763916
+    },
+    "integrations:list": {
+      "count": 1,
+      "success_count": 1,
+      "total_duration": 0.873582124710083
+    }
+  },
+  "complexity_distribution": {
+    "MEDIUM": {
+      "count": 2,
+      "avg_score": 3.0,
+      "avg_duration": 0.09168004989624023,
+      "success_rate": 100.0,
+      "total_score": 6,
+      "total_duration": 0.18336009979248047,
+      "successes": 2
+    },
+    "LOW": {
+      "count": 3,
+      "avg_score": 3.0,
+      "avg_duration": 0.4169317881266276,
+      "success_rate": 100.0,
+      "total_score": 9,
+      "total_duration": 1.2507953643798828,
+      "successes": 3
+    }
+  },
+  "top_performers": {
+    "highest_complexity": [
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "score": 3
+      },
+      {
+        "prompt": "What resources are associated with the Azure integration?",
+        "score": 3
+      },
+      {
+        "prompt": "List all integrations and show the resource count for each",
+        "score": 3
+      },
+      {
+        "prompt": "Find all critical resources across all integrations",
+        "score": 3
+      },
+      {
+        "prompt": "Generate a comprehensive report of our infrastructure",
+        "score": 3
+      }
+    ],
+    "most_tool_calls": [
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "calls": 1
+      },
+      {
+        "prompt": "What resources are associated with the Azure integration?",
+        "calls": 1
+      },
+      {
+        "prompt": "List all integrations and show the resource count for each",
+        "calls": 1
+      },
+      {
+        "prompt": "Find all critical resources across all integrations",
+        "calls": 1
+      },
+      {
+        "prompt": "Generate a comprehensive report of our infrastructure",
+        "calls": 1
+      }
+    ],
+    "longest_responses": [
+      {
+        "prompt": "List all integrations and show the resource count for each",
+        "length": 452
+      },
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "length": 42
+      },
+      {
+        "prompt": "What resources are associated with the Azure integration?",
+        "length": 42
+      },
+      {
+        "prompt": "Find all critical resources across all integrations",
+        "length": 42
+      },
+      {
+        "prompt": "Generate a comprehensive report of our infrastructure",
+        "length": 42
+      }
+    ]
+  },
+  "failure_analysis": {
+    "count": 0,
+    "patterns": [],
+    "categories": {}
+  },
+  "detailed_results": [
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Show me a report of AWS integrations and their associated resources",
+        "expected_complexity": "MEDIUM",
+        "line_number": 1
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.0042171478271484375,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.0038449764251708984,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:43.769729"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:43.769919",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.0038449764251708984,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:43.769729"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "What resources are associated with the Azure integration?",
+        "expected_complexity": "LOW",
+        "line_number": 2
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.1795341968536377,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.15410375595092773,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:45.020755"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:45.033449",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.15410375595092773,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:45.020755"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "List all integrations and show the resource count for each",
+        "expected_complexity": "LOW",
+        "line_number": 3
+      },
+      "success": true,
+      "response": "Here are the OpsRamp integrations:\n\n1. hpe-alletra-LabRat (ID: INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc)\n   Status: Installed, Category: SDK APP\n   App: hpe-alletra, Version: 7.0.0\n\n2. redfish-server-LabRat (ID: INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca)\n   Status: Installed, Category: SDK APP\n   App: redfish-server, Version: 7.0.0\n\n3. vcenter-58.51 (ID: INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd)\n   Status: enabled, Category: COMPUTE_INTEGRATION\n\n",
+      "duration_seconds": 0.8981280326843262,
+      "tool_calls_made": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.873582124710083,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:47.069485"
+        }
+      ],
+      "error_message": null,
+      "response_length": 452,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:47.081821",
+      "session_traces": [
+        {
+          "tool_name": "integrations",
+          "arguments": {
+            "action": "list"
+          },
+          "result": [
+            {
+              "app": "hpe-alletra",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "hpe-alletra-LabRat",
+              "id": "INTG-2ed93041-eb92-40e9-b6b4-f14ad13e54fc",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:34:32+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T17:02:06+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "redfish-server",
+              "category": "SDK APP",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "redfish-server-LabRat",
+              "id": "INTG-f9e5d2aa-ee17-4e32-9251-493566ebdfca",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:25:00+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T15:25:45+0000",
+              "name": "",
+              "state": "Deployed",
+              "status": "Installed",
+              "type": "",
+              "updateAvailable": true,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": "7.0.0"
+            },
+            {
+              "app": "",
+              "category": "COMPUTE_INTEGRATION",
+              "config": {},
+              "createdBy": "",
+              "createdTime": "",
+              "displayName": "vcenter-58.51",
+              "id": "INTG-00ee85e2-1f84-4fc1-8cf8-5277ae6980dd",
+              "installedBy": "220203-murthy.chelankuri@hpe.com",
+              "installedTime": "2025-02-18T15:40:23+0000",
+              "modifiedBy": "220203-murthy.chelankuri@hpe.com",
+              "modifiedTime": "2025-02-18T16:50:52+0000",
+              "name": "",
+              "state": "",
+              "status": "enabled",
+              "type": "",
+              "updateAvailable": false,
+              "updatedBy": "",
+              "updatedTime": "",
+              "version": ""
+            }
+          ],
+          "duration": 0.873582124710083,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:47.069485"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Find all critical resources across all integrations",
+        "expected_complexity": "LOW",
+        "line_number": 4
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.17313313484191895,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.1426408290863037,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:48.396726"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:48.409512",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.1426408290863037,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:48.396726"
+        }
+      ]
+    },
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Generate a comprehensive report of our infrastructure",
+        "expected_complexity": "MEDIUM",
+        "line_number": 5
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.17914295196533203,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.16640591621398926,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:49.716011"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:49.728036",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.16640591621398926,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:49.716011"
+        }
+      ]
+    }
+  ],
+  "log_files": {
+    "main_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/enhanced_integration_test_1748300803.log",
+    "payload_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/request_response_payloads_1748300803.jsonl"
+  }
+}

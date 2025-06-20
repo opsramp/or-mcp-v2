@@ -1,0 +1,113 @@
+{
+  "test_summary": {
+    "session_id": "1748300786",
+    "total_tests": 1,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_duration": 1.6622977256774902,
+    "avg_test_duration": 1.6622977256774902,
+    "total_tool_calls": 1,
+    "server_url": "http://localhost:8080",
+    "timestamp": "2025-05-26T16:06:28.289941"
+  },
+  "category_analysis": {
+    "UNKNOWN": {
+      "total": 1,
+      "success": 1,
+      "avg_duration": 0.0028228759765625,
+      "total_duration": 0.0028228759765625,
+      "success_rate": 100.0
+    }
+  },
+  "tool_usage_analysis": {
+    "resources:getMinimal": {
+      "count": 1,
+      "success_count": 1,
+      "total_duration": 0.002685070037841797
+    }
+  },
+  "complexity_distribution": {
+    "MEDIUM": {
+      "count": 1,
+      "avg_score": 3.0,
+      "avg_duration": 0.0028228759765625,
+      "success_rate": 100.0,
+      "total_score": 3,
+      "total_duration": 0.0028228759765625,
+      "successes": 1
+    }
+  },
+  "top_performers": {
+    "highest_complexity": [
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "score": 3
+      }
+    ],
+    "most_tool_calls": [
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "calls": 1
+      }
+    ],
+    "longest_responses": [
+      {
+        "prompt": "Show me a report of AWS integrations and their associated resources",
+        "length": 42
+      }
+    ]
+  },
+  "failure_analysis": {
+    "count": 0,
+    "patterns": [],
+    "categories": {}
+  },
+  "detailed_results": [
+    {
+      "prompt": {
+        "category": "UNKNOWN",
+        "prompt_text": "Show me a report of AWS integrations and their associated resources",
+        "expected_complexity": "MEDIUM",
+        "line_number": 1
+      },
+      "success": true,
+      "response": "No resources found matching your criteria.",
+      "duration_seconds": 0.0028228759765625,
+      "tool_calls_made": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.002685070037841797,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:27.276052"
+        }
+      ],
+      "error_message": null,
+      "response_length": 42,
+      "complexity_score": 3,
+      "timestamp": "2025-05-26T16:06:27.276115",
+      "session_traces": [
+        {
+          "tool_name": "resources",
+          "arguments": {
+            "action": "getMinimal",
+            "pageSize": 10
+          },
+          "result": "Resource ID is required for getMinimal action",
+          "duration": 0.002685070037841797,
+          "success": true,
+          "timestamp": "2025-05-26T16:06:27.276052"
+        }
+      ]
+    }
+  ],
+  "log_files": {
+    "main_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/enhanced_integration_test_1748300786.log",
+    "payload_log": "/Users/vobbilis/go/src/github.com/vobbilis/codegen/or-mcp-v2/client/agent/tests/output/request_response_payloads_1748300786.jsonl"
+  }
+}

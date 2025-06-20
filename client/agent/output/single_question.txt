@@ -1,0 +1,1 @@
+Show me a report of AWS integrations and their associated resources
