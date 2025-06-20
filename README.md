@@ -18,7 +18,7 @@ A **PRODUCTION-READY** Go-based MCP server for HPE OpsRamp with comprehensive AI
 | **Integration Management** | **Resource Management** | **MCP Protocol** | **Multi-Provider LLM** |
 |---------------------------|-------------------------|------------------|------------------------|
 | 10+ comprehensive actions | 14+ comprehensive actions | **Inspector Compatible** | OpenAI, Anthropic, Google |
-| [📖 Learn More](INTEGRATIONS.md) | [📖 Learn More](RESOURCES.md) | **Server-Sent Events** | Token-optimized testing |
+| [📖 Learn More](https://github.com/opsramp/or-mcp-v2/blob/main/INTEGRATIONS.md) | [📖 Learn More](https://github.com/opsramp/or-mcp-v2/blob/main/RESOURCES.md) | **Server-Sent Events** | Token-optimized testing |
 | Real-time API validation | Live resource monitoring | **Runtime Logging** | Multi-model comparison |
 
 ## 🔌 MCP Protocol Compatibility
@@ -138,18 +138,18 @@ tail -f output/logs/or-mcp.log
 
 | Document | Description |
 |----------|-------------|
-| **[🚀 GETTING_STARTED.md](GETTING_STARTED.md)** | Complete setup guide and replication steps |
-| **[⚙️ CONFIGURATION_GUIDE.md](CONFIGURATION_GUIDE.md)** | Detailed configuration instructions |
-| **[🔗 INTEGRATIONS.md](INTEGRATIONS.md)** | Integration management capabilities |
-| **[🖥️ RESOURCES.md](RESOURCES.md)** | Resource management capabilities |
-| **[🏗️ docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System architecture and design overview |
-| **[🧪 docs/TESTING.md](docs/TESTING.md)** | Comprehensive testing strategies and procedures |
-| **[🔧 docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues and troubleshooting guide |
-| **[📋 docs/MCP_GO_FORK.md](docs/MCP_GO_FORK.md)** | Details about the forked MCP-Go library |
-| **[📊 docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md](docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md)** | Resource management tool design specifications |
-| **[📈 docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md](docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md)** | Resource management development phases |
-| **[📝 docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md](docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md)** | Phase 1 resource management implementation tasks |
-| **[🔄 docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md](docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md)** | Client updates for resource management features |
+| **[🚀 GETTING_STARTED.md](https://github.com/opsramp/or-mcp-v2/blob/main/GETTING_STARTED.md)** | Complete setup guide and replication steps |
+| **[⚙️ CONFIGURATION_GUIDE.md](https://github.com/opsramp/or-mcp-v2/blob/main/CONFIGURATION_GUIDE.md)** | Detailed configuration instructions |
+| **[🔗 INTEGRATIONS.md](https://github.com/opsramp/or-mcp-v2/blob/main/INTEGRATIONS.md)** | Integration management capabilities |
+| **[🖥️ RESOURCES.md](https://github.com/opsramp/or-mcp-v2/blob/main/RESOURCES.md)** | Resource management capabilities |
+| **[🏗️ docs/ARCHITECTURE.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/ARCHITECTURE.md)** | System architecture and design overview |
+| **[🧪 docs/TESTING.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/TESTING.md)** | Comprehensive testing strategies and procedures |
+| **[🔧 docs/TROUBLESHOOTING.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/TROUBLESHOOTING.md)** | Common issues and troubleshooting guide |
+| **[📋 docs/MCP_GO_FORK.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/MCP_GO_FORK.md)** | Details about the forked MCP-Go library |
+| **[📊 docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/RESOURCE_MANAGEMENT_TOOL_DESIGN.md)** | Resource management tool design specifications |
+| **[📈 docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/RESOURCE_MANAGEMENT_PHASE_TRACKER.md)** | Resource management development phases |
+| **[📝 docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/PHASE1_RESOURCE_MANAGEMENT_TASKS.md)** | Phase 1 resource management implementation tasks |
+| **[🔄 docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md](https://github.com/opsramp/or-mcp-v2/blob/main/docs/RESOURCE_MANAGEMENT_CLIENT_UPDATES.md)** | Client updates for resource management features |
 
 ## 🛡️ Security Excellence
 
@@ -204,4 +204,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **🔍 FULLY TESTED** with MCP Inspector integration, comprehensive runtime logging, and 100% protocol compliance.
 
-**Ready to get started?** → [📖 GETTING_STARTED.md](GETTING_STARTED.md)
+**Ready to get started?** → [📖 GETTING_STARTED.md](https://github.com/opsramp/or-mcp-v2/blob/main/GETTING_STARTED.md)
