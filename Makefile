@@ -1,4 +1,4 @@
-.PHONY: all build clean clean-all test run dirs config kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup chat-interactive
+.PHONY: all build clean clean-all test run dirs config configure show-system-info kill-server client-setup client-test client-run-browser client-run-integrations client-clean test-with-client mcp-go-update mcp-go-test security-scan security-go security-python security-secrets security-deps security-full security-help security-clean python-setup chat-interactive
 
 # Define variables
 BINARY_NAME=or-mcp-server
@@ -10,6 +10,330 @@ PYTHON_CLIENT_DIR=client/python
 MCP_GO_DIR=internal/mcp-go
 PYTHON=python3
 PIP=$(PYTHON) -m pip
+
+# Detect OS and architecture
+OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+ARCH := $(shell uname -m)
+GOARCH := $(shell go env GOARCH 2>/dev/null || echo "unknown")
+GOOS := $(shell go env GOOS 2>/dev/null || echo "unknown")
+
+# Normalize architecture names for cross-platform compatibility
+ifeq ($(ARCH),x86_64)
+    NORMALIZED_ARCH := amd64
+else ifeq ($(ARCH),arm64)
+    NORMALIZED_ARCH := arm64
+else ifeq ($(ARCH),aarch64)
+    NORMALIZED_ARCH := arm64
+else
+    NORMALIZED_ARCH := $(ARCH)
+endif
+
+# Platform-specific package manager detection
+BREW := $(shell command -v brew 2>/dev/null)
+APT := $(shell command -v apt-get 2>/dev/null)
+YUM := $(shell command -v yum 2>/dev/null)
+DNF := $(shell command -v dnf 2>/dev/null)
+PACMAN := $(shell command -v pacman 2>/dev/null)
+
+# Configure system environment and install missing toolchains
+configure:
+	@echo "========================================================"
+	@echo "🔧 SYSTEM CONFIGURATION & TOOLCHAIN SETUP"
+	@echo "========================================================"
+	@echo "🖥️  System Information:"
+	@echo "   Operating System: $(OS)"
+	@echo "   Architecture:     $(ARCH) (normalized: $(NORMALIZED_ARCH))"
+	@echo "   Go OS:           $(GOOS)"
+	@echo "   Go Architecture: $(GOARCH)"
+	@echo ""
+	
+	@echo "🔍 Checking required toolchains..."
+	@echo ""
+	
+	# Check and install Go
+	@if ! command -v go &> /dev/null; then \
+		echo "❌ Go not found. Installing Go..."; \
+		$(MAKE) install-go; \
+	else \
+		GO_VERSION=$$(go version | awk '{print $$3}' | sed 's/go//'); \
+		GO_MAJOR=$$(echo $$GO_VERSION | cut -d. -f1); \
+		GO_MINOR=$$(echo $$GO_VERSION | cut -d. -f2); \
+		echo "✅ Go $$GO_VERSION detected"; \
+		if [ $$GO_MAJOR -lt 1 ] || ([ $$GO_MAJOR -eq 1 ] && [ $$GO_MINOR -lt 21 ]); then \
+			echo "⚠️  Go version $$GO_VERSION is older than required (1.21+)"; \
+			echo "   Updating Go..."; \
+			$(MAKE) install-go; \
+		fi; \
+	fi
+	
+	# Check and install Python
+	@if ! command -v $(PYTHON) &> /dev/null; then \
+		echo "❌ Python3 not found. Installing Python..."; \
+		$(MAKE) install-python; \
+	else \
+		PYTHON_VERSION=$$($(PYTHON) --version 2>&1 | awk '{print $$2}'); \
+		echo "✅ Python $$PYTHON_VERSION detected"; \
+		$(PYTHON) -c "import sys; exit(0) if sys.version_info >= (3,8) else exit(1)" || \
+		(echo "⚠️  Python version too old (requires 3.8+). Installing newer Python..." && $(MAKE) install-python); \
+	fi
+	
+	# Check Git
+	@if ! command -v git &> /dev/null; then \
+		echo "❌ Git not found. Installing Git..."; \
+		$(MAKE) install-git; \
+	else \
+		GIT_VERSION=$$(git --version | awk '{print $$3}'); \
+		echo "✅ Git $$GIT_VERSION detected"; \
+	fi
+	
+	# Check Make
+	@if ! command -v make &> /dev/null; then \
+		echo "❌ Make not found. Installing Make..."; \
+		$(MAKE) install-build-tools; \
+	else \
+		MAKE_VERSION=$$(make --version | head -n1 | awk '{print $$3}'); \
+		echo "✅ Make $$MAKE_VERSION detected"; \
+	fi
+	
+	# Check curl/wget for downloads
+	@if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then \
+		echo "❌ Neither curl nor wget found. Installing curl..."; \
+		$(MAKE) install-network-tools; \
+	else \
+		if command -v curl &> /dev/null; then \
+			CURL_VERSION=$$(curl --version | head -n1 | awk '{print $$2}'); \
+			echo "✅ curl $$CURL_VERSION detected"; \
+		fi; \
+		if command -v wget &> /dev/null; then \
+			WGET_VERSION=$$(wget --version | head -n1 | awk '{print $$3}'); \
+			echo "✅ wget $$WGET_VERSION detected"; \
+		fi; \
+	fi
+	
+	@echo ""
+	@echo "🔧 Validating Go environment..."
+	@go env GOOS GOARCH GOROOT GOPATH
+	@echo ""
+	
+	@echo "🧪 Testing Go compilation for target platform..."
+	@echo 'package main\nimport "fmt"\nfunc main() { fmt.Println("Go toolchain test successful") }' > /tmp/go_compile_check.go && \
+		go run /tmp/go_compile_check.go && rm /tmp/go_compile_check.go && \
+		echo "✅ Go compilation test passed" || \
+		(echo "❌ Go compilation test failed" && exit 1)
+	
+	@echo ""
+	@echo "========================================================"
+	@echo "✅ CONFIGURATION COMPLETE!"
+	@echo "========================================================"
+	@echo "🎯 Your system is now configured for $(OS)/$(NORMALIZED_ARCH)"
+	@echo ""
+	@echo "Next steps:"
+	@echo "  1. Run 'make all' to build the project"
+	@echo "  2. Run 'make run' to start the server"
+	@echo "  3. Run 'make chat-interactive' for AI agent testing"
+	@echo ""
+
+# Show system information without installing anything
+show-system-info:
+	@echo "========================================================"
+	@echo "🖥️  SYSTEM INFORMATION"
+	@echo "========================================================"
+	@echo "Operating System: $(OS)"
+	@echo "Architecture:     $(ARCH) → $(NORMALIZED_ARCH)"
+	@echo "Package Managers:"
+	@if [ -n "$(BREW)" ]; then echo "  ✅ Homebrew: $(BREW)"; else echo "  ❌ Homebrew: not found"; fi
+	@if [ -n "$(APT)" ]; then echo "  ✅ APT: $(APT)"; else echo "  ❌ APT: not found"; fi
+	@if [ -n "$(DNF)" ]; then echo "  ✅ DNF: $(DNF)"; else echo "  ❌ DNF: not found"; fi
+	@if [ -n "$(YUM)" ]; then echo "  ✅ YUM: $(YUM)"; else echo "  ❌ YUM: not found"; fi
+	@if [ -n "$(PACMAN)" ]; then echo "  ✅ Pacman: $(PACMAN)"; else echo "  ❌ Pacman: not found"; fi
+	@echo ""
+	@echo "Toolchain Status:"
+	@if command -v go &> /dev/null; then \
+		echo "  ✅ Go: $$(go version | awk '{print $$3}')"; \
+	else \
+		echo "  ❌ Go: not installed"; \
+	fi
+	@if command -v $(PYTHON) &> /dev/null; then \
+		echo "  ✅ Python: $$($(PYTHON) --version 2>&1 | awk '{print $$2}')"; \
+	else \
+		echo "  ❌ Python3: not installed"; \
+	fi
+	@if command -v git &> /dev/null; then \
+		echo "  ✅ Git: $$(git --version | awk '{print $$3}')"; \
+	else \
+		echo "  ❌ Git: not installed"; \
+	fi
+	@if command -v make &> /dev/null; then \
+		echo "  ✅ Make: $$(make --version | head -n1 | awk '{print $$3}')"; \
+	else \
+		echo "  ❌ Make: not installed"; \
+	fi
+	@echo ""
+	@echo "To install missing toolchains, run: make configure"
+
+# Install Go based on platform
+install-go:
+	@echo "🔨 Installing Go for $(OS)/$(NORMALIZED_ARCH)..."
+ifeq ($(OS),darwin)
+	@if [ -n "$(BREW)" ]; then \
+		echo "📦 Installing Go via Homebrew..."; \
+		brew install go; \
+	else \
+		echo "📦 Installing Homebrew first..."; \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+		brew install go; \
+	fi
+else ifeq ($(OS),linux)
+	@if [ -n "$(APT)" ]; then \
+		echo "📦 Installing Go via APT..."; \
+		sudo apt-get update && sudo apt-get install -y golang-go; \
+	elif [ -n "$(DNF)" ]; then \
+		echo "📦 Installing Go via DNF..."; \
+		sudo dnf install -y golang; \
+	elif [ -n "$(YUM)" ]; then \
+		echo "📦 Installing Go via YUM..."; \
+		sudo yum install -y golang; \
+	elif [ -n "$(PACMAN)" ]; then \
+		echo "📦 Installing Go via Pacman..."; \
+		sudo pacman -S go; \
+	else \
+		echo "📦 Installing Go from official binary..."; \
+		$(MAKE) install-go-binary; \
+	fi
+else
+	@echo "📦 Installing Go from official binary..."; \
+	$(MAKE) install-go-binary
+endif
+
+# Install Go from official binary (fallback method)
+install-go-binary:
+	@echo "📦 Installing Go from official binary for $(OS)/$(NORMALIZED_ARCH)..."
+	@GO_VERSION=1.23.4; \
+	GO_ARCHIVE="go$$GO_VERSION.$(OS)-$(NORMALIZED_ARCH).tar.gz"; \
+	echo "Downloading $$GO_ARCHIVE..."; \
+	if command -v curl &> /dev/null; then \
+		curl -L "https://golang.org/dl/$$GO_ARCHIVE" -o "/tmp/$$GO_ARCHIVE"; \
+	elif command -v wget &> /dev/null; then \
+		wget "https://golang.org/dl/$$GO_ARCHIVE" -O "/tmp/$$GO_ARCHIVE"; \
+	else \
+		echo "❌ Neither curl nor wget available for download"; \
+		exit 1; \
+	fi; \
+	sudo rm -rf /usr/local/go; \
+	sudo tar -C /usr/local -xzf "/tmp/$$GO_ARCHIVE"; \
+	rm "/tmp/$$GO_ARCHIVE"; \
+	echo "✅ Go installed to /usr/local/go"; \
+	echo "⚠️  Add /usr/local/go/bin to your PATH:"; \
+	echo "   echo 'export PATH=/usr/local/go/bin:\$$PATH' >> ~/.bashrc"; \
+	echo "   source ~/.bashrc"
+
+# Install Python based on platform
+install-python:
+	@echo "🔨 Installing Python for $(OS)/$(NORMALIZED_ARCH)..."
+ifeq ($(OS),darwin)
+	@if [ -n "$(BREW)" ]; then \
+		echo "📦 Installing Python via Homebrew..."; \
+		brew install python@3.11; \
+	else \
+		echo "📦 Installing Homebrew first..."; \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+		brew install python@3.11; \
+	fi
+else ifeq ($(OS),linux)
+	@if [ -n "$(APT)" ]; then \
+		echo "📦 Installing Python via APT..."; \
+		sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-venv; \
+	elif [ -n "$(DNF)" ]; then \
+		echo "📦 Installing Python via DNF..."; \
+		sudo dnf install -y python3 python3-pip; \
+	elif [ -n "$(YUM)" ]; then \
+		echo "📦 Installing Python via YUM..."; \
+		sudo yum install -y python3 python3-pip; \
+	elif [ -n "$(PACMAN)" ]; then \
+		echo "📦 Installing Python via Pacman..."; \
+		sudo pacman -S python python-pip; \
+	else \
+		echo "❌ No supported package manager found for Python installation"; \
+		echo "Please install Python 3.8+ manually"; \
+		exit 1; \
+	fi
+else
+	@echo "❌ Unsupported OS for automatic Python installation: $(OS)"; \
+	echo "Please install Python 3.8+ manually"; \
+	exit 1
+endif
+
+# Install Git based on platform
+install-git:
+	@echo "🔨 Installing Git for $(OS)/$(NORMALIZED_ARCH)..."
+ifeq ($(OS),darwin)
+	@if [ -n "$(BREW)" ]; then \
+		brew install git; \
+	else \
+		echo "📦 Installing Homebrew first..."; \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+		brew install git; \
+	fi
+else ifeq ($(OS),linux)
+	@if [ -n "$(APT)" ]; then \
+		sudo apt-get update && sudo apt-get install -y git; \
+	elif [ -n "$(DNF)" ]; then \
+		sudo dnf install -y git; \
+	elif [ -n "$(YUM)" ]; then \
+		sudo yum install -y git; \
+	elif [ -n "$(PACMAN)" ]; then \
+		sudo pacman -S git; \
+	fi
+else
+	@echo "❌ Unsupported OS for automatic Git installation: $(OS)"
+endif
+
+# Install build tools (make, etc.)
+install-build-tools:
+	@echo "🔨 Installing build tools for $(OS)/$(NORMALIZED_ARCH)..."
+ifeq ($(OS),darwin)
+	@if [ -n "$(BREW)" ]; then \
+		brew install make; \
+	else \
+		echo "📦 Installing Xcode Command Line Tools..."; \
+		xcode-select --install; \
+	fi
+else ifeq ($(OS),linux)
+	@if [ -n "$(APT)" ]; then \
+		sudo apt-get update && sudo apt-get install -y build-essential; \
+	elif [ -n "$(DNF)" ]; then \
+		sudo dnf groupinstall -y "Development Tools"; \
+	elif [ -n "$(YUM)" ]; then \
+		sudo yum groupinstall -y "Development Tools"; \
+	elif [ -n "$(PACMAN)" ]; then \
+		sudo pacman -S base-devel; \
+	fi
+else
+	@echo "❌ Unsupported OS for automatic build tools installation: $(OS)"
+endif
+
+# Install network tools (curl, wget)
+install-network-tools:
+	@echo "🔨 Installing network tools for $(OS)/$(NORMALIZED_ARCH)..."
+ifeq ($(OS),darwin)
+	@if [ -n "$(BREW)" ]; then \
+		brew install curl wget; \
+	else \
+		echo "curl should be available by default on macOS"; \
+	fi
+else ifeq ($(OS),linux)
+	@if [ -n "$(APT)" ]; then \
+		sudo apt-get update && sudo apt-get install -y curl wget; \
+	elif [ -n "$(DNF)" ]; then \
+		sudo dnf install -y curl wget; \
+	elif [ -n "$(YUM)" ]; then \
+		sudo yum install -y curl wget; \
+	elif [ -n "$(PACMAN)" ]; then \
+		sudo pacman -S curl wget; \
+	fi
+else
+	@echo "❌ Unsupported OS for automatic network tools installation: $(OS)"
+endif
 
 all: clean dirs config build python-setup
 	@echo "========================================================"
@@ -458,6 +782,8 @@ help:
 	@echo "HPE OpsRamp MCP Server Makefile Help"
 	@echo "========================================================"
 	@echo "Available targets:"
+	@echo "  configure       - 🔧 Configure system and install missing toolchains (run this first!)"
+	@echo "  show-system-info- 🖥️  Show system information and toolchain status"
 	@echo "  all             - Clean, create directories, and build the server"
 	@echo "  build           - Build the server binary"
 	@echo "  clean           - Remove build artifacts"

@@ -55,7 +55,10 @@ make kill-server
 git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
 
-# 2. Set up Python environment (creates virtual env and installs dependencies)
+# 2. Configure system and install missing toolchains (run this first!)
+make configure  # Detects OS/architecture and installs Go, Python, Git, etc.
+
+# 3. Set up Python environment (creates virtual env and installs dependencies)
 make python-setup  # Requires Python 3.8+
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
@@ -66,14 +69,14 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # pip install -e "client/agent[all]"
 # pip install -e client/python
 
-# 3. Configure (see CONFIGURATION_GUIDE.md for details)
+# 4. Configure (see CONFIGURATION_GUIDE.md for details)
 cp config.yaml.template config.yaml
 cd client/agent && cp .env.template .env && cd ../..
 
-# 4. Build and run (creates build/or-mcp-server binary)
+# 5. Build and run (creates build/or-mcp-server binary)
 make all && make health-check
 
-# 5. Start in debug mode (recommended for MCP Inspector)
+# 6. Start in debug mode (recommended for MCP Inspector)
 make run-debug  # Enables detailed logging and MCP Inspector compatibility
 
 # OR start in background for testing
@@ -85,10 +88,10 @@ make run
 # Stop server when done
 make kill-server
 
-# 6. Chat directly with the agent (simplest way)
+# 7. Chat directly with the agent (simplest way)
 make chat-interactive
 
-# 7. Run automated tests
+# 8. Run automated tests
 cd client/agent
 make test-integrations-basic-organized
 make test-resources-basic-organized
@@ -147,6 +150,8 @@ tail -f output/logs/or-mcp.log
 ```
 
 **🔍 Recent Compatibility Achievements:**
+- ✅ **Cross-Platform Support** - Auto-detects OS/architecture and configures toolchains (Intel/ARM64 Mac, Linux, etc.)
+- ✅ **ARM64 MacBook Compatible** - Full support for Apple Silicon with automatic toolchain setup
 - ✅ **Architecture Refactored** - Clean modular code with 73% reduction in main.go complexity
 - ✅ **MCP Inspector Fixed** - Full compatibility restored after refactoring
 - ✅ **Protocol handshake** - Complete `initialize` → `initialized` flow working perfectly
@@ -154,6 +159,40 @@ tail -f output/logs/or-mcp.log
 - ✅ **Error handling** - Comprehensive JSON-RPC error responses
 - ✅ **Session support** - Debug mode for development, validation for production
 - ✅ **Comprehensive Testing** - Automated test suite validates all MCP Inspector functionality
+
+## 🛠️ Platform Support & Troubleshooting
+
+### 🍎 **ARM64 MacBook (Apple Silicon) Support**
+The project is fully compatible with ARM64 MacBooks. If you encounter compilation issues:
+
+```bash
+# First, run the automatic configuration
+make configure
+
+# This will:
+# - Detect your ARM64 architecture
+# - Install/update Go for arm64
+# - Install Python via Homebrew
+# - Set up all required build tools
+```
+
+### 🐧 **Linux Support**
+Supports major Linux distributions with automatic package manager detection:
+- **Ubuntu/Debian**: Uses `apt-get`
+- **RHEL/CentOS/Fedora**: Uses `dnf` or `yum`
+- **Arch Linux**: Uses `pacman`
+
+### 🖥️ **Cross-Platform Toolchain Management**
+The `make configure` target automatically:
+- Detects your OS (macOS, Linux) and CPU architecture (x86_64, arm64)
+- Installs missing toolchains (Go 1.21+, Python 3.8+, Git, Make, curl/wget)
+- Validates Go compilation for your specific platform
+- Provides helpful next-step guidance
+
+```bash
+# Run this on any fresh system
+make configure
+```
 
 ## 📚 Documentation
 

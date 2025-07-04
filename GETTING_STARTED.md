@@ -42,11 +42,85 @@ git clone https://github.com/opsramp/or-mcp-v2.git
 cd or-mcp-v2
 ```
 
-### **Step 2: Verify System Requirements**
+# Getting Started Guide
+
+Complete step-by-step guide to set up and replicate the HPE OpsRamp MCP Server with AI Agent Testing Platform.
+
+## 🎯 What You'll Achieve
+
+By following this guide, you'll have:
+- ✅ **Fully functional MCP server** with Integration & Resource Management
+- ✅ **AI agent testing platform** with multi-provider LLM support
+- ✅ **Zero-vulnerability security** with professional-grade hardening
+- ✅ **Comprehensive testing framework** with organized test suites
+- ✅ **Real OpsRamp integration** with production API connectivity
+
+## 📋 Prerequisites
+
+### **System Requirements**
+- **Operating System**: macOS (Intel/ARM64), Linux, or Windows with WSL2
+- **Go**: Version 1.21 or higher (automatically installed by `make configure`)
+- **Python**: Version 3.8 or higher (automatically installed by `make configure`)
+- **Git**: For cloning the repository (automatically installed by `make configure`)
+- **Internet Connection**: For downloading dependencies and API access
+
+### **Account Requirements**
+- **HPE OpsRamp Account** with API access
+- **LLM Provider Account** (at least one):
+  - OpenAI API key (recommended for testing)
+  - Anthropic API key (excellent for token efficiency)
+  - Google AI API key (alternative option)
+
+### **Knowledge Prerequisites**
+- Basic command line usage
+- Understanding of API keys and configuration files
+- Familiarity with environment variables
+
+## 🚀 Step-by-Step Setup
+
+### **Step 1: Clone and Initial Setup**
+
+```bash
+# Clone the repository
+git clone https://github.com/opsramp/or-mcp-v2.git
+cd or-mcp-v2
+```
+
+### **Step 2: Auto-Configure System & Install Toolchains** ⭐ **NEW!**
+
+**🎉 One-Command Setup for Any Platform!**
+
+The project now includes an intelligent configuration system that automatically detects your OS and CPU architecture, then installs any missing toolchains.
+
+```bash
+# 🔧 Auto-configure your system (run this first!)
+make configure
+
+# This will:
+# ✅ Detect your OS (macOS, Linux) and architecture (x86_64, ARM64)
+# ✅ Install Go 1.21+ if missing or outdated
+# ✅ Install Python 3.8+ if missing or outdated  
+# ✅ Install Git, Make, curl/wget if missing
+# ✅ Validate Go compilation for your platform
+# ✅ Provide next-step guidance
+```
+
+**🍎 ARM64 MacBook Users**: This automatically handles Apple Silicon compatibility!
+
+**🐧 Linux Users**: Automatically detects and uses your package manager (apt, dnf, yum, pacman).
+
+**💡 System Information**: Want to see what's already installed?
+```bash
+make show-system-info  # Shows OS, architecture, and toolchain status
+```
+
+### **Step 3: Verify Auto-Configuration (Optional)**
+
+After running `make configure`, you can verify everything is working:
 
 ```bash
 # Verify Go installation
-go version  # Should show Go 1.19+
+go version  # Should show Go 1.21+
 
 # Verify Python installation
 python3 --version  # Should show Python 3.8+
@@ -239,6 +313,63 @@ make test-provider-comparison
 ```
 
 ## 🔧 Troubleshooting Common Issues
+
+### **🍎 ARM64 MacBook (Apple Silicon) Issues**
+
+**Issue**: Compilation failures on ARM64 MacBooks
+
+**Solutions**:
+```bash
+# Use the auto-configure system (recommended)
+make configure  # Automatically detects ARM64 and installs compatible toolchains
+
+# Manual verification of architecture
+make show-system-info  # Should show "arm64 → arm64"
+
+# If Go compilation still fails, try:
+go clean -cache
+go clean -modcache
+make clean-all
+make configure  # Re-run configuration
+make all        # Rebuild everything
+```
+
+**Issue**: Go not found or wrong architecture
+
+**Solutions**:
+```bash
+# Remove old Go installation (if any)
+sudo rm -rf /usr/local/go
+
+# Install Go for ARM64 automatically
+make install-go
+
+# Or install manually via Homebrew (recommended for Mac)
+brew install go
+
+# Verify Go is correctly configured for ARM64
+go env GOOS GOARCH  # Should show "darwin arm64"
+```
+
+### **🐧 Linux Compilation Issues**
+
+**Issue**: Missing build tools or package manager issues
+
+**Solutions**:
+```bash
+# Use auto-configure to install everything
+make configure
+
+# Manual installation for specific distros:
+# Ubuntu/Debian:
+sudo apt-get update && sudo apt-get install -y golang-go python3 python3-pip git build-essential
+
+# RHEL/CentOS/Fedora:
+sudo dnf install -y golang python3 python3-pip git make gcc
+
+# Arch Linux:
+sudo pacman -S go python python-pip git base-devel
+```
 
 ### **Python Environment Issues**
 
