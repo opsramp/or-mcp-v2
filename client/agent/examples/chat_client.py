@@ -175,7 +175,21 @@ def get_integrations_direct(server_url, session_id):
             return None
         
         if "result" in data:
-            return data["result"]
+            # MCP protocol returns data in result.content[0].text format
+            result = data["result"]
+            if "content" in result and len(result["content"]) > 0:
+                content = result["content"][0]
+                if "text" in content:
+                    # Parse the JSON string from the text field
+                    import json
+                    try:
+                        integrations_data = json.loads(content["text"])
+                        return integrations_data
+                    except json.JSONDecodeError as e:
+                        print(f"Error parsing JSON from server response: {e}")
+                        print(f"Raw text: {content['text']}")
+                        return None
+            return result
         
         return None
     

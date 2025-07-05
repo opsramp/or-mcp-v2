@@ -282,6 +282,9 @@ func (h *InspectorHandler) handleMCPProtocolMethods(w http.ResponseWriter, r *ht
 		return h.handleMCPToolsMethod(w, r, rpcRequest)
 	case "tools/call":
 		return h.handleToolCalls(w, r, rpcRequest)
+	case "callTool":
+		// Support both "callTool" and "tools/call" for client compatibility
+		return h.handleToolCalls(w, r, rpcRequest)
 	}
 	return false
 }
@@ -357,15 +360,23 @@ func (h *InspectorHandler) handleMCPToolsMethod(w http.ResponseWriter, r *http.R
 
 // handleToolCalls handles tool/call requests by delegating to the MCP server
 func (h *InspectorHandler) handleToolCalls(w http.ResponseWriter, r *http.Request, rpcRequest *jsonRpcRequest) bool {
-	if rpcRequest.Method != "tools/call" {
+	// Support both "tools/call" (MCP standard) and "callTool" (some client implementations)
+	if rpcRequest.Method != "tools/call" && rpcRequest.Method != "callTool" {
 		return false
 	}
 
-	h.logger.Info("Received tool call request - delegating to MCP server")
+	h.logger.Info("Received tool call request (method: %s) - delegating to MCP server", rpcRequest.Method)
 	h.logger.Debug("Tool call request params: %+v", rpcRequest.Params)
 
+	// Normalize method name to standard MCP protocol for the underlying server
+	normalizedRequest := *rpcRequest
+	if rpcRequest.Method == "callTool" {
+		normalizedRequest.Method = "tools/call"
+		h.logger.Debug("Normalized method from 'callTool' to 'tools/call' for MCP server compatibility")
+	}
+
 	// Create a proper MCP protocol message and route it through the MCP server
-	mcpMessage, err := json.Marshal(rpcRequest)
+	mcpMessage, err := json.Marshal(normalizedRequest)
 	if err != nil {
 		h.logger.Error("Failed to marshal tool call message: %v", err)
 		h.jsonError(w, "Failed to process tool call", http.StatusInternalServerError, rpcRequest.Id)
